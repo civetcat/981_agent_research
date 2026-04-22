@@ -52,9 +52,9 @@
 
 若你們團隊剛好是同產品線，可自行從內部來源複製，不建議推進本共用 repo。
 
-## 在 GitHub 上使用此倉庫名稱
+## 重新命名倉庫後（本機 `origin`）
 
-若你目前是舊名稱 `cursor_skill_subagent`，請在 GitHub 網頁：**Settings → General → Repository name** 改成 `981_agent_research` 後儲存。GitHub 通常會把舊 URL 轉址到新名稱，但本機仍建議更新 `origin`（見下）。
+若 GitHub 上曾用舊名稱 `cursor_skill_subagent`，現已改為 `981_agent_research`，GitHub 通常會把舊 URL 轉址到新名稱，但本機仍建議把 `origin` 改成新 URL（見下 `git remote set-url`）。
 
 ## Clone（協作者）
 
