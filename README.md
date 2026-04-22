@@ -1,8 +1,8 @@
-# Cursor Skills & Subagent 研究室
+# 981 Agent Research（Cursor Skills / Subagent）
 
 和朋友一起整理 Cursor **Skills**（`SKILL.md`）與 **Subagent / Task** 的用法、範本與實驗筆記。
 
-**GitHub：** [civetcat/cursor_skill_subagent](https://github.com/civetcat/cursor_skill_subagent)
+**GitHub：** [civetcat/981_agent_research](https://github.com/civetcat/981_agent_research)
 
 ## 本機 Skills 常見位置
 
@@ -52,11 +52,15 @@
 
 若你們團隊剛好是同產品線，可自行從內部來源複製，不建議推進本共用 repo。
 
+## 在 GitHub 上使用此倉庫名稱
+
+若你目前是舊名稱 `cursor_skill_subagent`，請在 GitHub 網頁：**Settings → General → Repository name** 改成 `981_agent_research` 後儲存。GitHub 通常會把舊 URL 轉址到新名稱，但本機仍建議更新 `origin`（見下）。
+
 ## Clone（協作者）
 
 ```bash
-git clone https://github.com/civetcat/cursor_skill_subagent.git
-cd cursor_skill_subagent
+git clone https://github.com/civetcat/981_agent_research.git
+cd 981_agent_research
 ```
 
 ## 第一次 push（本機已有 `origin` 時）
@@ -70,7 +74,15 @@ git push -u origin main
 若本機還沒加過遠端：
 
 ```bash
-git remote add origin https://github.com/civetcat/cursor_skill_subagent.git
+git remote add origin https://github.com/civetcat/981_agent_research.git
 git branch -M main
 git push -u origin main
+```
+
+若遠端已存在但仍是舊 URL，請改成：
+
+```bash
+git remote set-url origin https://github.com/civetcat/981_agent_research.git
+# 或使用 SSH：
+# git remote set-url origin git@github.com:civetcat/981_agent_research.git
 ```
