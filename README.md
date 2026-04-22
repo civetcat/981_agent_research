@@ -18,6 +18,40 @@
 
 在 Cursor 裡透過 **Task / Agent** 委派子任務時，描述要寫清楚：目標、限制、要回傳的格式。此 repo 可放你們約定的「委派範本」文字檔（例如 `examples/task-prompts/`）。
 
+### 目前已放的 Task 範本（`examples/task-prompts/`）
+
+| 檔案 | 用途 |
+|---|---|
+| `explore-codebase.txt` | 快速掃描 repo 結構與相關檔案 |
+| `review-diff.txt` | 唯讀審查變更／風險與驗證建議 |
+| `shell-oneoff.txt` | 單次唯讀 shell 調查（grep、git log 等） |
+
+使用方式：複製內容到 Task 對話，把占位符 `＿＿＿主題＿＿＿` 換成實際主題或檔案路徑。
+
+## 可共用 Skills（`examples/skills/`）
+
+以下為從個人 skills 整理、**已去掉或泛化公司／專案綁定**後的版本，可直接複製到 `~/.cursor/skills/<name>/` 或專案 `.cursor/skills/<name>/`。
+
+| 目錄 | 說明 |
+|---|---|
+| `build-code-on-docker` | 在 Docker 內 build／test（Go、cmake、make）；映像檔請用 `BUILD_IMAGE` 改成你們的 image |
+| `code-review-go-cpp-p0p3` | Go／C++ 變更審查，P0–P3 分級與輸出模板 |
+| `refactor-optimize-pragmatic` | 務實重構：不過度設計、保留行為、小步驗證 |
+| `karpathy-coding-principles` | 實作前的假設／最小改動／可驗證完成 |
+| `plan-md-template-zh` | Cursor `plan.md` 繁中 frontmatter + 段落結構 |
+| `validation-notes-generic-zh` | 給 QA 的驗證筆記五欄格式（需自行指定「版型參照檔」） |
+
+另有最小範例：`examples/skill-minimal/SKILL.md`。
+
+### 刻意未收錄（偏單一產品線）
+
+下列 skill 與特定 C++ UI command／內部模組強綁定，**不適合當通用教材**，請留在私有 repo 或專案內：
+
+- `option-checker-centralize`
+- `cpp-header-thin-wrapper-hygiene`（內文大量引用上述重構脈絡）
+
+若你們團隊剛好是同產品線，可自行從內部來源複製，不建議推進本共用 repo。
+
 ## Clone（協作者）
 
 ```bash
