@@ -1,0 +1,57 @@
+---
+description: ⚠️ TRIGGER THIS RULE whenever the user mentions "commit" in the prompt. Handles Git operations, custom commit message standards, and local .gitconfig application.
+globs: **/*
+alwaysApply: false
+---
+
+# Git Workflow & Configuration Standards
+
+## 1. Local Git Configuration
+- **Configuration File:** The project-specific Git configuration file is located at the root of the current directory as `.gitconfig`.
+- When performing any Git configuration reads, environment setup, or commit operations, you **MUST prioritize reading and applying the `.gitconfig` in the current directory** over the global configuration.
+
+## 2. User Identity
+- **Validator / Committer:** The default committer and validator is "Derek". As a BMC engineer, all commits should demonstrate a careful evaluation of their impact on the hardware and underlying architecture.
+
+## 3. Strict Commit Message Format
+All commit messages **MUST strictly follow** the format below. The standard Conventional Commits format is strictly prohibited. Please automatically deduce and fill in the corresponding variables `<...>` based on the `git diff` content. The descriptive content should be written in **English**:
+
+- **Line Length Limit:** Every single line in the commit message **MUST NOT exceed 80 characters**. Please wrap text automatically (especially in the `[Analysis]` section) to strictly comply with this hard limit.
+
+Format:
+```text
+[<scope>] <type> - <subject>
+
+[Recipes]
+  1. <recipe_name>
+
+[Analysis]
+  1. <analysis_details>
+
+[Validator]
+  <validator_name>
+
+
+1. Category: <type>
+   Description:
+     [ENGINEERING] - <subject>
+   Infected Motherboard: <scope>
+   Affected functions: <affected_functions>
+```
+
+**Variables Guide:**
+- `<scope>`: The affected project scope or motherboard model (corresponds to 'Infected Motherboard' below).
+- `<type>`: The type of change (e.g., feat, fix, refactor, enhance).
+- `<subject>`: A brief change title and summary.
+- `<recipe_name>`: The name of the modified Yocto recipe, package name, or main module name. If there are multiple, add them sequentially with numbers.
+- `<analysis_details>`: Detailed analysis and explanation of the development modifications (please use a bulleted list to clearly explain the reasons for the change and implementation details).
+- `<validator_name>`: The validator/committer, default to `Derek Ko`.
+- `<affected_functions>`: The related functions, interfaces, or underlying components affected by this change.
+
+## 4. Automation & Verification
+- Before generating a commit message, you must actively analyze the changes in `git diff` to ensure that the `<analysis_details>` description in the `[Analysis]` section completely matches the actual code modifications.
+- Ensure that all required fields (such as Recipes, Analysis) contain substantive content and are not left blank or filled with perfunctory text.
+
+## 5. Response Format
+- All explanations involving Git operations must be in **Traditional Chinese**.
+- When outputting a commit message for user confirmation, please provide the plain text format directly as shown above. Ensure the indentation and formatting are perfectly consistent so the user can easily copy or apply it.
