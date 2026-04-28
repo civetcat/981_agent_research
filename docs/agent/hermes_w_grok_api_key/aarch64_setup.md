@@ -138,6 +138,12 @@ npx playwright install chromium
 
 ## 後續指令參考
 
+開啟 python 虛擬環境
+```bash
+python3.11 -m venv ~/hermes_env
+source ~/hermes_env/bin/activate
+```
+
 ```bash
 hermes                  # 啟動對話
 hermes setup            # 重新執行設定精靈
