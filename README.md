@@ -11,7 +11,7 @@
 | `skills/` | 可複製的 Cursor `SKILL.md`（含各主題子目錄） |
 | `task-prompts/` | Task／委派用的文字範本（`.txt`） |
 | `agents/` | 複製到 `.cursor/agents` 的角色定義（`.md`） |
-| `rules/` | Project Rules 範例（`.mdc`） |
+| `rules/` | Project Rules 範例（`.mdc`）；`cursor-rules-consolidated.mdc` 為 BMC 全域＋Git／commit 合併版 |
 | `docs/` | 筆記與截圖說明 |
 | `hermes-agent/` | Hermes-Agent 相關範例 |
 
