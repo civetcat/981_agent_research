@@ -139,3 +139,4 @@ All commit messages **must** follow the structure below (not plain Conventional 
 
 - Explain Git steps and tradeoffs in **English** (same as Part 1).
 - When you output a commit message for copy/paste, use the block above **verbatim** in structure and indentation.
+
