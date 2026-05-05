@@ -4,6 +4,17 @@
 
 **GitHub：** [civetcat/981_agent_research](https://github.com/civetcat/981_agent_research)
 
+## 倉庫根目錄（依用途）
+
+| 路徑 | 用途 |
+|---|---|
+| `skills/` | 可複製的 Cursor `SKILL.md`（含各主題子目錄） |
+| `task-prompts/` | Task／委派用的文字範本（`.txt`） |
+| `agents/` | 複製到 `.cursor/agents` 的角色定義（`.md`） |
+| `rules/` | Project Rules 範例（`.mdc`） |
+| `docs/` | 筆記與截圖說明 |
+| `hermes-agent/` | Hermes-Agent 相關範例 |
+
 ## 本機 Skills 常見位置
 
 - 使用者層級：`~/.cursor/skills/`（底下每個 skill 一個資料夾，內含 `SKILL.md`）
@@ -12,23 +23,23 @@
 ## 協作方式建議
 
 1. 把此 repo clone 到本機後，在專案內建立 `.cursor/skills/<你的主題>/SKILL.md`，用 PR 或分支合併。
-2. 或只把「可分享的範本」放在 `examples/`，個人機密設定不要 commit。
+2. 或只把「可分享的範本」放在對應資料夾（`skills/`、`task-prompts/`、`agents/`、`rules/`），個人機密設定不要 commit。
 
 ## Subagent（Task）
 
-在 Cursor 裡透過 **Task / Agent** 委派子任務時，描述要寫清楚：目標、限制、要回傳的格式。此 repo 可放你們約定的「委派範本」文字檔（例如 `examples/task-prompts/`）。
+在 Cursor 裡透過 **Task / Agent** 委派子任務時，描述要寫清楚：目標、限制、要回傳的格式。此 repo 可放你們約定的「委派範本」文字檔（見 `task-prompts/`）。
 
-### 目前已放的 Task 範本（`examples/task-prompts/`）
+### 目前已放的 Task 範本（`task-prompts/`）
 
 | 檔案 | 用途 |
 |---|---|
-| `explore-codebase.txt` | 快速掃描 repo 結構與相關檔案 |
-| `review-diff.txt` | 唯讀審查變更／風險與驗證建議 |
-| `shell-oneoff.txt` | 單次唯讀 shell 調查（grep、git log 等） |
+| `task-prompts/explore-codebase.txt` | 快速掃描 repo 結構與相關檔案 |
+| `task-prompts/review-diff.txt` | 唯讀審查變更／風險與驗證建議 |
+| `task-prompts/shell-oneoff.txt` | 單次唯讀 shell 調查（grep、git log 等） |
 
 使用方式：複製內容到 Task 對話，把占位符 `＿＿＿主題＿＿＿` 換成實際主題或檔案路徑。
 
-## 可共用 Skills（`examples/skills/`）
+## 可共用 Skills（`skills/`）
 
 以下為從個人 skills 整理、**已去掉或泛化公司／專案綁定**後的版本，可直接複製到 `~/.cursor/skills/<name>/` 或專案 `.cursor/skills/<name>/`。
 
@@ -40,8 +51,9 @@
 | `karpathy-coding-principles` | 實作前的假設／最小改動／可驗證完成 |
 | `plan-md-template-zh` | Cursor `plan.md` 繁中 frontmatter + 段落結構 |
 | `validation-notes-generic-zh` | 給 QA 的驗證筆記五欄格式（需自行指定「版型參照檔」） |
+| `multi-model-judge` | 用 [@cursor/sdk](https://www.npmjs.com/package/@cursor/sdk) 多模型 fan-out + judge；腳本在 `skills/multi-model-judge/scripts/`（需 `npm install` 與 `CURSOR_API_KEY`） |
 
-另有最小範例：`examples/skill-minimal/SKILL.md`。
+另有最小範例：`skills/skill-minimal/SKILL.md`。
 
 ### 刻意未收錄（偏單一產品線）
 

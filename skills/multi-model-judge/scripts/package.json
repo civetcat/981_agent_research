@@ -1,0 +1,18 @@
+{
+  "name": "multi-model-judge",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "judge": "node --import tsx judge.ts",
+    "list-models": "node --import tsx list-models.ts"
+  },
+  "dependencies": {
+    "@cursor/sdk": "^1.0.12"
+  },
+  "devDependencies": {
+    "tsx": "^4.0.0",
+    "typescript": "^5.4.0",
+    "@types/node": "^20.0.0"
+  }
+}
