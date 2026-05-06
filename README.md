@@ -1,100 +1,60 @@
-# 981 Agent Research（Cursor Skills / Subagent）
+# 981 Agent Research（Cursor Skills / Subagent / Hermes）
 
-和朋友一起整理 Cursor **Skills**（`SKILL.md`）與 **Subagent / Task** 的用法、範本與實驗筆記。
+和朋友一起整理 **Cursor Skills**（`SKILL.md`）、**Subagent / Task** 範本、**Project Rules** 以及 **Hermes Agent** 客製化設定。
 
 **GitHub：** [civetcat/981_agent_research](https://github.com/civetcat/981_agent_research)
 
-## 倉庫根目錄（依用途）
+## 倉庫根目錄結構（最新）
 
-| 路徑 | 用途 |
-|---|---|
-| `skills/` | 可複製的 Cursor `SKILL.md`（含各主題子目錄） |
-| `task-prompts/` | Task／委派用的文字範本（`.txt`） |
-| `agents/` | 複製到 `.cursor/agents` 的角色定義（`.md`） |
-| `rules/` | Project Rules 範例（`.mdc`）；`cursor-rules-consolidated.mdc` 為 BMC 全域＋Git／commit 合併版 |
-| `docs/` | 筆記與截圖說明 |
-| `hermes-agent/` | Hermes-Agent 相關範例 |
+| 路徑             | 用途 |
+|------------------|------|
+| `skills/`        | 可複製的 Cursor `SKILL.md`（含各主題子目錄） |
+| `agents/`        | 複製到 `.cursor/agents` 的角色定義（coder, judge, reviewer） |
+| `rules/`         | Project Rules 範例（`.mdc`）；`cursor-rules-consolidated.mdc` 為 BMC 全域＋Git／commit 合併版 |
+| `task-prompts/`  | Task／委派用的文字範本（`.txt`） |
+| `docs/agent/`    | 各 Agent 工具的設定指南與截圖（Cursor + Grok、Hermes + Grok） |
+| `USER.md`        | 使用者 Profile 模板（已改為可彈性修改版本） |
+
+## 可共用 Skills 一覽表（`skills/`）
+
+| Skill 名稱                        | 分類           | 主要功能 |
+|----------------------------------|----------------|----------|
+| `build-code-on-docker`           | Build          | 在 Docker 容器中編譯、測試、排除 build 錯誤 |
+| `code-review-go-cpp-p0p3`        | Review         | Go/C++ 程式碼審查（P0–P3 嚴重度，繁體中文輸出） |
+| `karpathy-coding-principles`     | Coding         | 實作 Karpathy 務實編碼原則（最小改動、可驗證） |
+| `multi-model-judge`              | Judge          | 多模型並行執行 + Judge 模型交叉評比 |
+| `produce-code`                   | Orchestrator   | 多 Agent 子代理工作流（Coder/Reviewer/Judge 分離） |
+| `refactor-optimize-pragmatic`    | Refactor       | 務實重構：不過度設計、保留正確行為、小步驗證 |
+| `hermes-memory-management`       | Productivity   | Hermes Agent 記憶體壓縮、知識提煉至 memory、清理舊 session |
+| `plan-md-template-zh`            | Template       | Cursor `plan.md` 繁體中文標準模板 |
+| `validation-notes-generic-zh`    | Validation     | 產生 QA 驗證筆記（五欄格式） |
+| `skill-minimal`                  | Example        | 最小技能範例模板 |
+
+## Hermes Agent 客製化設定
+
+此專案包含 Hermes Agent 的使用者特定配置：
+
+- **`USER.md`**：定義 persistent user profile 與 communication preferences，會注入到 Hermes Agent 的每一次對話。
+  - **Core Tech Stack**：OpenBMC、Yocto Project、Linux Kernel Drivers、C/C++、Python、YOLOv8、Transformer、LangChain、Reinforcement Learning。
+  - **Language Preference**：預設使用**繁體中文 (zh-TW)** 回覆，所有專有名詞、變數、函式、程式碼片段維持英文。
+  - **Response Tone**：直截了當、專業且極度精簡。禁止不必要的客套語。
+  - **Code Generation Rules**：C/Kernel 程式碼必須考量嵌入式系統的記憶體限制與硬體安全性；Yocto 變更需直接提供 bitbake recipe 或 bbappend；除錯時優先從 register-level、driver 層面分析。
+
+**使用方式**：
+- 將 `USER.md` 放在專案根目錄或 `~/.hermes/` 下
+- Hermes Agent 啟動時會自動載入此檔案作為 persona 與偏好
+- 所有互動將遵循「Simplicity First」、「Surgical Changes」以及 BMC 工程師的硬體導向思維
 
 ## 本機 Skills 常見位置
 
-- 使用者層級：`~/.cursor/skills/`（底下每個 skill 一個資料夾，內含 `SKILL.md`）
-- 專案層級：`.cursor/skills/`（可版本化、與此 repo 一起協作）
+- 使用者層級：`~/.cursor/skills/`
+- 專案層級：`.cursor/skills/`（可版本控制）
 
 ## 協作方式建議
 
-1. 把此 repo clone 到本機後，在專案內建立 `.cursor/skills/<你的主題>/SKILL.md`，用 PR 或分支合併。
-2. 或只把「可分享的範本」放在對應資料夾（`skills/`、`task-prompts/`、`agents/`、`rules/`），個人機密設定不要 commit。
+1. Clone 此 repo 後，在專案內建立 `.cursor/skills/<你的主題>/SKILL.md`，透過 PR 或分支貢獻。
+2. 個人敏感設定請勿 commit，可使用 `USER.md` 模板來自訂偏好。
 
-## Subagent（Task）
+---
 
-在 Cursor 裡透過 **Task / Agent** 委派子任務時，描述要寫清楚：目標、限制、要回傳的格式。此 repo 可放你們約定的「委派範本」文字檔（見 `task-prompts/`）。
-
-### 目前已放的 Task 範本（`task-prompts/`）
-
-| 檔案 | 用途 |
-|---|---|
-| `task-prompts/explore-codebase.txt` | 快速掃描 repo 結構與相關檔案 |
-| `task-prompts/review-diff.txt` | 唯讀審查變更／風險與驗證建議 |
-| `task-prompts/shell-oneoff.txt` | 單次唯讀 shell 調查（grep、git log 等） |
-
-使用方式：複製內容到 Task 對話，把占位符 `＿＿＿主題＿＿＿` 換成實際主題或檔案路徑。
-
-## 可共用 Skills（`skills/`）
-
-以下為從個人 skills 整理、**已去掉或泛化公司／專案綁定**後的版本，可直接複製到 `~/.cursor/skills/<name>/` 或專案 `.cursor/skills/<name>/`。
-
-| 目錄 | 說明 |
-|---|---|
-| `build-code-on-docker` | 在 Docker 內 build／test（Go、cmake、make）；映像檔請用 `BUILD_IMAGE` 改成你們的 image |
-| `code-review-go-cpp-p0p3` | Go／C++ 變更審查，P0–P3 分級與輸出模板 |
-| `refactor-optimize-pragmatic` | 務實重構：不過度設計、保留行為、小步驗證 |
-| `karpathy-coding-principles` | 實作前的假設／最小改動／可驗證完成 |
-| `plan-md-template-zh` | Cursor `plan.md` 繁中 frontmatter + 段落結構 |
-| `validation-notes-generic-zh` | 給 QA 的驗證筆記五欄格式（需自行指定「版型參照檔」） |
-| `multi-model-judge` | 用 [@cursor/sdk](https://www.npmjs.com/package/@cursor/sdk) 多模型 fan-out + judge；腳本在 `skills/multi-model-judge/scripts/`（需 `npm install` 與 `CURSOR_API_KEY`） |
-
-另有最小範例：`skills/skill-minimal/SKILL.md`。
-
-### 刻意未收錄（偏單一產品線）
-
-下列 skill 與特定 C++ UI command／內部模組強綁定，**不適合當通用教材**，請留在私有 repo 或專案內：
-
-- `option-checker-centralize`
-- `cpp-header-thin-wrapper-hygiene`（內文大量引用上述重構脈絡）
-
-若你們團隊剛好是同產品線，可自行從內部來源複製，不建議推進本共用 repo。
-
-## 重新命名倉庫後（本機 `origin`）
-
-若 GitHub 上曾用舊名稱 `cursor_skill_subagent`，現已改為 `981_agent_research`，GitHub 通常會把舊 URL 轉址到新名稱，但本機仍建議把 `origin` 改成新 URL（見下 `git remote set-url`）。
-
-## Clone（協作者）
-
-```bash
-git clone https://github.com/civetcat/981_agent_research.git
-cd 981_agent_research
-```
-
-## 第一次 push（本機已有 `origin` 時）
-
-在專案目錄執行（需已登入 GitHub：PAT、`gh auth login`、或已設好的 SSH）：
-
-```bash
-git push -u origin main
-```
-
-若本機還沒加過遠端：
-
-```bash
-git remote add origin https://github.com/civetcat/981_agent_research.git
-git branch -M main
-git push -u origin main
-```
-
-若遠端已存在但仍是舊 URL，請改成：
-
-```bash
-git remote set-url origin https://github.com/civetcat/981_agent_research.git
-# 或使用 SSH：
-# git remote set-url origin git@github.com:civetcat/981_agent_research.git
-```
+**最後更新**：2026-05-06
