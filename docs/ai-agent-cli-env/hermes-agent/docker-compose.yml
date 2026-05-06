@@ -1,0 +1,56 @@
+#
+# docker-compose.yml for the ARM64 AI Agent CLI environment
+#
+# Usage:
+#   HERMES_UID=$(id -u) HERMES_GID=$(id -g) docker compose up -d --build
+#
+# Set HERMES_UID / HERMES_GID to the host user that owns ~/.hermes so
+# files created inside the container stay readable/writable on the host.
+# The entrypoint remaps the internal `hermes` user to these values via
+# usermod/groupmod + gosu.
+#
+# Security notes:
+#   - This Linux compose profile uses host networking so local model servers
+#     on 127.0.0.1 remain reachable from inside the container.
+#   - Dashboard binds to 127.0.0.1 by default. It stores API keys; exposing it
+#     on LAN without auth is unsafe. If you want remote access, use an SSH
+#     tunnel or put it behind an authenticated reverse proxy.
+#   - /var/run/docker.sock is mounted so Hermes' docker-cli tools can manage
+#     host containers. Only do this for a trusted local Hermes profile.
+#
+services:
+  ai-agent-cli:
+    build: .
+    image: ai-agent-cli-env:local
+    container_name: ai-agent-cli
+    restart: unless-stopped
+    network_mode: host
+    shm_size: 1g
+    volumes:
+      - ${HOME}/.hermes:/opt/data
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Change this path to the host directory the agents should edit.
+      - ${HOME}/git:/workspace/git
+    environment:
+      - HOME=/opt/data
+      - HERMES_UID=${HERMES_UID:-10000}
+      - HERMES_GID=${HERMES_GID:-10000}
+      - CURSOR_CONFIG_DIR=/opt/data/.cursor
+      - HERMES_DASHBOARD=1
+      - HERMES_DASHBOARD_HOST=127.0.0.1
+      - HERMES_DASHBOARD_TUI=1
+      # To expose the OpenAI-compatible API server beyond localhost,
+      # uncomment BOTH lines (API_SERVER_KEY is mandatory for auth):
+      # - API_SERVER_HOST=0.0.0.0
+      # - API_SERVER_KEY=${API_SERVER_KEY}
+      # Microsoft Teams — uncomment and fill in to enable Teams gateway.
+      # Register your bot at https://dev.botframework.com/ to get these values.
+      # - TEAMS_CLIENT_ID=${TEAMS_CLIENT_ID}
+      # - TEAMS_CLIENT_SECRET=${TEAMS_CLIENT_SECRET}
+      # - TEAMS_TENANT_ID=${TEAMS_TENANT_ID}
+      # - TEAMS_ALLOWED_USERS=${TEAMS_ALLOWED_USERS}
+      # - TEAMS_PORT=${TEAMS_PORT:-3978}
+    # Keep the Docker environment alive even before any messaging platform is
+    # configured. Run `hermes gateway setup` first, then `hermes gateway run`
+    # manually or change this back to ["gateway", "run"] for gateway deployment.
+    command: ["sleep", "infinity"]
