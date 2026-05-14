@@ -1,33 +1,42 @@
-# Project Tip-Toi-Reveng: 點讀筆應用研究
+# Project Tip-Toi-Reveng: 點讀筆應用研究與工具開發
 
 ## 📝 專案描述
-深入研究開源專案 [tip-toi-reveng](https://github.com/entropia/tip-toi-reveng)，探索點讀筆與數位紙張（OID 編碼）的互動原理，並實作客製化互動教材。
+深入研究開源專案 [tip-toi-reveng](https://github.com/entropia/tip-toi-reveng) 與 [snowbirdopter](https://github.com/maehw/snowbirdopter)，探索點讀筆與 OID 編碼的互動原理，並透過自建 Toolbox 實現客製化教材的自動化生產鏈。
 
 ## 🔍 技術背景
-- **OID 編碼**: 研究 Sonix 技術，點讀筆 CMOS 透過紅外光讀取微點陣[cite: 1, 2]。
-- **硬體版本**: 已取得 **第四代 (Model 00110)**，具備內建鋰電池與 USB 充電/傳輸功能[cite: 1, 2]。
-- **列印需求**: 需 1200dpi+ 雷射列印、K100 純黑碳粉（吸紅外光）[cite: 1, 2]。
-- **驗證方式**: 使用 Sony A73 搭配微距鏡頭觀察點陣碼完整度，重點檢查高解析度下的點陣清晰度[cite: 1, 2]。
+- **OID 編碼**: 研究 OID2/OID3 技術，點讀筆 CMOS 透過紅外光讀取微點陣。
+- **跨專案整合**: 結合 `main_repo` 的檔案格式分析與 `snowbird_repo` 的 SoC (ZC3202N) 硬體底層邏輯。
+- **硬體版本**: 已取得 **第四代 (Model 00110)**，具備內建鋰電池與 USB 傳輸功能。
+- **精密品質檢測**: 使用 Sony A73 搭配微距鏡頭進行 1200dpi 碳粉點陣鑑定，確保 K100 純黑碳粉吸光特性達標。
 
-## ⚙️ 當前任務
-- [x] **硬體採購**：已取得 Tiptoi 第四代 (00110)[cite: 1, 2]。
-- [x] **5/14 環境對接與備份**：
-    - [x] 完成 PowerShell 備份，包含關鍵目錄 `system/`, `update/`[cite: 1, 2]。
-    - [x] 確認 `tttool` 與第四代硬體通訊正常[cite: 1]。
-- [x] **5/14 音訊與邏輯原型驗證**：
-    - [x] 成功實作 `.mp3` 轉 `.ogg` (22050Hz, Mono) 自動化腳本[cite: 1, 2]。
-    - [x] 驗證 OID 999-1001 邏輯，確認第四代筆可正常讀取自製 `.gme`[cite: 1, 2]。
-- [ ] **5/15-5/18 規模化測試與設備升級**：
-    - [ ] **自動化排版**：撰寫 Python 腳本生成 OID 1000-1100 網格測試 PDF。
-    - [ ] **設備購入**：評估並採購物理 1200 dpi 雷射印表機（目標：HP M404n 或 Brother L2460DW）[cite: 1]。
-    - [ ] **精準驗證**：使用 Sony A73 進行 1200 dpi 列印品質微距鑑定[cite: 1, 2]。
+## ⚙️ 當前進度
+- [x] **環境構建與逆向基礎**：
+    - [x] 整合兩大核心 Repo (`main_repo`, `snowbird_wiki`)。
+    - [x] 完成 Wiki 繁體中文化轉換 (HTML 離線版)，克服德文技術文檔障礙。
+- [x] **5/14 全鏈路首通 (里程碑)**：
+    - [x] 完成第四代筆備份 (`system/`, `update/`) 與 `tttool` 通訊測試。
+    - [x] 成功實現 `.mp3` -> `.ogg` -> `.gme` 注入並由硬體正常發聲。
+- [x] **5/14 Toolbox 規劃與工作空間建立**：
+    - [x] 建立 `toolbox_workspace` 架構，區分 `Human-Read` 與 `Agent-Read` 計畫書。
+    - [x] 定義核心工具：OID 生成器、自動化打包器 (mp3+json)、音軌管理器。
+- [ ] **5/15-5/18 規模化與自動化實作**：
+    - [ ] **實作 Toolbox #1**: OID 條碼批次生成工具 (Python)。
+    - [ ] **實作 Toolbox #2**: 撰寫自動化腳本，將 JSON 描述檔一鍵轉為專案專用 YAML 並編譯。
+    - [ ] **物理升級**: 採購 1200dpi 雷射印表機 (HP M404n/Brother L2460DW) 並完成首批 1000-1100 網格測試。
 
 ## 📊 狀態紀錄
 - **2026-05-12**: 設備運送中，軟體環境配置完成。
 - **2026-05-13**: 規劃將 OID 生成邏輯整合至 Project Toolbox。
-- **2026-05-14**: **全鏈路首通**。完成第四代筆資料備份，成功將自訂音檔注入 00110 硬體並發聲[cite: 1, 2]。
-- **2026-05-14**: 啟動 **1000-1100 批次測試計畫**，準備採購高階雷射印表機以優化列印成功率[cite: 1, 2]。
+- **2026-05-14**: **重大突破**。完成全鏈路測試，自訂音檔成功發聲。
+- **2026-05-14**: **架構升級**。啟動 Toolbox Workspace 計畫，導入 AI Agent 協作模式開發專屬工具集。
 
-## 🛠 關鍵工具
-- **Software**: `tttool`, Python (pydub/reportlab), Cursor CLI
-- **Hardware**: TipToi Pen (00110), Sony A73 (Macro), **Laser Printer (1200dpi Candidate)**
+## 🛠 關鍵工具與工作流
+- **Knowledge Base**: 中文化 Wiki (Tip-Toi-Reveng & Snowbirdopter)
+- **Software**: `tttool`, Cursor (Claude 3.5 Sonnet), Python (pydub, reportlab, jinja2)
+- **Hardware**: TipToi Pen (00110), Sony A73 (Macro Check), **Target: 1200dpi Laser Printer**
+- **Toolbox Path**: `tiptoi_study/toolbox_workspace/`
+
+## 🚀 未來願景 (Toolbox Plan)
+1. **Barcode Generator**: 輸入 ID 範圍自動生成 A4 排版 PDF。
+2. **Auto-Packer**: 監控目錄，自動將 MP3 與 JSON 指令打包成 .gme。
+3. **Firmware Explorer**: 基於 Snowbird 研究，探索 00110 硬體更多的隱藏功能。
