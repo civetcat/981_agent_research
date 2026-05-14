@@ -1,0 +1,3051 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tip-Toi 逆向工程 Wiki（繁體中文）</title>
+<style>
+  :root {
+    --sidebar-width: 300px;
+    --bg: #ffffff;
+    --fg: #1f2328;
+    --muted: #6e7781;
+    --accent: #0969da;
+    --code-bg: #f6f8fa;
+    --border: #d0d7de;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                 "Microsoft JhengHei", "PingFang TC", Roboto, sans-serif;
+    color: var(--fg); background: var(--bg); line-height: 1.7;
+  }
+  aside {
+    position: fixed; top: 0; left: 0; bottom: 0;
+    width: var(--sidebar-width); overflow-y: auto;
+    border-right: 1px solid var(--border); background: #f6f8fa;
+    padding: 20px 16px;
+  }
+  aside h1 { font-size: 18px; margin: 0 0 4px; }
+  aside .source-note { color: var(--muted); font-size: 12px; margin-bottom: 16px; }
+  aside .group { margin-bottom: 18px; }
+  aside .group h2 {
+    font-size: 12px; text-transform: uppercase; color: var(--muted);
+    letter-spacing: 0.06em; margin: 0 0 6px;
+  }
+  aside ul { list-style: none; margin: 0; padding: 0; }
+  aside a {
+    display: block; padding: 4px 8px; color: var(--fg);
+    text-decoration: none; border-radius: 4px; font-size: 14px;
+  }
+  aside a:hover { background: rgba(9,105,218,0.08); color: var(--accent); }
+  aside a.active {
+    background: rgba(9,105,218,0.12); color: var(--accent); font-weight: 600;
+  }
+  main {
+    margin-left: var(--sidebar-width); padding: 32px 48px; max-width: 980px;
+  }
+  article { display: none; }
+  article.active { display: block; }
+  article h1 { border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+  article h2 { border-bottom: 1px solid var(--border); padding-bottom: 6px;
+                margin-top: 28px; }
+  pre {
+    background: var(--code-bg); padding: 12px; border-radius: 6px;
+    overflow-x: auto; font-size: 13px; line-height: 1.5;
+  }
+  code { background: var(--code-bg); padding: 1px 5px; border-radius: 3px;
+          font-size: 0.9em; }
+  pre code { background: transparent; padding: 0; }
+  table { border-collapse: collapse; margin: 12px 0; font-size: 14px; }
+  th, td { border: 1px solid var(--border); padding: 6px 12px; }
+  th { background: #f6f8fa; }
+  blockquote {
+    border-left: 4px solid var(--border); margin: 0; padding: 4px 16px;
+    color: var(--muted);
+  }
+  img { max-width: 100%; height: auto; }
+  @media (max-width: 720px) {
+    aside { position: relative; width: 100%; height: auto; }
+    main { margin-left: 0; padding: 16px; }
+  }
+</style>
+</head>
+<body>
+<aside>
+  <h1>Tip-Toi 逆向工程 Wiki</h1>
+  <div class="source-note">
+    原始來源：entropia/tip-toi-reveng wiki<br>
+    翻譯模型：grok:grok-4-1-fast-non-reasoning
+  </div>
+  <div class="group"><h2>點讀筆 硬體與韌體</h2><ul>
+<li><a href="#PEN-Firmware" data-target="PEN-Firmware">PEN Firmware</a></li>
+<li><a href="#PEN-Hardware-Details" data-target="PEN-Hardware-Details">PEN Hardware Details</a></li>
+<li><a href="#PEN-Optical-ID-and-codes" data-target="PEN-Optical-ID-and-codes">PEN Optical ID and codes</a></li>
+<li><a href="#PEN-Other-Pens" data-target="PEN-Other-Pens">PEN Other Pens</a></li>
+<li><a href="#PEN-Patents" data-target="PEN-Patents">PEN Patents</a></li>
+<li><a href="#PEN-Revisions" data-target="PEN-Revisions">PEN Revisions</a></li>
+</ul></div>
+<div class="group"><h2>GME 檔案格式</h2><ul>
+<li><a href="#GME-Additional-game-binaries-table" data-target="GME-Additional-game-binaries-table">GME Additional game binaries table</a></li>
+<li><a href="#GME-Additional-media-file-table" data-target="GME-Additional-media-file-table">GME Additional media file table</a></li>
+<li><a href="#GME-Additional-script-table" data-target="GME-Additional-script-table">GME Additional script table</a></li>
+<li><a href="#GME-Checksum" data-target="GME-Checksum">GME Checksum</a></li>
+<li><a href="#GME-Format" data-target="GME-Format">GME Format</a></li>
+<li><a href="#GME-Game-binaries-table" data-target="GME-Game-binaries-table">GME Game binaries table</a></li>
+<li><a href="#GME-Game-Examples" data-target="GME-Game-Examples">GME Game Examples</a></li>
+<li><a href="#GME-Game-Table" data-target="GME-Game-Table">GME Game Table</a></li>
+<li><a href="#GME-Games" data-target="GME-Games">GME Games</a></li>
+<li><a href="#GME-Gametypes" data-target="GME-Gametypes">GME Gametypes</a></li>
+<li><a href="#GME-Header" data-target="GME-Header">GME Header</a></li>
+<li><a href="#GME-Media-file-table" data-target="GME-Media-file-table">GME Media file table</a></li>
+<li><a href="#GME-Media-flag-table" data-target="GME-Media-flag-table">GME Media flag table</a></li>
+<li><a href="#GME-Play-script" data-target="GME-Play-script">GME Play script</a></li>
+<li><a href="#GME-Playlist" data-target="GME-Playlist">GME Playlist</a></li>
+<li><a href="#GME-Playlistlist" data-target="GME-Playlistlist">GME Playlistlist</a></li>
+<li><a href="#GME-Register-init-values" data-target="GME-Register-init-values">GME Register init values</a></li>
+<li><a href="#GME-Script-line" data-target="GME-Script-line">GME Script line</a></li>
+<li><a href="#GME-Script-table" data-target="GME-Script-table">GME Script table</a></li>
+<li><a href="#GME-Special-symbols" data-target="GME-Special-symbols">GME Special symbols</a></li>
+<li><a href="#GME-Subgames" data-target="GME-Subgames">GME Subgames</a></li>
+</ul></div>
+<div class="group"><h2>其他檔案格式</h2><ul>
+<li><a href="#RAV-file-format" data-target="RAV-file-format">RAV file format</a></li>
+<li><a href="#REC-file-format" data-target="REC-file-format">REC file format</a></li>
+</ul></div>
+<div class="group"><h2>使用技巧</h2><ul>
+<li><a href="#Languages" data-target="Languages">Languages</a></li>
+<li><a href="#Printing" data-target="Printing">Printing</a></li>
+</ul></div>
+<div class="group"><h2>資源、彩蛋與點子</h2><ul>
+<li><a href="#Hidden-Features-in-Ravensburger-Books" data-target="Hidden-Features-in-Ravensburger-Books">Hidden Features in Ravensburger Books</a></li>
+<li><a href="#Ideas" data-target="Ideas">Ideas</a></li>
+<li><a href="#Known-Product-IDs" data-target="Known-Product-IDs">Known Product IDs</a></li>
+<li><a href="#Links-and-Resources" data-target="Links-and-Resources">Links and Resources</a></li>
+</ul></div>
+<div class="group"><h2>入口</h2><ul>
+<li><a href="#Home" data-target="Home">Home</a></li>
+</ul></div>
+</aside>
+<main>
+  <article id="PEN-Firmware"><h1>PEN Firmware</h1>
+<h1 id="_1">警告</h1>
+<p><strong>請永遠記住，玩弄韌體和相關檔案可能導致點讀筆損壞。目前可能沒有辦法復原此類點讀筆。您已被警告！</strong></p>
+<p><strong>請另見 <a href="https://github.com/maehw/snowbirdopter">snowbirdopter</a> 以取得更深入資訊！</strong></p>
+<hr>
+<h1 id="_2">韌體更新</h1>
+<p>韌體更新是透過將 .upd 檔案放在點讀筆上來進行。點讀筆上有一個名為 <code>LanguageInfo.txt</code>（或 <code>LanguageInfoMT.txt</code> 或 <code>LanguageInfo5E.txt</code>... 視執行中的韌體而定）的檔案，該檔案用來定義點讀筆正在尋找的更新檔案名稱。該檔案包含如下清單：</p>
+<pre><code>3&lt;0x0d&gt;&lt;0x0a&gt;
+999 GERMAN Update3202.upd&lt;0x0d&gt;&lt;0x0a&gt;
+998 FRENCH Update3202_fr.upd&lt;0x0d&gt;&lt;0x0a&gt;
+997 DUTCH Update3202_nl.upd&lt;0x0d&gt;&lt;0x0a&gt;
+</code></pre>
+<p>第一欄表示語言 OID 碼（這是用來初始化新點讀筆使用特定語言的 OID。每支新點讀筆都附帶一張啟動紙，上面印有包含該 OID 的欄位，點讀筆需讀取（一次）該欄位），第二欄是點讀筆在 GME 檔案中尋找以匹配點讀筆語言的單字。第三欄則顯然是該語言對應的更新檔案名稱。</p>
+<p>某些語言有（額外）命名不同的更新檔案。在本專案的 scripts 目錄中，您會找到一些腳本負責下載大多數韌體。<br>
+到目前為止，這些已在 Ravensburger 網站上被識別/找到。</p>
+<ul>
+<li>德國<ul>
+<li>Update3202.upd</li>
+<li>update3202_dl.upd (官方下載頁面未連結；與 Update3202.upd 相同)</li>
+<li>update3202MT.upd (官方下載頁面未連結)</li>
+<li>update.upd</li>
+<li>update encrypt normal freq.upd (官方下載頁面未連結；與 update.upd 相同)</li>
+<li>Update3203L.upd</li>
+</ul>
+</li>
+<li>法國<ul>
+<li>Update3202_fr.upd</li>
+<li>Update3202MT_fr.upd</li>
+</ul>
+</li>
+<li>義大利<ul>
+<li>Update3202_it.upd</li>
+<li>Update3202MT_it.upd</li>
+</ul>
+</li>
+<li>荷蘭<ul>
+<li>Update3202_nl.upd</li>
+<li>Update3202MT_nl.upd</li>
+</ul>
+</li>
+<li>比利時 (荷蘭語)<ul>
+<li>Update3202_nl.upd (與荷蘭相同)</li>
+<li>update encrypt normal freq.upd (與德國 update.upd 相同)</li>
+</ul>
+</li>
+<li>俄羅斯<ul>
+<li>Update3202MT_ru.upd</li>
+</ul>
+</li>
+</ul>
+<p>目前尚不清楚某些檔案名稱中的 <code>MT</code> 指的是什麼（也許有不同硬體修訂版需要略微不同的韌體；目前懷疑 MT 韌體支援 4 GB 點讀筆的 Micron Technology 快閃記憶體）。<code>3202</code> 是主處理器 Chomptech ZC3202N 的簡稱。對於最新帶有音訊播放器或麥克風的點讀筆，兩者皆為 ZC3203L。</p>
+<h1 id="urls">URLs</h1>
+<p>（目前）韌體映像檔可在此下載，先前韌體檔案無已知位置：<br>
+   * 德國: https://www.ravensburger.de/entdecken/ravensburger-marken/tiptoi/aktualisierung-der-firmware/index.html<br>
+   * 義大利: https://www.ravensburger.com/it/tiptoi/download/index.html<br>
+   * 荷蘭: https://www.ravensburger.com/nl/tiptoi/tiptoi-downloads/index.html<br>
+   * 俄羅斯: https://www.ravensburger.com/ru/%D0%B7%D0%B0%D0%B3%D1%80%D1%83%D0%B7%D0%BA%D0%B8/index.html<br>
+   * 法國: https://www.ravensburger.com/fr/tiptoi/tiptoi-t%C3%A9l%C3%A9chargements/index.html</p>
+<p>第一代點讀筆的深度連結：<br>
+* https://cdn.ravensburger.de/db/firmware/update%20encrypt%20normal%20freq.upd<br>
+* https://cdn.ravensburger.de/db/firmware/update%20encrypt%20normal%20freq.upd<br>
+* https://cdn.ravensburger.de/db/firmware/update%20encrypt%20normal%20freq.upd<br>
+* https://cdn.ravensburger.de/db/firmware/update%20encrypt%20normal%20freq.upd<br>
+* https://cdn.ravensburger.de/db/firmware/update%20encrypt%20normal%20freq.upd</p>
+<p>第二代點讀筆的深度連結：<br>
+* https://cdn.ravensburger.de/db/firmware/Update3202_dl.upd<br>
+* https://cdn.ravensburger.de/db/firmware/Update3202_fr.upd<br>
+* https://cdn.ravensburger.de/db/firmware/Update3202_it.upd<br>
+* https://cdn.ravensburger.de/db/firmware/Update3202_nl.upd</p>
+<p>帶有 MT 晶片的第二代點讀筆的深度連結：<br>
+* https://cdn.ravensburger.de/db/firmware/update3202MT.upd<br>
+* https://cdn.ravensburger.de/db/firmware/Update3202MT_fr.upd<br>
+* https://cdn.ravensburger.de/db/firmware/Update3202MT_it.upd<br>
+* https://cdn.ravensburger.de/db/firmware/Update3202MT_nl.upd<br>
+* https://cdn.ravensburger.de/db/firmware/Update3202MT_ru.upd</p>
+<p>帶有音訊播放器的第三代點讀筆的深度連結：<br>
+* https://cdn.ravensburger.de/db/firmware/Update3203L.upd<br>
+* 法國<br>
+  * 檔案 1: https://cdn.ravensburger.de/db/firmware/Update3203L_fr.upd<br>
+  * 檔案 2: https://cdn.ravensburger.de/db/Firmware-Files/fr/7/REV11/Update3203L_fr.upd (適用於帶有 "te4" 雷射標籤的點讀筆)<br>
+  * 檔案 2: https://cdn.ravensburger.de/db/Firmware-Files/fr/11/REV4/Update3203L_fr.upd (適用於不帶 "te4" 雷射標籤的點讀筆)<br>
+* https://cdn.ravensburger.de/db/firmware/Update3203L_it.upd<br>
+* https://cdn.ravensburger.de/db/firmware/Update3203L_nl.upd<br>
+* https://cdn.ravensburger.de/db/firmware/Update3203L_ru.upd</p>
+<p>(適用於 tiptoi® CREATE 的深度連結 (Update5E.upd...)？待辦)</p>
+<h1 id="tiptoilog">.tiptoi.log</h1>
+<p>點讀筆上有一個隱藏檔案，表示記憶棒的語言。以下是該檔案的內容：</p>
+<pre><code>00000000  41 42 31 32 33 34 35 36  ff ff ff ff ff ff ff ff  |AB123456........|
+00000010  4e 30 30 33 38 00 00 00  00 00 ff ff ff ff ff ff  |N0038...........|
+00000020  47 45 52 4d 41 4e 00 00  00 00 ff ff ff ff ff ff  |GERMAN..........|
+00000030  33 32 30 32 4e 00 00 00  00 00 ff ff ff ff ff ff  |3202N...........|
+</code></pre>
+<p>此檔案由四個「行」組成：</p>
+<ul>
+<li>點讀筆的序列號（在此範例中已替換為 AB123456）。</li>
+<li>韌體版本（可在韌體更新檔案中找到的字串）。每次點讀筆開機時都會更新。</li>
+<li>點讀筆韌體的語言</li>
+<li>處理器名稱</li>
+</ul>
+<p>如果您移除 .tiptoi.log 檔案，點讀筆必須使用啟動紙重新啟動。</p>
+<h1 id="_3">韌體版本字串</h1>
+<p>韌體版本字串似乎最多由 10 個字元組成。目前韌體有五或七個字元的版本。皆以一個字母加上四位數字開始，其中有些在數字後附加 'MT'。基於 ZC3202N 裝置的韌體顯示這些版本（最後檢查：2015-02-06）<br>
+* 德國: "N0038" (20120419)<br>
+* 法國: "f0021" (20131120) 或 "f0023MT" (20131120)<br>
+* 荷蘭: "h0013" (20130117) 或 "h0013MT" (20131003)<br>
+* 義大利: "i0010" (20140213) 或 "i0012MT" (20131203)<br>
+* 俄羅斯: "r0007MT" (20140912)</p>
+<p>顯然第一個字元對應語言，除德國韌體外（也許原因是德國是第一個市場，他們在德國市場推出後才加入該命名方案）。德國韌體中的 'N' 可能指 Chomptech 處理器名為 ZC3202N。</p>
+<p>基於 ZC3201 的裝置，目前韌體為 v136 (最後檢查 2018-11-13)。</p>
+<p>基於 ZC3203L 的裝置，目前韌體為 "2G0042 (適用於德國)。</p>
+<p>您可以使用十六進位編輯器或 Linux 上的 "strings" 工具查看 upd 檔案末尾來檢查版本。有一個看起來像 "ANYKA_IDRAV2G0042" 的字串。"RAV" 後的右側部分是韌體版本。"RAV" 可能代表 "Ravensburger"。</p>
+<h1 id="_4">如何切換點讀筆的語言</h1>
+<ul>
+<li>在 <code>LanguageInfo.txt</code> 中，將所需語言第一欄的數字與目前語言的數字交換（見上文）。如果檔案遺失，您可以自行建立一個，見上文格式</li>
+<li>將新語言的更新檔案放在點讀筆上（正確檔案名稱可在 <code>LanguageInfo.txt</code> 中找到） </li>
+<li>開機點讀筆。它會（以新語言）告訴您正在更新，然後重新開機</li>
+</ul>
+<p>自 2021 年起，Ravensburger 部分支援語言切換（透過 Tiptoi Manager）官方支援：https://service.ravensburger.de/tiptoi/Fragen_zum_tiptoi_Stift/Spracheinstellungen_des_tiptoi_Stiftes (德文) </p>
+<h1 id="_5">模式</h1>
+<p>點讀筆可運行多種模式：<br>
+* 正常操作模式<br>
+* 測試模式 (執行某些測試)<br>
+* USB 大容量儲存模式 (從/至點讀筆讀寫檔案)<br>
+* USB 儲存開機模式 (快閃韌體)</p>
+<h2 id="_6">測試模式</h2>
+<p>按住音量減按鈕同時按下開機按鈕進入此模式（對於新 Player 點讀筆，您可能想按住倒退按鈕同時按下開機按鈕）。點讀筆不得透過 USB 連接！</p>
+<p>進入該模式時，您會先聽到（中文）"Testmode" ("Toshe mo she")、"Start test of program" ("Cashe toshe ton tjio")，接著是 "Program test pass" ("ton tjio toshe dchin tao") 或 "Program test fail" ("ton tjio toshe she by")。現在您可以按 "+" 運行某些測試。每按一次會啟動下一個測試（依此順序描述）：<br>
+   * "Start test of the tip of the pen" ("cashe toshe beat ho") 接著是 "Test of the tip of the pen passed" ("beat ho toshe dchin tao") 或 "Communication to the tip of the pen failed" ("beat ho toshe she by")<br>
+   * "Start test of encryption procedure"  ("cashe toshe dja mee")，之後需一段時間無法操作，然後您會聽到 "Encryption procedure test passed" ("dja mee toshe dchang gung") 或 "Encryption procedure test failed" ("dja mee toshe she by")。這可能使用點讀筆上的 <code>TestFile</code> 目錄。<br>
+   * 播放 <code>TestTone/Test1KHz.wav</code> 三次。<br>
+   * 不再有任何動作</p>
+<p>代替按 "+"，您也可以按 "-" 以以下順序啟動這些測試：<br>
+   * "Start test of UDISK file" ("Cashe toshe upau in dje") 接著是 "Test of UDISK file passed"  ("jon de toshe dchin tao") 或 "Test of UDISK file failed" ("jon de toshe she by")<br>
+   * 循環播放 "if you want to hear the manual for that game tip on the info sign on the game plan"（非中文，而是點讀筆語言）。有時您可以按 "+" 離開此模式，點讀筆會跳至 "+" 區段描述的其中一個測試。</p>
+<p>在測試模式中，您無法變更音量或停止測試樣本播放。</p>
+<p>新點讀筆有兩個包含某些測試資料（或結果？）的目錄：</p>
+<pre><code>5196  1048576 Apr 13  2010 TestFile/Test1.bin
+5197  1048576 Apr 13  2010 TestFile/Test2.bin
+5198  1048576 Apr 13  2010 TestFile/Test3.bin
+5199  1048576 Apr 13  2010 TestFile/Test4.bin
+5200  1048576 Apr 13  2010 TestFile/Test5.bin
+5201  1048576 Apr 13  2010 TestFile/Test6.bin
+5203  1964880 Jan  5  2012 TestTone/Test1KHz.wav
+</code></pre>
+<p><code>TestFile</code> 目錄中的檔案大小為 1MB。格式乍看像是隨機資料，但所有 6 個檔案顯示非常相似的統計分佈：</p>
+<p><img alt="" src="https://user-images.githubusercontent.com/6303021/102666462-46413100-4187-11eb-92b3-c1b284cc40c2.PNG"></p>
+<p>當測試運行時，點讀筆會有一段時間無回應（甚至無法關機）。只需等待一段時間，它會恢復正常。測試結果會寫入名為 <code>Prodtest.txt</code> 的檔案。每次運行測試時都會重新建立。它以位元組 0x01 開始，接著一或多行測試結果。每行皆以 0x0d 0x0a 結束（回車和換行）。內容：</p>
+<pre><code>&lt;0x01&gt;The Program File's checksum=0X62fa5e0&lt;0x0d&gt;&lt;0x0a&gt;
+The Test1.bin File's checksum=0X51df7b1,checksum right!&lt;0x0d&gt;&lt;0x0a&gt;
+The Test2.bin File's checksum=0X57f5ac9,checksum right!&lt;0x0d&gt;&lt;0x0a&gt;
+The Test3.bin File's checksum=0X5aade57,checksum right!&lt;0x0d&gt;&lt;0x0a&gt;
+The Test4.bin File's checksum=0X51b659a,checksum right!&lt;0x0d&gt;&lt;0x0a&gt;
+The Test5.bin File's checksum=0X5447108,checksum right!&lt;0x0d&gt;&lt;0x0a&gt;
+The Test6.bin File's checksum=0X52c1349,checksum right!&lt;0x0d&gt;&lt;0x0a&gt;
+</code></pre>
+<p>如果您移除 <code>TestFile</code> 目錄，內容會變為：</p>
+<pre><code>&lt;0x01&gt;The Program File's checksum=0X62fa5e0&lt;0x0d&gt;&lt;0x0a&gt;
+The Test1.bin File is not exist!&lt;0x0d&gt;&lt;0x0a&gt;
+The Test2.bin File is not exist!&lt;0x0d&gt;&lt;0x0a&gt;
+The Test3.bin File is not exist!&lt;0x0d&gt;&lt;0x0a&gt;
+The Test4.bin File is not exist!&lt;0x0d&gt;&lt;0x0a&gt;
+The Test5.bin File is not exist!&lt;0x0d&gt;&lt;0x0a&gt;
+The Test6.bin File is not exist!&lt;0x0d&gt;&lt;0x0a&gt;
+</code></pre>
+<p>如果您修改 <code>TestFile</code> 目錄中的某個檔案，點讀筆會偵測到：</p>
+<pre><code>&lt;0x01&gt;The Program File's checksum=0X62fa5e0&lt;0x0d&gt;&lt;0x0a&gt;
+The Test1.bin File's checksum=0X51df60f,checksum wrong!&lt;0x0d&gt;&lt;0x0a&gt;
+The Test2.bin File's checksum=0X57f5ac9,checksum right!&lt;0x0d&gt;&lt;0x0a&gt;
+The Test3.bin File's checksum=0X5aade57,checksum right!&lt;0x0d&gt;&lt;0x0a&gt;
+The Test4.bin File's checksum=0X51b659a,checksum right!&lt;0x0d&gt;&lt;0x0a&gt;
+The Test5.bin File's checksum=0X5447108,checksum right!&lt;0x0d&gt;&lt;0x0a&gt;
+The Test6.bin File's checksum=0X52c1349,checksum right!&lt;0x0d&gt;&lt;0x0a&gt;
+</code></pre>
+<p>(檔案的第一個位元組保持在 0x01)</p>
+<p>因此明顯地，測試檔案的 checksums-32 包含在韌體中。</p>
+<p><code>.wav</code> 檔案是測試音調樣本。如果您移除這些檔案，它們將永遠消失，因此最好備份它們。誰知道未來它們有何用處？</p>
+<h3 id="_7">音訊格式</h3>
+<p>支援：<br>
+WAV, OGG, MP3  (耳機插孔的立體聲音質與 MP3 播放器相當！)  </p>
+<p>不支援：<br>
+AAC/MP4</p>
+<h2 id="usb">USB 大容量儲存模式 (標準)</h2>
+<p>將點讀筆插入 Linux PC 時會顯示這些資料，可像外部 USB 隨身碟一樣使用：</p>
+<pre><code>usb 2-1: new high-speed USB device number 12 using ehci-pci
+usb 2-1: New USB device found, idVendor=2546, idProduct=e301
+usb 2-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+usb 2-1: Product: tiptoi
+usb 2-1: Manufacturer: tiptoi
+usb 2-1: SerialNumber: USB 2.0
+usb-storage 2-1:1.0: USB Mass Storage device detected
+scsi12 : usb-storage 2-1:1.0
+scsi 12:0:0:0: Direct-Access     Tiptoi   ZC3202N          V1.0 PQ: 0 ANSI: 2
+sd 12:0:0:0: Attached scsi generic sg3 type 0
+sd 12:0:0:0: [sdd] 3608576 512-byte logical blocks: (1.84 GB/1.72 GiB)
+sd 12:0:0:0: [sdd] Write Protect is off
+sd 12:0:0:0: [sdd] Mode Sense: 0b 00 00 08
+sd 12:0:0:0: [sdd] No Caching mode page found
+sd 12:0:0:0: [sdd] Assuming drive cache: write through
+sd 12:0:0:0: [sdd] No Caching mode page found
+sd 12:0:0:0: [sdd] Assuming drive cache: write through
+sdd:
+sd 12:0:0:0: [sdd] No Caching mode page found
+sd 12:0:0:0: [sdd] Assuming drive cache: write through
+sd 12:0:0:0: [sdd] Attached SCSI removable disk
+</code></pre>
+<h2 id="usb_1">USB 儲存開機模式 (韌體快閃)</h2>
+<p>請另見 <a href="https://github.com/entropia/tip-toi-reveng/wiki/PEN-Hardware-Details">Hardware Details</a> 區段！</p>
+<p>此模式（已確認！）允許使用 Anyka Burn Tool 寫入新韌體。  </p>
+<p>若在啟動期間將 GPIO13 連接到接地，即可啟動此模式。這可透過 1 kOhm 電阻連接標記區域的焊墊輕鬆完成。直接連接可能也有效，但可能損壞點讀筆。  </p>
+<p>由於 PCB 上的這兩個焊墊與電池艙中的兩個小孔對齊，甚至無需打開點讀筆即可進入 USB 儲存開機模式。缺點：舊版點讀筆有一層箔保護兩個焊墊免受外部存取。輕微修改此箔，應可透過兩個孔存取。對於 B6 版 (4 GB)，此變通方式不必要，因為箔在正確位置有切口。</p>
+<p><img alt="" src="https://cloud.githubusercontent.com/assets/6303021/6094671/a39409c2-af34-11e4-8dc1-a68e617538de.jpg">  </p>
+<p>點讀筆在 USB 儲存開機模式下有 USB PID 038D 和 VID 04D6，電腦會這樣辨識：<br>
+<img alt="" src="https://cloud.githubusercontent.com/assets/6303021/6094668/8e8628c6-af34-11e4-8e17-63ef2af71007.gif"><br>
+(技術細節：字串 "Snowbird2_Massboot&gt;" 和某些其他位元組在啟動後立即以 38400 bps 的 UART 協定透過 GPIO13 發送)  </p>
+<p>逐步步驟（方法 1，已在 B6 型號測試）：<br>
+1. 移除電池並等待 10 秒（確保點讀筆處於已定義狀態）。<br>
+2. 插入電池但勿按開機按鈕。<br>
+3. 啟動 Burntool.exe (v3.0.18) 並匯入 .upd 檔案（例如：若點讀筆有 Micron Technologies 快閃記憶體，則為 Update3202MT_fr.upd；若有其他供應商快閃記憶體，則為 Update3202_fr.upd）。<br>
+4. 使用 ~1 kOhm 電阻橋接 GPIO13 和 GND<br>
+5. 在電阻仍就位時按住並保持開機按鈕。現在點讀筆應處於 USB 儲存開機模式，您可以移除電阻。若正確執行，您不會聽到提示音（因為 TT 未從快閃記憶體執行 TT 軟體）。<br>
+6. 透過 USB 將點讀筆連接到 PC，並全程保持按住開機按鈕（否則點讀筆會再次關機）。<br>
+6. Burntool 偵測到點讀筆準備就緒，並在短時間後自動啟動快閃程序。<br>
+7. 達到 100% 標記後（約 30 秒至 2 分鐘之間），您可以釋放開機按鈕並從 USB 斷開點讀筆。</p>
+<p>重新啟動點讀筆後，您應有一支如新且可用的點讀筆。</p>
+<p>逐步步驟（方法 2，適用於 B5 型號，也許方法 1 也適用）：<br>
+1. 移除電池<br>
+2. 插入電池<br>
+3. 透過 USB 將點讀筆連接到 PC<br>
+4. 使用 ~1 kOhm (820 Ohm 也可) 電阻橋接 GPIO13 和 GND<br>
+5. 按開機按鈕並在約 2 秒後移除電阻。現在點讀筆應處於 USB 大容量儲存模式，且 PC 會公告發現新裝置  </p>
+<p>基於 ZC3201 的裝置，此程序無效。這些點讀筆在透過 USB 連接時會自動啟動（即使無電池！）。進入儲存開機模式的方式應為此（不涉及開機按鈕）：  </p>
+<p>逐步步驟（方法 3，適用於 A4 型號）<br>
+1. 插入電池<br>
+2. 開啟 Tiptoi<br>
+3. 關閉 Tiptoi<br>
+4. 等待 ~10s<br>
+5. 透過 USB 將點讀筆連接到 PC<br>
+6. 使用 ~1 kOhm (820 Ohm 也可) 電阻橋接 GPIO13 和 GND  </p>
+<p>可透過重新啟動點讀筆離開 USB 儲存開機模式。</p>
+<p>關於實際 <em>使用 burntool 快閃</em>，使用者 "clean31" 在 github 上報告：</p>
+<blockquote>
+<p>[..] 匯入 upd 檔案後，勾選 update 和 udisk 選項，然後用 usb 連接 tiptoi，接著按住開機按鈕，並在整個過程中保持 GPIO13 和 GND 之間的電阻。</p>
+</blockquote>
+<p>(請見 https://github.com/entropia/tip-toi-reveng/issues/144#issuecomment-541413723 以取得可能更新)。</p>
+<hr>
+</article>
+<article id="PEN-Hardware-Details"><h1>PEN Hardware Details</h1>
+<p>(於修訂版 B6 (2GB) 上測量，若未另行標示)</p>
+<p><img alt="PCB overview" src="https://cloud.githubusercontent.com/assets/6303021/6306394/88476610-b933-11e4-946e-32baa63ea3ab.jpg"></p>
+<h2 id="b6">修訂版 B6 的電路圖</h2>
+<p><i><b>(重要：本節顯示的所有資訊均來自網路上自由取得的資料。提供時不附任何保證，且可能有誤！)</b></i><br>
+<img alt="image" src="https://github.com/entropia/tip-toi-reveng/assets/6303021/d46c6789-57b8-40bb-931d-a8b2ff51ec79"><br>
+<a href="https://github.com/entropia/tip-toi-reveng/files/13058008/Tiptoi.B6.pdf">Tiptoi B6.pdf</a></p>
+<h2 id="_1">主控制器</h2>
+<p>Chomptech ZC3202N (A4 版本：ZC3201)；ChipID：「1090」<br>
+64-pin LQFP，由 Anyka 提供的基於 AK1050 的 SoC，具 ARM926EJ-S 核心<br>
+<a href="http://www.anyka.com/en/productInfo.aspx?id=77">http://www.anyka.com/en/productInfo.aspx?id=77</a></p>
+<p><IMG SRC="https://user-images.githubusercontent.com/6303021/67005746-9932da80-f0e3-11e9-9efd-ff5635b9aa95.jpg" height=200 alt="Chomptech ZC3202N 影像"><br>
+<br><br>  </p>
+<h3 id="_2">標準模式</h3>
+<ul>
+<li>從外部快閃記憶體啟動並從中執行程式碼 (透過 MMU 分頁？)</li>
+<li>電源供應由板上電路控制 (自動保持)</li>
+<li>在啟動過程中開始時，以 115200 bps 透過 GPIO13 (pin 39) 輸出 NAND 快閃記憶體的 ID：<br>
+<IMG SRC="https://user-images.githubusercontent.com/6303021/97111680-8da7c580-16e0-11eb-9ee5-bc532f41ef53.png"></li>
+</ul>
+<h3 id="_3">大容量儲存啟動</h3>
+<p><i><b>(重要：本節顯示的所有資訊均來自網路上自由取得的資料，並經自身實驗確認。提供時不附任何保證，且可能有誤！)</b></i></p>
+<p>電源啟動時將 GPIO13 (pin 39) 拉低 (例如使用 1 kOhm 電阻)：<br>
+* 啟動後立即以 38400 bps UART 協議透過 GPIO13 發送字串「Snowbird2_Massboot&gt;」及其他一些位元組<br>
+* 準備好透過 USB 更新韌體<br>
+* 一旦鬆開電源按鈕，TT 即關機！</p>
+<h3 id="uart">UART 啟動</h3>
+<p><i><b>(重要：本節顯示的所有資訊均來自網路上自由取得的資料，並經自身實驗確認。提供時不附任何保證，且可能有誤！)</b></i></p>
+<p>電源啟動時將 GPIO9 (pin 37，修訂版 B6 上可於 R66 和 R67 之間存取) 拉低 (例如使用 1 kOhm 電阻)：<br>
+* 啟動後立即以 38400 bps UART 協議透過 GPIO13 (pin 39) 發送字串「SNOWBIRD2-BIOS&gt;#」<br>
+* 可透過 GPIO12 (pin 36) 向 SoC 發送指令：「download」、「setvalue」、「go」、「dump」<br>
+備註：為此目的，請切斷 GPIO12 與電源按鈕模組之間的連接！<br>
+* 指令需以回車字元 ('\r') 終止<br>
+* 輸入應逐字元發送，而非一次全發，否則可能導致「通訊錯誤」<br>
+* 透過 UART 傳輸的資料通常會被回顯<br>
+* 位址需以十六進位數字給定，不帶「0x」前綴<br>
+* BIOS：0x00000000 - 0x0000FFFF，暫存器：0x04000000 - 0x040AFFFF，RAM：0x08000000 - 0802FFFF<br>
+* 使用 <em>Realterm</em> 與 SoC 通訊 (也可用於下載轉儲檔及上傳 ARM 程式碼至 RAM)<br>
+* 一旦鬆開電源按鈕，TT 即關機！<br>
+* 工具 <a href="https://github.com/maehw/snowbirdopter">snowbirdopter</a> 為 Tiptoi 撰寫，用以自動執行低階指令 («download」、「go」等)。可用於執行自訂可執行檔並了解執行環境。</p>
+<table>
+<thead>
+<tr>
+<th>Rev. B6 中的接觸位置</th>
+<th>圓圈</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><IMG SRC="https://user-images.githubusercontent.com/6303021/77105010-3b514880-6a1d-11ea-991f-743c07136f38.jpg" height=200 alt="GND、GPIO13、RESET"></td>
+<td>綠色：RESET (pin 29)<br>紅色：GPIO13/TXD (pin 39)<br>藍色：GND</td>
+</tr>
+<tr>
+<td><IMG SRC="https://user-images.githubusercontent.com/6303021/77105055-4f954580-6a1d-11ea-9cb9-768a70ab5c7f.jpg" height=200 alt="GPIO9"></td>
+<td>紅色：GPIO9 (pin 37)</td>
+</tr>
+<tr>
+<td><IMG SRC="https://user-images.githubusercontent.com/6303021/77105098-5f148e80-6a1d-11ea-8b4f-e2f5b20febd7.jpg" height=200 alt="GPIO12"></td>
+<td>紅色：GPIO12/RXD (pin 36)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="nand">NAND 快閃記憶體</h2>
+<p>WE 訊號以約 7.24 MHz 時脈，從主控制器的 pin 60 驅動。<br>
+在正常運作及 USB 隨身碟模式下，NAND 晶片的型號會以 115.200 bps 8N1 重複透過 GPIO13 輸出 (例如「Hynix H27UAG8T2B」)。</p>
+<ul>
+<li>
+<p>Hynix HY27UF084G2B<br>
+NAND 512 MB (512 Mbit x 8)<br>
+封裝：TSOP-48</p>
+</li>
+<li>
+<p>Hynix H27UAG8T2BTR<br>
+NAND 2 GB (2 Gbit x 8)<br>
+封裝：TSOP-48<br>
+<a href="http://www.farnell.com/datasheets/1641691.pdf">http://www.farnell.com/datasheets/1641691.pdf</a>  </p>
+</li>
+<li>
+<p>Micron 29F32G08CBACA<br>
+NAND 32 Gbit (32 Gbit x 8)  </p>
+</li>
+</ul>
+<p><IMG SRC="https://user-images.githubusercontent.com/6303021/67005750-99cb7100-f0e3-11e9-932e-b074b31fd0cb.jpg" height=200 alt="Micron 29F32G08CBACA 影像"></p>
+<hr>
+<h2 id="oid-15">OID 1.5 感測器模組</h2>
+<p>Sonix SNM9S102C2200A (尚未經 IC 標記確認)<br>
+- Sonix SN9S102CE CMOS 數位影像感測器 IC：3.0 - 3.6V<br>
+- 12 mA (典型值)，待機電流：50 µA (典型值)<br>
+- 最高可達 8 MHz 運作<br>
+- 12-pin 感測器模組介面<br>
+- 透過串列匯流排可程式化曝光/增益控制<br>
+- 資料輸出為 2-bit nibble 格式<br>
+- 8-bit ADC 解析度<br>
+- 內建 IR LED</p>
+<p><a href="http://www.sonix.com.tw/article-cn-1664-7097">http://www.sonix.com.tw/article-cn-1664-7097</a><br>
+<a href="http://www.sonix.com.tw/files/1/5041E7ED1569E91DE050007F0100790E">SNM9S102C2200A 規格 v1.0 (pdf)</a></p>
+<p><IMG SRC="https://user-images.githubusercontent.com/6303021/67024311-7cf36580-f104-11e9-988e-220c7523e392.jpg" height=200 alt="頭部 1 影像"><br>
+<IMG SRC="https://user-images.githubusercontent.com/6303021/67024312-7cf36580-f104-11e9-9ba7-77146eef250e.jpg" height=200 alt="頭部 2 影像"><br>
+<IMG SRC="https://user-images.githubusercontent.com/6303021/67024314-7cf36580-f104-11e9-9ee5-92b279b95f7d.jpg" height=200 alt="感測器模組 1 影像"><br>
+<IMG SRC="https://user-images.githubusercontent.com/6303021/67024315-7cf36580-f104-11e9-9178-a3c09b765800.jpg" height=200 alt="感測器模組 2 影像">  </p>
+<p>影像感測器晶片 (點擊查看全解析度)：<br>
+<a href="https://user-images.githubusercontent.com/6303021/155767161-7c04dc0f-b962-49de-bdce-fbbb48fd39a4.jpg"><IMG SRC="https://user-images.githubusercontent.com/6303021/155767161-7c04dc0f-b962-49de-bdce-fbbb48fd39a4.jpg" height=200></a><br>
+<sup><i>(影像由 @Siliconinsider 提供)</i></sup></p>
+<p>與修訂版 R5 中相同：<br>
+<IMG SRC="https://cloud.githubusercontent.com/assets/6303021/21908587/90cad210-d914-11e6-82cf-9ee0fdb7ebb2.jpg" height=200 alt="感測器影像"></p>
+<hr>
+<h2 id="oid-15_1">OID 1.5 影像解碼器</h2>
+<p>Sonix SN9P601FG-301<br>
+LQFP48，晶振/RC，內建 LVD &amp; LDO，2-wire 介面 V2 資料輸出<br>
+<a href="http://www.sonix.com.cn/article-tw-1639-6656">http://www.sonix.com.cn/article-tw-1639-6656</a>  </p>
+<p><a href="http://www.sonix.com.tw/files/1/0A752D32E75CAF1AE05012ACA96428EE">SN9P601FG 規格 (pdf)</a></p>
+<p><IMG SRC="https://user-images.githubusercontent.com/6303021/67005751-99cb7100-f0e3-11e9-8f97-a7bc4d0f1e60.jpg" height=200 alt="Sonix SN9P601FG-301 影像"></p>
+<p>Sonix SN9P601FG-301 旁邊的 7 個測試通孔：<br>
+(通孔 1 = 位於筆尖旁邊)<br>
+通孔 1：通電時 3.4 V；斷電後約 300 mV 緩慢放電<br>
+通孔 2：1.0 s 週期內 7.6 ms 的 3.4 V 尖峰；通電後 900 ms 高電位<br>
+通孔 3：至 EEPROM 的 I²C 資料 (SDA)<br>
+通孔 4：至 EEPROM 的 I²C 時脈 (SCL) <br>
+通孔 5：GND<br>
+通孔 6：通電時 2.0 V<br>
+通孔 7：通電時 3.4 V  </p>
+<hr>
+<h2 id="eeprom">EEPROM</h2>
+<p>Shanghai Fudan Microelectronics FM24C02B<br>
+2 Kbit (256 x 8 bit)<br>
+<a href="http://www.fmsh.com/xqitadmin/uploadFiles/20120306113321.pdf">http://www.fmsh.com/xqitadmin/uploadFiles/20120306113321.pdf</a><br>
+通電後約 2 秒讀取 EEPROM 內容的前 48 位元組 (可能用於讀取 OID 設定資料)。<br>
+由於 EEPROM 直接連至 OID 解碼器，且 OID 解碼器與 SoC 之間僅傳輸控制碼及 OID 碼，因此 EEPROM 似乎未用於儲存 SoC 相關資訊。  </p>
+<p><IMG SRC="https://user-images.githubusercontent.com/6303021/67005749-99cb7100-f0e3-11e9-98d6-2a24f3af0613.jpg" height=200 alt="FM24C02B 影像"></p>
+<p>Rev B6 (4GB) 的 EEPROM 內容：<br>
+<code>00: 06 07 01 50 06 08 01 2c 04 73 01 2c 04 b8 00 00    ???P???,?s?,??..</code><br>
+<code>10: 04 b9 01 f4 04 ba 46 50 04 bb 48 44 04 bc 01 f3    ??????FP??HD????</code><br>
+<code>20: 04 bd 03 e7 04 be 48 43 04 bf 4a 37 aa cc ac ac    ??????HC??J7????</code><br>
+<code>30: aa cc ac ac aa cc ac ac aa cc ac ac 01 80 01 00    ???????????????.</code><br>
+<code>40: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................</code><br>
+<code>50: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................</code><br>
+<code>60: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................</code><br>
+<code>70: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................</code><br>
+<code>80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................</code><br>
+<code>90: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................</code><br>
+<code>a0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................</code><br>
+<code>b0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................</code><br>
+<code>c0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................</code><br>
+<code>d0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................</code><br>
+<code>e0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................</code><br>
+<code>f0: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff    ................</code>  </p>
+<hr>
+<h2 id="ic">加密 IC</h2>
+<p>Chomptech ZC90B (2010 年販售版本：ZC90)<br>
+未知規格<br>
+Pin 1：VDD (3.3 V)<br>
+Pin 2：恆定低電位<br>
+Pin 3：恆定低電位<br>
+Pin 4：通電後及 LED 閃爍時資料傳輸<br>
+Pin 5：通電後類比尖峰<br>
+Pin 6：恆定低電位<br>
+Pin 7：通電後及 LED 閃爍時資料傳輸<br>
+Pin 8：恆定低電位，可能為 GND  </p>
+<p><img alt="ZC90B - Pin 4" src="https://cloud.githubusercontent.com/assets/6303021/5910076/cbf5a0a6-a5b6-11e4-9ee6-3108a1c4f2c1.png"><br>
+<img alt="ZC90B - Pin 7" src="https://cloud.githubusercontent.com/assets/6303021/5910108/204bb050-a5b7-11e4-86dd-d9112a0e1b91.png"><br>
+左：pin 4，右：pin 7</p>
+<p><IMG SRC="https://user-images.githubusercontent.com/6303021/67005748-99cb7100-f0e3-11e9-8afe-9e52ef4ee54e.jpg" height=200 alt="ZC90B 影像"></p>
+<hr>
+<h2 id="_4">音訊放大器</h2>
+<p>8891UL<br>
+1.0 Watt</p>
+<p><IMG SRC="https://user-images.githubusercontent.com/6303021/67005747-9932da80-f0e3-11e9-8c7b-571761364cb3.jpg" height=200 alt="8891UL 影像"></p>
+<hr>
+<h2 id="_5">揚聲器</h2>
+<p>規格：8 Ohms，0.3 Watts</p>
+<p>類似 Kingstate KDMG20008<br>
+(例如見 https://ch.farnell.com/kingstate/kdmg20008/lautsprecher-micro/dp/1502730?Ntt=1502730)</p>
+<hr>
+<h2 id="_6">石英晶振</h2>
+<p>12.000 MHz</p>
+<hr>
+<h2 id="_7">電源按鈕</h2>
+<p>36-ms 閃爍，週期 10.34 s<br>
+(於開關 PCB 上綠色電纜旁通孔測量)</p>
+<p>測試點 T2 和 T3 可加裝額外開關 (第 2 版點讀筆)</p>
+<p>至少在 Rev. A4 中，電源按鈕包含 LED，焊接於標記「1399A0」的小型 PCB 上。<br>
+電源按鈕 PCB 使用四條電纜連至主 PCB：</p>
+<ul>
+<li>紅色電纜連接主 PCB 的 #1 至電源按鈕 PCB 的 #1。 </li>
+<li>黑色電纜連接主 PCB 的 #2 至電源按鈕 PCB 的 #2。 </li>
+<li>綠色電纜連接主 PCB 的 #3 至電源按鈕 PCB 的 #3。 </li>
+<li>藍色電纜連接主 PCB 的 #4 至電源按鈕 PCB 的 #4。</li>
+</ul>
+<p>LED 連接於 pin #3 和 #4 之間，常開 (n.o.) 開關連接於 pin #1 和 #2 之間。</p>
+<p>有配線：</p>
+<p><IMG SRC="https://user-images.githubusercontent.com/6305922/100770109-3262a480-33fd-11eb-932b-b887b7b505aa.jpg" height=200 alt="電源按鈕 (正面)"> <IMG SRC="https://user-images.githubusercontent.com/6305922/100770107-31317780-33fd-11eb-80d4-587abd1a287e.jpg" height=200 alt="電源按鈕 (背面)"> </p>
+<p>無配線，更詳細：</p>
+<p><IMG SRC="https://user-images.githubusercontent.com/6303021/100771036-380cba00-33fe-11eb-9940-1e5c2f29999e.jpg" height=200 alt="電源按鈕 PCB (正面)"> <IMG SRC="https://user-images.githubusercontent.com/6303021/100771106-4bb82080-33fe-11eb-9ac5-f97fcf55922b.jpg" height=200 alt="電源按鈕 PCB (背面)"></p>
+<hr>
+<h2 id="_8">保險絲</h2>
+<p>此保險絲保護內部電路免於過電流。其電阻應為 0 Ohm。<br>
+若因測量時短路線路而燒斷，則電阻極高。此時點讀筆失效，因未獲電池電壓供應。</p>
+<p>保險絲可替換為例如 Bourns SingleFuse SF-0603F100 (1 A)，可從 Voelkner.de 取得。</p>
+<p><img alt="RT1" src="https://cloud.githubusercontent.com/assets/6303021/7401115/de24633a-eec1-11e4-8ced-8bce48484f00.jpg"></p>
+<hr>
+<h2 id="tiptoi-4">Tiptoi 第 4 代攝影機模組維修</h2>
+<p>若您的 Tiptoi 可開機並有歡迎文字，但觸碰 Tiptoi 圖片無反應，則可能為攝影機模組問題。<br>
+開啟裝置後，可見下列圖片右下角的攝影機模組。</p>
+<p><img alt="tiptoi_opened" src="https://github.com/entropia/tip-toi-reveng/assets/144583503/3fa95776-735e-49b0-b82c-d4d74361366a"></p>
+<p>攝影機模組可透過抬起轉接板 J2 連接器的深色把手，從主板上斷開。 <br>
+攝影機模組由轉接板及 CMOS 板組成。<br>
+攝影機模組與主板間的資料傳輸透過白色 10 線扁平排線的 I2C 匯流排系統處理。此例中，I2C 時脈連接 (SCL) 正常，<br>
+但資料連接 (SDA) 中斷。</p>
+<p><img alt="camera_module_01" src="https://github.com/entropia/tip-toi-reveng/assets/144583503/fcd8532f-ae0c-484a-b7e5-7e931281108e"><br>
+攝影機模組，CMOS 板在前</p>
+<p><img alt="camera_module_02" src="https://github.com/entropia/tip-toi-reveng/assets/144583503/9e4de173-5171-4201-bab9-a26f29483cb7"><br>
+攝影機模組 (轉接板帶 J2 和 J3 連接器)</p>
+<p><img alt="camera_module_03" src="https://github.com/entropia/tip-toi-reveng/assets/144583503/647e64e8-e4c5-4c16-b774-cf3757916102"><br>
+攝影機模組 (轉接板帶 J1 連接器)</p>
+<p>欲確認攝影機模組與主板間是否有正常 SDA 連接，可測量跳線 J1 的 pin 2 至轉接板其他 7 個 pin 的電阻。<br>
+若無歐姆電阻可測至其他至少一個 7 個 pin，則 J2 的 pin 3 至 J1 的 pin 2 再至 CMOS 板的通孔連接斷開，即 SDA 連接斷路。<br>
+若 pin 2 (J1) 與其他任一 7 個 pin 有可測電阻，<br>
+則存在本貢獻未涵蓋的其他故障。</p>
+<p><img alt="camera_module_04" src="https://github.com/entropia/tip-toi-reveng/assets/144583503/dd29ea09-a287-45f3-a08d-5da6546ddaf2"><br>
+帶連接器的攝影機板</p>
+<p>此例中，pin 2 (J1) 的接觸區與 CMOS 板分離，因此至附近通孔接觸斷開。此通孔接觸將 SDA 訊號傳至 CMOS 板另一側正對的 CMOS 晶片。因通孔位於 J1 和 J3 之間轉接板下，无法直接焊接 pin 至通孔。因此需完全將轉接板從 CMOS 板脫焊，以存取 SDA 通孔殘餘部分。最佳方式使用熱風焊接設備。<br>
+分離轉接板後，可將細銅線焊接至 SDA 通孔殘餘。線長應足夠置於 pin 1 (J1) 外側，以供後續焊接至 pin 2 (J1)。若線太短，可能無法最終保持至通孔的連接。準備好額外銅線後，可將轉接板的 7 個 pin (除 pin 2 (J1)) 焊接至 CMOS 板。最後將銅線開放端焊接至轉接板的 pin 2 (J1)。如前所述，若 pin 2 (J1) 與其他任一 7 個 pin 可測電阻，即連接建立。</p>
+<p><img alt="connections" src="https://github.com/entropia/tip-toi-reveng/assets/144583503/4b4c10f2-267b-43c5-a063-90527e4f373b"><br>
+互聯圖</p>
+<p>上圖描述 Tiptoi (第 4 代) 主板與攝影機模組的互聯。所示電壓為連接主板與攝影機模組的 10 線扁平排線時測得。或許此資訊有助進一步故障分析。</p>
+</article>
+<article id="PEN-Optical-ID-and-codes"><h1>PEN Optical ID and codes</h1>
+<h3 id="oid">OID</h3>
+<p>光學識別碼 (OID) 是 Tip-Toi 用來將數字編碼成黑色方塊圖案的方法。這些圖案隨後印在 Tip-Toi 產品的表面上，由點讀筆讀取並解碼，用作執行中腳本的輸入。儘管肉眼可見，此碼僅輕微干擾印刷內容。<br>
+<img alt="&quot;Codierung im digitalen Papier (Detail einer Spielkarte)&quot; by Schwesterschlumpf" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Tiptoi_digitalpapier.png/512px-Tiptoi_digitalpapier.png"></p>
+<p><em>(圖片 "<a href="https://de.wikipedia.org/wiki/Tiptoi#/media/File:Tiptoi_digitalpapier.png">Codierung im digitalen Papier (Detail einer Spielkarte)</a>" by <a href="https://commons.wikimedia.org/w/index.php?title=User:Schwesterschlumpf">Schwesterschlumpf</a> <a href="http://creativecommons.org/licenses/by-sa/3.0">CC-BY-SA 3.0</a>)</em></p>
+<p>OID 編碼於一個 16 個像素的圖案中，橫跨 1 mm x 1 mm 的正方形。像素（每個 0,05 mm x 0,05 mm）第一列和第一行的像素用來定義網格。由於第一列第三個像素有輕微凹陷，因此可確定圖案的方向。</p>
+<p><img alt="" src="http://i.imgur.com/tx8GXgy.png"></p>
+<p>其餘像素 <em>並未</em> 對齊由其他像素定義的 4x4 網格。相反，其餘像素的四進位值由空間偏差定義：從右下（0）經左下（1）、左上（2）到右上（3）：</p>
+<p><img alt="" src="http://i.imgur.com/UqZuULE.png"></p>
+<p>這 9 個像素中，左上像素作為校驗碼/奇偶位元。其餘像素依列從左上（最高有效位元）讀取至右下（最低有效位元）。此 GitHub 儲存庫中有一個 HTML/JS-<a href="http://htmlpreview.github.io/?https://github.com/entropia/tip-toi-reveng/blob/master/oid-decoder.html">OID-Decoder</a>，可互動式展示解碼過程。注意：整數的原始值使用對映表/偏移量進行混淆。</p>
+<p><img alt="" src="http://i.imgur.com/U1NyL6O.png"></p>
+<h3 id="oid-15-used-in-tiptoi">OID 1.5 (used in TipToi)</h3>
+<p>索引數量：15,000<br>
+圖案大小：1.0 x 1.0 mm²<br>
+視覺干擾：2.8%<br>
+錯誤率：&lt; 0.5%<br>
+(來源：http://www.sonix.com.tw/category-en-956)</p>
+<h3 id="tttool-oid">tttool 使用的 OID 碼</h3>
+<p>tttool 接受非原始 OID 碼來識別產品和項目。</p>
+<p>這些碼似乎以以下方式使用（若有誤請修正）：<br>
+* 0 起：<strong>M</strong>edia-<strong>OID</strong>s - 用來註冊程式的 OID，例如 WWW_Bauernhof (1)、WWW_Weltatlas (45) 等<br>
+* 999 降：語言 OID<br>
+* 1000..14999：物件/項目 - <strong>O</strong>bject-<strong>OID</strong>s，特別用於 Tip-Toi 產品腳本中，讓點讀筆識別互動物件<br>
+* 原始碼 65535 用作紙上中性位置的忽略碼。可使用 <code>tttool oid-code --raw 65535</code> 產生</p>
+<p>對於您自己的專案，建議使用：<br>
+* 900 起：MOIDs<br>
+* 1000..14999：OOIDs</p>
+</article>
+<article id="PEN-Other-Pens"><h1>PEN Other Pens</h1>
+<h1 id="stips-by-edition-atlas">STIPS by Edition Atlas</h1>
+<p>www.stipsnews.com</p>
+<p><img alt="STIPS case" src="https://cloud.githubusercontent.com/assets/6303021/6585121/2918b07c-c770-11e4-9009-7d4b2a9bcc20.jpg"><br>
+<img alt="STIPS front" src="https://cloud.githubusercontent.com/assets/6303021/6585146/4ef26d60-c770-11e4-904c-07984ca7a178.jpg"><br>
+<img alt="Stips back" src="https://cloud.githubusercontent.com/assets/6303021/6585130/3803810c-c770-11e4-824b-855eafd1449a.jpg"></p>
+<p>有趣的事實：<br>
+- 專用 SONIX SOC (SNP700327FB1FG) 而非 OID 解碼器 + MCU<br>
+  - 專為點讀筆設計<br>
+  - 也稱 ZC3306、SNP70032 和 SN9P70032（待確認）<br>
+  - 使用 OID 2（而非 OID 1.5）<br>
+- 模塑外殼<br>
+- 似乎也能使用標準 USB 線</p>
+</article>
+<article id="PEN-Patents"><h1>PEN Patents</h1>
+<h1 id="oid">OID 相關專利</h1>
+<ul>
+<li><a href="http://www.google.com.nf/patents/US8061611">US8061611</a>：Anoto 持有的一項專利，描述如何辨識 OID 圖案以及如何判斷其是否處於正確方向</li>
+<li><a href="http://www.google.com.nf/patents/US6548768">US6548768</a>：Anoto 持有的一項專利，描述如何使用 OID 來決定頁面上的 x 和 y 座標</li>
+<li><a href="https://www.google.com/patents/DE202013000802U1?cl=de&amp;dq=schleich+gmbh&amp;hl=de&amp;sa=X&amp;ei=1hirVNawCsTDPI_SgfgF&amp;ved=0CEEQ6AEwBA">DE202013000802U1</a>：Schleich 持有的一項專利，描述類似 Ravensburger 的 OID 動物。唯一的差別是 Schleich 的動物無需平坦表面即可列印 OID。目前尚未在野外見到此類動物。</li>
+</ul>
+</article>
+<article id="PEN-Revisions"><h1>PEN Revisions</h1>
+<p>以下是目前已知硬體修訂版本的清單。請參閱<a href="https://github.com/entropia/tip-toi-reveng/wiki/PEN-Hardware-Details">元件細節</a>。</p>
+<table>
+<thead>
+<tr>
+<th><sub>功能/修訂</sub></th>
+<th><sub><a href="#revision-a4">A4</a></th>
+<th><sub><a href="#revision-b3">B3</a></th>
+<th><sub><a href="#revision-b5">B5</a></th>
+<th><sub><a href="#revision-b6-2-gb">B6 (2 GB)</a></th>
+<th><sub><a href="#revision-b6-4-gb">B6 (4 GB)</a></th>
+<th><sub><a href="#revision-r5">R5</a></th>
+<th><sub><a href="#revision-r6">R6</a></th>
+<th><sub><a href="#revision-r1">R1</a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><sub><strong>媒體播放器</strong></td>
+<td><sub>無</td>
+<td><sub>無</td>
+<td><sub>無</td>
+<td><sub>無</td>
+<td><sub>無</td>
+<td><sub>有</td>
+<td><sub>有</td>
+<td><sub>無</td>
+</tr>
+<tr>
+<td><sub><strong>麥克風</strong></td>
+<td><sub>無</td>
+<td><sub>無</td>
+<td><sub>無</td>
+<td><sub>無</td>
+<td><sub>無</td>
+<td><sub>無</td>
+<td><sub>無</td>
+<td><sub>有</td>
+</tr>
+<tr>
+<td><sub><strong>日期</strong></td>
+<td><sub>2010.3.26</td>
+<td><sub>2010.06.21</td>
+<td><sub>2010.11.29</td>
+<td><sub>2012.2.14</td>
+<td><sub>2012.2.14</td>
+<td><sub>2014.8.26</td>
+<td><sub>2015.5.25</td>
+<td><sub>2018.2.7</td>
+</tr>
+<tr>
+<td><sub><strong>PCB 修訂</strong></td>
+<td><sub>1391A4</td>
+<td><sub>1391B3</td>
+<td><sub>1391B5</td>
+<td><sub>1391B6</td>
+<td><sub>1391B6</td>
+<td><sub>1742R5</td>
+<td><sub>1742R6</td>
+<td><sub>2182R1</td>
+</tr>
+<tr>
+<td><sub><strong>PCB 厚度</strong></td>
+<td><sub>0.7 mm</td>
+<td><sub>?</td>
+<td><sub>?</td>
+<td><sub>0.8 mm</td>
+<td><sub>0.8 mm</td>
+<td><sub>?</td>
+<td><sub>?</td>
+<td><sub>?</td>
+</tr>
+<tr>
+<td><sub><strong>控制器</strong></td>
+<td><sub>ZC3201</td>
+<td><sub>ZC3202N</td>
+<td><sub>ZC3202N</td>
+<td><sub>ZC3202N</td>
+<td><sub>ZC3202N</td>
+<td><sub>ZC3203L</td>
+<td><sub>ZC3203L</td>
+<td><sub>ZC3203L</td>
+</tr>
+<tr>
+<td><sub><strong>石英晶體</strong></td>
+<td><sub>24 MHz</td>
+<td><sub>?</td>
+<td><sub>?</td>
+<td><sub>12 MHz</td>
+<td><sub>12 Mhz</td>
+<td><sub>2 個石英晶體：?, ?</td>
+<td><sub>1 個石英晶體：?</td>
+<td><sub>?</td>
+</tr>
+<tr>
+<td><sub><strong>快閃記憶體容量</strong></td>
+<td><sub>512 MB</td>
+<td><sub>512 MB</td>
+<td><sub>512 MB</td>
+<td><sub>2 GB</td>
+<td><sub>4 GB</td>
+<td><sub>4 GB</td>
+<td><sub>4 GB</td>
+<td><sub>4 GB</td>
+</tr>
+<tr>
+<td><sub><strong>可用快閃記憶體容量</strong></td>
+<td><sub>464 MB</td>
+<td><sub>464 MB</td>
+<td><sub>464 MB</td>
+<td><sub>1.71 GB</td>
+<td><sub></td>
+<td><sub>?</td>
+<td><sub>?</td>
+<td><sub>3.878 GB</td>
+</tr>
+<tr>
+<td><sub><strong>快閃記憶體類型</strong></td>
+<td><sub>HY27UF084G2B</td>
+<td><sub>HY27UF084G2B</td>
+<td><sub>HY27UF084G2B</td>
+<td><sub>H27UAG8T2BTR</td>
+<td><sub>MT29F32G08CBACA</td>
+<td><sub>H27UBG8T2CTR</td>
+<td><sub>H27UBG8T2CTR</td>
+<td><sub>MT29F32G08CBADA</td>
+</tr>
+<tr>
+<td><sub><strong>EEPROM</strong></td>
+<td><sub>FM24C02B</td>
+<td><sub>FM24C02B</td>
+<td><sub>FM24C02B</td>
+<td><sub>FM24C02B</td>
+<td><sub>FM24C02B</td>
+<td><sub>FM24C02B</td>
+<td><sub>FM24C02B</td>
+<td><sub>?</td>
+</tr>
+<tr>
+<td><sub><strong>加密 IC</strong></td>
+<td><sub>ZC90</td>
+<td><sub>ZC90</td>
+<td><sub>ZC90</td>
+<td><sub>ZC90B</td>
+<td><sub>ZC90B</td>
+<td><sub>?</td>
+<td><sub>?</td>
+<td><sub>?</td>
+</tr>
+<tr>
+<td><sub><strong>保險絲 RT1</strong></td>
+<td><sub>無</td>
+<td><sub>有</td>
+<td><sub>有</td>
+<td><sub>有</td>
+<td><sub>有</td>
+<td><sub>?</td>
+<td><sub>?</td>
+<td><sub>?</td>
+</tr>
+<tr>
+<td><sub><strong>放大器</strong></td>
+<td><sub>8891UL</td>
+<td><sub>8891UL</td>
+<td></td>
+<td><sub>8891UL</td>
+<td><sub>8891UL</td>
+<td><sub>?</td>
+<td><sub>?</td>
+<td><sub>?</td>
+</tr>
+<tr>
+<td><sub><strong>揚聲器</strong></td>
+<td><sub>8 Ohm, 0.3 W</td>
+<td><sub>8 Ohm, 0.3 W</td>
+<td></td>
+<td></td>
+<td></td>
+<td><sub>?</td>
+<td><sub>?</td>
+<td><sub>?</td>
+</tr>
+<tr>
+<td><sub><strong>OID 解碼器</strong></td>
+<td><sub>SN9P601FG-301</td>
+<td><sub>?</td>
+<td><sub>SN9P601FG-301</td>
+<td><sub>SN9P601FG-301</td>
+<td><sub>SN9P601FG-301</td>
+<td><sub>SN9P601FG-301</td>
+<td><sub>SN9P601FG-301</td>
+<td><sub>?</td>
+</tr>
+<tr>
+<td><sub><strong>序號</strong></td>
+<td><sub>AB......<br> G0......</td>
+<td><sub>AB......</td>
+<td><sub>AD......</td>
+<td><sub>CA......?<br> CC......<br> CD......</td>
+<td><sub>DC......?<br> DD......?</td>
+<td>?</td>
+<td><sub>?</td>
+<td><sub>?</td>
+</tr>
+<tr>
+<td><sub><strong>WiFi</strong></td>
+<td><sub>無</td>
+<td><sub>無</td>
+<td><sub>無</td>
+<td><sub>無</td>
+<td><sub>無</td>
+<td><sub>無</td>
+<td><sub>無</td>
+<td><sub>無</td>
+</tr>
+<tr>
+<td>***</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h1 id="a4">修訂 A4</h1>
+<p>這是第一個上市的版本。</p>
+<p><img alt="front of PCB" src="https://cloud.githubusercontent.com/assets/6303021/11637874/590dbcd4-9d24-11e5-9c74-2b9de0e0331b.jpg"></p>
+<p><img alt="back of PCB" src="https://cloud.githubusercontent.com/assets/6303021/11637884/61e3328a-9d24-11e5-8a6c-05dcce3eb808.jpg"></p>
+<hr>
+<h1 id="b5">修訂 B5</h1>
+<p>相對於前一修訂最重要的變更：<br>
+* 改進的控制器 ZC3202N（取代 ZC3201）<br>
+  * 10 x 10 mm² 封裝尺寸 -&gt; 7 x 7 mm² 封裝尺寸<br>
+  * 0.5 mm 引腳間距 -&gt; 0.4 mm 引腳間距</p>
+<p><img alt="front of PCB" src="https://user-images.githubusercontent.com/6303021/77257037-1efa1980-6c72-11ea-8190-3eb74141bd9f.jpg"></p>
+<p><img alt="back of PCB" src="https://user-images.githubusercontent.com/6303021/77257039-21f50a00-6c72-11ea-92e1-b1fb4b1295eb.jpg"></p>
+<hr>
+<h1 id="b6-2-gb">修訂 B6 (2 GB)</h1>
+<p>相對於前一修訂最重要的變更：<br>
+* 更大的快閃記憶體（2 GB 取代 512 MB）<br>
+* 加密 IC 的新版本（ZC90B 取代 ZC90）</p>
+<p><img alt="front of PCB" src="https://user-images.githubusercontent.com/6303021/77257328-d5aac980-6c73-11ea-9ca4-c0b7147ff0ef.jpg"></p>
+<p><img alt="back of PCB" src="https://user-images.githubusercontent.com/6303021/77257330-d8a5ba00-6c73-11ea-8201-f010f3d76f93.jpg"></p>
+<hr>
+<h1 id="b6-4-gb">修訂 B6 (4 GB)</h1>
+<p>相對於前一修訂最重要的變更：<br>
+* 更大的快閃記憶體（4 GB 取代 2 GB）</p>
+<p><img alt="front side of PCB" src="https://cloud.githubusercontent.com/assets/6303021/6306394/88476610-b933-11e4-946e-32baa63ea3ab.jpg"><br>
+<img alt="back side of PCB" src="https://cloud.githubusercontent.com/assets/6303021/6306397/94943b5a-b933-11e4-9d2a-180674618de8.jpg">  </p>
+<hr>
+<h1 id="r5">修訂 R5</h1>
+<p>相對於前一修訂最重要的變更：<br>
+* 媒體播放器<br>
+* ZC3203L 取代 ZC3202N</p>
+<p><img alt="front side" src="https://cloud.githubusercontent.com/assets/6303021/21908420/f70e5002-d913-11e6-98eb-a0ccf99ac5a4.jpg"><br>
+<img alt="back side" src="https://cloud.githubusercontent.com/assets/6303021/21908425/f9f543ca-d913-11e6-8f78-c8503731f379.jpg"></p>
+<hr>
+<h1 id="r6">修訂 R6</h1>
+<p>相對於前一修訂最重要的變更：<br>
+* R5 的成本最佳化更新</p>
+<p><img alt="back side" src="https://user-images.githubusercontent.com/6303021/77254454-557b6880-6c61-11ea-8ff6-9016d88b6a74.jpg"><br>
+<img alt="front side" src="https://user-images.githubusercontent.com/6303021/77254452-51e7e180-6c61-11ea-9584-c74862749ab3.jpg"></p>
+<hr>
+<h1 id="r1">修訂 R1</h1>
+<p>相對於前一修訂最重要的變更：<br>
+* 新增麥克風<br>
+* 不再有媒體播放器</p>
+<p><img alt="front side" src="https://user-images.githubusercontent.com/6303021/77255069-223ad880-6c65-11ea-9719-07a743c145ce.jpg"><br>
+<img alt="back side" src="https://user-images.githubusercontent.com/6303021/77255071-2535c900-6c65-11ea-90b4-2219e152389e.jpg"></p>
+</article>
+<article id="GME-Additional-game-binaries-table"><h1>GME Additional game binaries table</h1>
+<p>這個表格的格式與其他 geme binaries 表格相同。懷疑這是用於較舊的點讀筆。</p>
+</article>
+<article id="GME-Additional-media-file-table"><h1>GME Additional media file table</h1>
+<p>這個表格的格式與其他媒體檔案表格相同。懷疑這是用於較舊的點讀筆。</p>
+</article>
+<article id="GME-Additional-script-table"><h1>GME Additional script table</h1>
+<p>僅用於德國產品「Puzzle Ponyhof」和「Reise durch die Jahreszeiten」及其法文、荷文、義大利文版本。格式為播放腳本（見上文）。在多數檔案中，它是一個空的播放腳本，即單純的 <code>0x0000</code> 。在「Reise durch die Jahreszeiten」中，它是一個具有空腳本行的播放腳本。</p>
+<p>TODO: 這何時會被執行？</p>
+</article>
+<article id="GME-Checksum"><h1>GME Checksum</h1>
+<p>檔案的最後 4 個位元組是檔案的簡單加法校驗碼，點讀筆不會檢查它。</p>
+</article>
+<article id="GME-Format"><h1>GME Format</h1>
+<h1 id="gme">GME 檔案格式</h1>
+<p>這是逆向工程的結果（即長時間盯著十六進位碼），可能並不總是準確。此外，它也不完整；請參閱 <a href="https://github.com/entropia/tip-toi-reveng/blob/master/README.md">README.md</a> 中的待辦事項清單。</p>
+<p>檔案格式也在 <a href="https://github.com/entropia/tip-toi-reveng/blob/master/GME-Format.md">GME-Format.md</a> 中有描述。不幸的是，那裡的資訊傾向於與這裡維護的資訊有所出入。</p>
+<p>檔案格式由這些部分組成<br>
+ * 一[[header|GME Header]]，包含偏移量指向<br>
+ * 資料區域，其中包括 [[play scripts|GME Play script]]、[[games|GME Games]]、[[audio files|GME Media file table]] 和其他內容，最後是<br>
+ * 一[[checksum|GME Checksum]]。</p>
+<p>所有偏移量皆相對於檔案開頭。如果我們說某物是一個 8 位元數字後接一個零位元組，當然也可能是 16 位元數字，我們只是尚未看到高值。</p>
+<p>所有數值皆以 little-endian 格式儲存；本文檔中的偏移量為十六進位數字，以慣用（big-endian）格式印出。因此，如果在十六進位傾印中看到 <code>d5b2 0100</code>，那就是指向位置 <code>0x1B2D5</code> 的偏移量。</p>
+<ul>
+<li>[[Header|GME Header]]</li>
+<li>[[Script table|GME Script table]]</li>
+<li>[[Play script|GME Play script]]</li>
+<li>[[Script line|GME Script line]]</li>
+<li>[[Playlist|GME Playlist]]</li>
+<li>[[Playlistlist|GME Playlistlist]]</li>
+<li>[[Game table|GME Game table]]</li>
+<li>[[Games|GME Games]]  <ul>
+<li>[[Gametypes|GME Gametypes]]  </li>
+<li>[[Game-Examples|GME Game-Examples]]  </li>
+</ul>
+</li>
+<li>[[Subgames|GME Subgames]]  </li>
+<li>[[Register init values|GME Register init values]]</li>
+<li>[[Media file table|GME Media file table]]</li>
+<li>[[Additional media file table|GME Additional media file table]]</li>
+<li>[[Additional script table|GME Additional script table]]</li>
+<li>[[Game binaries table|GME Game binaries table]]</li>
+<li>[[Additional game binaries table|GME Additional game binaries table]]</li>
+<li>[[Checksum|GME Checksum]]</li>
+</ul>
+</article>
+<article id="GME-Game-binaries-table"><h1>GME Game binaries table</h1>
+<p>至少在 'WWW Weltatlas' 中存在，此表格包含 (ARM) 二進位資料，可從二進位中包含的不同字串辨識出來。<br>
+表格由一個 16bit? 長度及另一個 112bit (14 位元組) 填充組成，總計 16 位元組。接著是表格的項目：<br>
+每個項目由一個指向二進位資料的 32bit 指標、一個二進位資料的 32bit 長度，以及 8 位元組用於簡寫二進位名稱（非零結束）組成。</p>
+<p>很可能，表格的第 <code>0</code> 個項目會被跳過，因為它與表格長度項目開始於相同位置。<br>
+相同的佈局可在額外的遊戲二進位表格中找到。</p>
+<table>
+<thead>
+<tr>
+<th>16 Start bytes</th>
+<th>Address in GME file</th>
+<th>Length</th>
+<th>Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>01 00 00 00 . 00 00 00 00 . 00 00 00 00 . 00 00 00 00</td>
+<td>22 C2 55 02</td>
+<td>10 0B 00 00</td>
+<td>4F 69 64 4D 61 69 6E 2E</td>
+</tr>
+<tr>
+<td>"01" 後跟 15 個零位元組</td>
+<td>0x0255C222</td>
+<td>0xB10 = 2832 位元組</td>
+<td>"OidMain."</td>
+</tr>
+</tbody>
+</table>
+</article>
+<article id="GME-Game-Examples"><h1>GME Game Examples</h1>
+<ul>
+<li><a href="#gametype-6">Gametype 6</a>  </li>
+<li><a href="#gametype-8">Gametype 8</a>  </li>
+<li><a href="#gametype-9">Gametype 9</a>  </li>
+<li><a href="#gametype-10">Gametype 10</a>  </li>
+<li><a href="#gametype-16">Gametype 16</a>  </li>
+</ul>
+<h2 id="gametype-6">Gametype 6</h2>
+<hr>
+<h3 id="5">道路交通，第 5 款遊戲</h3>
+<p>7 子遊戲，7 輪，3 獎勵子遊戲，3 獎勵輪</p>
+<pre><code>0x000177C0:                         06 00 07 00 07 00 03 00
+                                    aa aa bb bb rr rr cc cc
+0x000177D0: 03 00 07 00 00 00 06 00 02 00 91 04 00 00 00 00
+            ii ii ii ii ii ii zz zz qq qq yy yy xx xx ww ww
+0x000177E0: 00 00 02 7D 01 00 14 7D 01 00 16 7D 01 00 30 7D
+            vv vv dd dd dd dd dd dd dd dd dd dd dd dd dd dd
+0x000177F0: 01 00 32 7D 01 00 3C 7D 01 00 3E 7D 01 00 2A 7B
+            dd dd dd dd dd dd hh hh hh hh hh hh hh hh ee ee
+0x00017800: 01 00 66 78 01 00 DC 78 01 00 52 79 01 00 C8 79
+            ee ee ee ee ee ee ee ee ee ee ee ee ee ee ee ee
+0x00017810: 01 00 3E 7A 01 00 B4 7A 01 00 A0 7B 01 00 16 7C
+            ee ee ee ee ee ee ff ff ff ff ff ff ff ff ff ff
+0x00017820: 01 00 8C 7C 01 00 07 00 00 00 03 00 02 00 01 00
+            ff ff ff ff ff ff uu uu uu uu uu uu uu uu uu uu
+0x00017830: 00 00 00 00 00 00 00 00 00 00 48 7D 01 00 56 7D
+            uu uu uu uu uu uu uu uu uu uu gg gg gg gg gg gg
+0x00017840: 01 00 58 7D 01 00 6A 7D 01 00 7E 7D 01 00 92 7D
+            gg gg gg gg gg gg gg gg gg gg gg gg gg gg gg gg
+0x00017850: 01 00 A4 7D 01 00 A6 7D 01 00 A8 7D 01 00 AA 7D
+            gg gg gg gg gg gg gg gg gg gg gg gg gg gg gg gg
+0x00017860: 01 00 AC 7D 01 00
+            gg gg jj jj jj jj
+</code></pre>
+<h2 id="gametype-8">Gametype 8</h2>
+<hr>
+<h3 id="8">農場，第 8 款遊戲</h3>
+<p>3 款遊戲的切換遊戲</p>
+<pre><code>0x00019F00:                                              08
+                                                         aa
+0x00019F10: 00 00 00 00 00 00 00 00 00 99 06 00 00 6F 00 DE
+            aa bb bb rr rr cc cc zz zz yy yy xx xx ww ww vv
+0x00019F20: 00 81 9F 01 00 8D 9F 01 00 8F 9F 01 00 91 9F 01
+            vv dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd
+0x00019F30: 00 93 9F 01 00 00 00 00 00 00 00 00 00 00 00 00
+            dd dd dd dd dd uu uu uu uu uu uu uu uu uu uu uu
+0x00019F40: 00 00 00 00 00 00 00 00 00 95 9F 01 00 97 9F 01
+            uu uu uu uu uu uu uu uu uu gg gg gg gg gg gg gg
+0x00019F50: 00 99 9F 01 00 9B 9F 01 00 9D 9F 01 00 9F 9F 01
+            gg gg gg gg gg gg gg gg gg gg gg gg gg gg gg gg
+0x00019F60: 00 A1 9F 01 00 A3 9F 01 00 A5 9F 01 00 A7 9F 01
+            gg gg gg gg gg gg gg gg gg gg gg gg gg gg gg gg
+0x00019F70: 00 A9 9F 01 00 B1 9F 01 00 B9 9F 01 00 BB 9F 01
+            gg jj jj jj jj kk kk kk kk ll ll ll ll ll ll ll
+0x00019F80: 00
+            ll
+</code></pre>
+<h2 id="gametype-9">Gametype 9</h2>
+<hr>
+<h3 id="3">神秘面具，第 3 款遊戲</h3>
+<pre><code>0x0001BDD0:                09 00 01 00 01 00 00 00 00 00 DE
+                           aa aa bb bb rr rr cc cc zz zz yy
+0x0001BDE0: 22 00 00 00 00 00 00 A5 BF 01 00 B9 BF 01 00 BB
+            yy xx xx ww ww vv vv dd dd dd dd dd dd dd dd dd
+0x0001BDF0: BF 01 00 BD BF 01 00 BF BF 01 00 67 BF 01 00 00
+            dd dd dd dd dd dd dd dd dd dd dd ee ee ee ee uu
+0x0001BE00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+            uu uu uu uu uu uu uu uu uu uu uu uu uu uu uu uu
+0x0001BE10: 00 00 00 C1 BF 01 00 C3 BF 01 00 C5 BF 01 00 C7
+            uu uu uu gg gg gg gg gg gg gg gg gg gg gg gg gg
+0x0001BE20: BF 01 00 C9 BF 01 00 CB BF 01 00 CD BF 01 00 CF
+            gg gg gg gg gg gg gg gg gg gg gg gg gg gg gg gg
+0x0001BE30: BF 01 00 D1 BF 01 00 D3 BF 01 00 D5 BF 01 00 EF
+            gg gg gg gg gg gg gg gg gg gg gg jj jj jj jj jj
+0x0001BE40: BF 01 00 F9 BF 01 00 03 C0 01 00 0D C0 01 00 19
+            jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj
+0x0001BE50: C0 01 00 23 C0 01 00 2F C0 01 00 71 C0 01 00 73
+            jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj
+0x0001BE60: C0 01 00 75 C0 01 00 77 C0 01 00 79 C0 01 00 7B
+            jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj
+0x0001BE70: C0 01 00 7D C0 01 00 7F C0 01 00 81 C0 01 00 83
+            jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj
+0x0001BE80: C0 01 00 85 C0 01 00 87 C0 01 00 89 C0 01 00 8B
+            jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj
+0x0001BE90: C0 01 00 8D C0 01 00 8F C0 01 00 91 C0 01 00 93
+            jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj
+0x0001BEA0: C0 01 00 95 C0 01 00 97 C0 01 00 99 C0 01 00 9B
+            jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj
+0x0001BEB0: C0 01 00 9D C0 01 00 9F C0 01 00 A1 C0 01 00 A3
+            jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj
+0x0001BEC0: C0 01 00 A5 C0 01 00 A7 C0 01 00 A9 C0 01 00 AB
+            jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj
+0x0001BED0: C0 01 00 AD C0 01 00 AF C0 01 00 B1 C0 01 00 B3
+            jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj
+0x0001BEE0: C0 01 00 B5 C0 01 00 B7 C0 01 00 B9 C0 01 00 BB
+            jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj
+0x0001BEF0: C0 01 00 BD C0 01 00 BF C0 01 00 C1 C0 01 00 C3
+            jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj
+0x0001BF00: C0 01 00 C5 C0 01 00 C7 C0 01 00 C9 C0 01 00 CB
+            jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj
+0x0001BF10: C0 01 00 CD C0 01 00 CF C0 01 00 D1 C0 01 00 D3
+            jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj
+0x0001BF20: C0 01 00 D5 C0 01 00 D7 C0 01 00 D9 C0 01 00 DB
+            jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj
+0x0001BF30: C0 01 00 DD C0 01 00 DF C0 01 00 E1 C0 01 00 E3
+            jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj
+0x0001BF40: C0 01 00 E5 C0 01 00 E7 C0 01 00 E9 C0 01 00 EB
+            jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj
+0x0001BF50: C0 01 00 ED C0 01 00 EF C0 01 00 F1 C0 01 00 F3
+            jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj jj
+0x0001BF60: C0 01 00 F5 C0 01 00
+            jj jj jj jj jj jj jj
+</code></pre>
+<h2 id="gametype-10">Gametype 10</h2>
+<hr>
+<h3 id="2">英語偵探，第 2 款遊戲</h3>
+<pre><code>0x00002190:          0A 00 0A 00 00 00 00 00 00 00 00 00 4F
+                     aa aa bb bb rr rr cc cc zz zz yy yy xx
+0x000021A0: 0C 50 0C 4E 0C CD 25 00 00 E1 25 00 00 EB 25 00
+            xx ww ww vv vv dd dd dd dd dd dd dd dd dd dd dd
+0x000021B0: 00 FB 25 00 00 FD 25 00 00 21 22 00 00 7F 22 00
+            dd dd dd dd dd dd dd dd dd ee ee ee ee ee ee ee
+0x000021C0: 00 DD 22 00 00 3B 23 00 00 99 23 00 00 F7 23 00
+            ee ee ee ee ee ee ee ee ee ee ee ee ee ee ee ee
+0x000021D0: 00 55 24 00 00 B3 24 00 00 11 25 00 00 6F 25 00
+            ee ee ee ee ee ee ee ee ee ee ee ee ee ee ee ee
+0x000021E0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+            ee uu uu uu uu uu uu uu uu uu uu uu uu uu uu uu
+0x000021F0: 00 00 00 00 00 FF 25 00 00 01 26 00 00 03 26 00
+            uu uu uu uu uu gg gg gg gg gg gg gg gg gg gg gg
+0x00002200: 00 05 26 00 00 07 26 00 00 09 26 00 00 0B 26 00
+            gg gg gg gg gg gg gg gg gg gg gg gg gg gg gg gg
+0x00002210: 00 0D 26 00 00 0F 26 00 00 11 26 00 00 13 26 00
+            gg gg gg gg gg gg gg gg gg gg gg gg gg jj jj jj
+0x00002220: 00
+            jj
+</code></pre>
+<h2 id="gametype-16">Gametype 16</h2>
+<hr>
+<h3 id="11">機場，第 11 款遊戲</h3>
+<pre><code>0x0001EFB0:    10 00 07 00 07 00 00 00 00 00 13 07 00 00 00
+               aa aa bb bb rr rr cc cc zz zz yy yy xx xx ww
+0x0001EFC0: 00 00 00 83 F4 01 00 8F F4 01 00 91 F4 01 00 A1
+            ww vv vv dd dd dd dd dd dd dd dd dd dd dd dd dd
+0x0001EFD0: F4 01 00 A3 F4 01 00 3F F0 01 00 D9 F0 01 00 73
+            dd dd dd dd dd dd dd ee ee ee ee ee ee ee ee ee
+0x0001EFE0: F1 01 00 0D F2 01 00 A7 F2 01 00 49 F3 01 00 E5
+            ee ee ee ee ee ee ee ee ee ee ee ee ee ee ee ee
+0x0001EFF0: F3 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+            ee ee ee uu uu uu uu uu uu uu uu uu uu uu uu uu
+0x0001F000: 00 00 00 00 00 00 00 A5 F4 01 00 A7 F4 01 00 A9
+            uu uu uu uu uu uu uu gg gg gg gg gg gg gg gg gg
+0x0001F010: F4 01 00 AB F4 01 00 AD F4 01 00 AF F4 01 00 B1
+            gg gg gg gg gg gg gg gg gg gg gg gg gg gg gg gg
+0x0001F020: F4 01 00 B3 F4 01 00 B5 F4 01 00 B7 F4 01 00 B9
+            gg gg gg gg gg gg gg gg gg gg gg gg gg gg gg jj
+0x0001F030: F4 01 00 C9 F4 01 00 CB F4 01 00 D5 F4 01 00
+            jj jj jj kk kk kk kk kk kk kk kk kk kk kk kk
+</code></pre>
+</article>
+<article id="GME-Game-Table"><h1>GME Game Table</h1>
+<p>遊戲表格的偏移位於 '0x0010'</p>
+<p>來自 WWW Bauernhof 的範例</p>
+<pre><code>0001703d  0c 00 00 00 71 70 01 00  35 7a 01 00 91 7f 01 00
+          aa aa aa aa bb bb bb bb  bb bb bb bb bb bb bb bb
+0001704d  cd 82 01 00 59 8a 01 00  e7 8e 01 00 4f 97 01 00 
+          bb bb bb bb bb bb bb bb  bb bb bb bb bb bb bb bb
+0001705d  0f 9f 01 00 c7 9f 01 00  69 a1 01 00 69 ad 01 00 
+          bb bb bb bb bb bb bb bb  bb bb bb bb bb bb bb bb
+0001706d  fb b2 01 00 
+          bb bb bb bb
+</code></pre>
+<p><strong>a:</strong> 32bit 計數器（[[games|GME Games]] 的數量）<br>
+<strong>b:</strong> a * 32bit 指標指向 <a href="https://github.com/entropia/tip-toi-reveng/wiki/GME-Games">game header</a></p>
+</article>
+<article id="GME-Games"><h1>GME Games</h1>
+<h3 id="_1">標頭</h3>
+<p>範例（Bauernhof，第 6 款遊戲）：</p>
+<pre><code>0x00018EE0:                      06 00 05 00 05 00 04 00 03
+                                 aa aa bb bb rr rr cc cc ss
+0x00018EF0: 00 05 00 00 00 04 00 03 00 49 06 00 00 6F 00 DE
+            ss tt tt ii ii zz zz qq qq yy yy xx xx ww ww vv
+0x00018F00: 00 F7 93 01 00 03 94 01 00 05 94 01 00 07 94 01
+            vv dd dd dd dd dd dd dd dd dd dd dd dd dd dd dd
+0x00018F10: 00 13 94 01 00 1F 94 01 00 2B 94 01 00 7B 91 01
+            dd dd dd dd dd hh hh hh hh hh hh hh hh ee ee ee
+0x00018F20: 00 81 8F 01 00 FF 8F 01 00 7D 90 01 00 FB 90 01
+            ee ee ee ee ee ee ee ee ee ee ee ee ee ee ee ee
+0x00018F30: 00 FD 91 01 00 7D 92 01 00 FB 92 01 00 79 93 01
+            ee ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+0x00018F40: 00 03 00 00 00 03 00 00 00 00 00 00 00 00 00 00
+            ff uu uu uu uu uu uu uu uu uu uu uu uu uu uu uu
+0x00018F50: 00 00 00 00 00 37 94 01 00 49 94 01 00 57 94 01
+            uu uu uu uu uu gg gg gg gg gg gg gg gg gg gg gg
+0x00018F60: 00 65 94 01 00 73 94 01 00 75 94 01 00 77 94 01
+            gg gg gg gg gg gg gg gg gg gg gg gg gg gg gg gg
+0x00018F70: 00 79 94 01 00 7B 94 01 00 7D 94 01 00 7F 94 01
+            gg gg gg gg gg gg gg gg gg gg gg gg gg jj jj jj
+0x00018F80: 00
+            jj
+</code></pre>
+<ul>
+<li><strong>a:</strong> 16bit，遊戲類型  </li>
+<li><strong>b:</strong> 16bit，計數：[[subgames|GME Subgames]] 的數量  </li>
+<li><strong>r:</strong> 16bit，本遊戲中要玩的回合數  </li>
+<li><strong>c:</strong> 16bit，對於遊戲類型 6：獎勵遊戲的子遊戲數量；其他遊戲類型的可能值為 0 和 1  </li>
+<li><strong>s（僅遊戲類型 6 存在）：</strong> 16bit，獎勵遊戲中要玩的回合數  </li>
+<li><strong>t（僅遊戲類型 6 存在）：</strong> 16bit，主要遊戲中正確答案數量以進入獎勵遊戲  </li>
+<li><strong>i（僅遊戲類型 6 存在）：</strong> 16bit，未知  </li>
+<li><strong>z:</strong> 16bit：從「下一回合前」聲音開始的回合數，之後播放「最後一回合前」聲音  </li>
+<li><strong>q（僅遊戲類型 6 存在）：</strong> 16bit，未知  </li>
+<li><strong>y:</strong> 16bit：定義觸發「重複上次媒體」動作的 [[OID]]  </li>
+<li><strong>x:</strong> 16bit，未知（「Englisch Detektive」中為 3151）<br>
+3151 是「Englisch Detektive」中的空腳本  </li>
+<li><strong>w:</strong> 16bit，未知（所有「Bauernhof」遊戲中為 111，「Englisch Detektive」中為 3152）<br>
+111 不是「Bauernhof」的有效 OID<br>
+3152 是「Englisch Detektive」中的空腳本  </li>
+<li><strong>v:</strong> 16bit，未知（所有 Bauernhof 遊戲中為 222，「Englisch Detektive」中為 3150）<br>
+222 不是「Bauernhof」的有效 OID，3150 是「Englisch Detektive」中的空腳本  </li>
+<li><strong>d:</strong> 5（似乎硬編碼）* 32bit 指向 playlistlist 的指標</li>
+<li><strong>playlistlist 1:</strong><br>
+遊戲開始時播放  </li>
+<li><strong>playlistlist 2:</strong><br>
+在第 1 到 r 回合結束時播放（由左至右）  </li>
+<li><strong>playlistlist 3:</strong><br>
+遊戲結束後播放（隨機選擇一個 playlist）  </li>
+<li><strong>playlistlist 4:</strong><br>
+在第 2 到 z 回合開始時播放</li>
+<li><strong>playlistlist 5:</strong><br>
+在第 z+1 回合開始時播放</li>
+<li><strong>h（僅遊戲類型 6 存在）：</strong> 2 * 32bit 指向 playlistlist 的指標。從某些產品中這裡引用的媒體來判斷，這些 playlist 似乎被忽略。有時這些 playlist 與 d 的最後兩個相同。  </li>
+<li><strong>playlistlist 1:</strong><br>
+在回合開始時播放  </li>
+<li><strong>playlistlist 2:</strong><br>
+在最後一回合開始時播放     </li>
+<li><strong>e:</strong> b * 32bit 指向子遊戲的指標  </li>
+<li><strong>f（僅遊戲類型 6 存在）：</strong> c * 32bit 指向第二組子遊戲的指標  </li>
+<li><strong>u:</strong> 10（似乎硬編碼）<em> 16bit<br>
+對於 playlistlist g 中的每個 playlist，u 包含一個 16bit 值。在遊戲結束時，從左至右檢查 u。每個 u 中的數字與正確答案數量比較。第一個 &lt;= 正確答案數量的 u 數字定義要播放的 playlist。u 必須按降序排列。<br>
+</em><em>範例：</em><em> u 包含 [5,3,1,0,0,0,0,0,0,0]。<br>
+這表示：如果玩家有 5 個或更多正確答案，播放 g 的第一個 playlist；如果有 3 或 4 個正確答案，播放第二個 playlist；如果至少有一個正確答案，播放第三個 playlist，否則播放第四個。<br>
+</em><em>對於遊戲類型 6 行為不同：</em><em><br>
+前兩個值關於主要遊戲，其餘關於獎勵遊戲。<br>
+</em><em>範例：</em>* u 包含 [8,0,1,0,0,0,0,0,0,0]。<br>
+這表示：如果玩家在主要遊戲中有 8 個或更多正確答案，播放 g 的第 1 個 playlist，否則播放第 2 個。<br>
+如果玩家在獎勵遊戲中有 1 個或更多正確答案，播放 g 的第 3 個 playlist，否則播放第 4 個。  </li>
+<li><strong>g:</strong> 10（似乎硬編碼）* 32bit 指向 playlistlist 的指標  </li>
+</ul>
+<p>現在根據遊戲類型不同<br>
+<strong>遊戲類型 6</strong><br>
+<em> </em><em>j:</em>* 1 * 32bit 指向 subgamelist 的指標<br>
+包含獎勵子遊戲的子遊戲 ID。</p>
+<p><strong>遊戲類型 7</strong><br>
+<em> </em><em>j:</em>* 1 * 32bit 指向 subgamelistlist 的指標<br>
+包含子遊戲的子集，例如 [1,2][3,4,5][6,7,8,9]。<br>
+子集可能隨機選擇，但子集中的子遊戲始終從左至右播放。</p>
+<p><strong>遊戲類型 8</strong><br>
+<em> </em><em>j:</em><em> 1 * 32bit 指向 oidlist 的指標<br>
+有效 OID 清單，用於從 k 選擇遊戲。<br>
+</em> <strong>k:</strong> 1 * 32bit 指向 gameidlist 的指標<br>
+可透過指向 j 對應 OID 啟動的遊戲清單。<br>
+<em> </em><em>l:</em>* 2 * 32bit 指向 playlistlist 的指標<br>
+第一個 playlist 始終為空，第二個 playlist 在點讀筆指向錯誤頁面的 OID 時播放。<br>
+由於類型 8 的遊戲未定義有效範圍，似乎從一個或所有連結的遊戲中取得有效範圍。  </p>
+<p><strong>遊戲類型 9</strong><br>
+<em> </em><em>j:</em>* 75 * 32bit 指向 playlistlist 的指標  </p>
+<p><strong>遊戲類型 10</strong><br>
+<em> </em><em>j:</em>* 1 * 32bit 指向 playlistlist 的指標  </p>
+<p><strong>遊戲類型 16</strong><br>
+<em> </em><em>j:</em><em> 1 * 32bit 指向 oidlist 的指標<br>
+</em> <strong>k:</strong> 3 * 32bit 指向 playlistlist 的指標  </p>
+<p><strong>其他遊戲類型</strong><br>
+* 無</p>
+<h3 id="playlistlist">playlistlist</h3>
+<p>範例：</p>
+<pre><code>000176f1 01 00 f7 76 01 00
+         aa aa bb bb bb bb
+</code></pre>
+<ul>
+<li><strong>a:</strong> 16bit 計數（可為零，則無 b）  </li>
+<li><strong>b:</strong> a * 32bit 指向 playlist 的指標  </li>
+</ul>
+<h3 id="playlist">playlist</h3>
+<p>範例：</p>
+<pre><code>000176f7 02 00 b3 01 ba 01
+         aa aa bb bb bb bb
+</code></pre>
+<ul>
+<li><strong>a:</strong> 16bit 計數  </li>
+<li><strong>b:</strong> a * 16bit 要播放的媒體 ID  </li>
+</ul>
+<h3 id="oidlist">oidlist</h3>
+<p>範例：</p>
+<pre><code>0x00019FA0:                            03 00 96 06 97 06 98
+                                       aa aa bb bb bb bb bb
+0x00019FB0: 06
+            bb
+</code></pre>
+<ul>
+<li><strong>a:</strong> 16bit 計數  </li>
+<li><strong>b:</strong> a * 16bit oids  </li>
+</ul>
+<h3 id="gameidlist">gameidlist</h3>
+<p>範例：</p>
+<pre><code>0x00019FB0:    03 00 09 00 0A 00 0B 00
+               aa aa bb bb bb bb bb bb
+</code></pre>
+<ul>
+<li><strong>a:</strong> 16bit 計數  </li>
+<li><strong>b:</strong> a * 16bit 遊戲 ID</li>
+</ul>
+</article>
+<article id="GME-Gametypes"><h1>GME Gametypes</h1>
+<ul>
+<li><strong>gametype 0</strong><br>
+?!?</li>
+<li><strong>gametype 1</strong><br>
+基本遊戲，找到正確的 OID 或 OID 清單</li>
+<li><strong>gametype 2</strong><br>
+「我看到你沒看到的一樣東西」，找到正確的 OID，在 x+1 次嘗試中獲得 x 個提示</li>
+<li><strong>gametype 3</strong><br>
+僅在「Bauernhof」（不同語言版本）中使用：「每回合找到 <strong>n</strong> 隻動物寶寶」</li>
+<li><strong>gametype 4</strong><br>
+找到 1 到 n 個物件<br>
+第 1 回合：找到物件 a<br>
+第 2 回合：找到物件 a、b<br>
+第 3 回合：找到物件 a、b、c<br>
+依此類推</li>
+<li><strong>gametype 5</strong><br>
+僅在「Bauernhof」（不同語言版本）中使用：「找到不同的穀物」</li>
+<li><strong>gametype 6</strong><br>
+基本遊戲帶獎勵遊戲</li>
+<li><strong>gametype 7</strong><br>
+基本遊戲，但子遊戲被分組<br>
+群組隨機選擇，但分組的子遊戲從左到右玩</li>
+<li><strong>gametype 8</strong><br>
+用於選擇其他遊戲。範例：<br>
+Bauernhof 第 8 遊戲，Straßenverkehr 第 8 遊戲<br>
+有趣的事實：你可以在任何其他頁面切換到遊戲模式，然後指向其中一顆星星來切換遊戲</li>
+<li><strong>gametype 9</strong> <br>
+?!?</li>
+<li><strong>gametype 10</strong><br>
+僅在「Englisch-Detektive」和「Musik」（不同語言版本）中使用</li>
+<li><strong>gametype 11</strong><br>
+僅在「Englisch-Detektive」（不同語言版本）中使用</li>
+<li><strong>gametype 12</strong><br>
+僅在「Englisch-Detektive」（不同語言版本）中使用</li>
+<li><strong>gametype 13</strong><br>
+僅在「Englisch-Detektive」（不同語言版本）中使用</li>
+<li><strong>gametype 14</strong><br>
+僅在「Englisch-Detektive」（不同語言版本）中使用</li>
+<li><strong>gametype 15</strong><br>
+僅在「Englisch-Detektive」（不同語言版本）中使用</li>
+<li><strong>gametype 16</strong><br>
+僅在「Feuerwehr」和「Englisch-Detektive」（不同語言版本）中使用</li>
+<li><strong>gametype 17</strong><br>
+僅在「Feuerwehr」和「Englisch-Detektive」（不同語言版本）中使用</li>
+<li><strong>gametype 18</strong><br>
+僅在「Feuerwehr」中使用</li>
+<li><strong>gametype 19</strong><br>
+僅在「Wir lernen Englisch」（不同語言版本）中使用</li>
+<li><strong>gametype 20</strong><br>
+僅在「Wir lernen Englisch」（不同語言版本）中使用</li>
+<li><strong>gametype 21</strong><br>
+僅在「Wir lernen Englisch」（不同語言版本）中使用</li>
+<li><strong>gametype 22</strong><br>
+僅在「Wald」和「Piraten」（不同語言版本）中使用</li>
+<li><strong>gametype 23</strong><br>
+僅在「Wald」（不同語言版本）中使用</li>
+<li><strong>gametype 30</strong><br>
+僅在「Leserabe Pony」中使用</li>
+<li><strong>gametype 40</strong>  </li>
+<li><strong>gametype 253</strong><br>
+Type 253 是特殊的，只包含值 0x00fd。據推測這是一種（額外的）「遊戲結束」標記，雖然這是多餘的，因為遊戲數量也可以在遊戲表格中找到。<br>
+[在本文件早期版本中註明，緊接在 0x00fd 之後的開機音效播放清單屬於此遊戲。但由於此播放清單在標頭 (0x0071) 中被引用，這現在似乎是錯誤的。]</li>
+</ul>
+</article>
+<article id="GME-Header"><h1>GME Header</h1>
+<p>長度：512 位元組</p>
+<p>標頭以這 8 個 32 位元數字開始，並列出其偏移量：<br>
+ * <code>0x0000</code>: 32bit offset to the [[play script table|GME Script table]]<br>
+ * <code>0x0004</code>: 32bit offset to the [[media file table|GME Media file table]]<br>
+ * <code>0x0008</code>: 32bit。若在可運行的遊戲檔案中更改此值，將不再被接受。其值為所有目前見過的 tiptoi 產品皆為 0x0000238b。可能是 Chomptech 的 Ravensburger 客戶編號。<br>
+ * <code>0x000C</code>: 32bit。到一個 [[additional script table|GME Additional script table]] 的偏移量。用途未知。<br>
+ * <code>0x0010</code>: 32bit。到 [[game table|GME Game Table]] 的偏移量<br>
+ * <code>0x0014</code>: 32bit。產品 ID 碼 (== 第 1 頁開機符號的 OID 碼)<br>
+ * <code>0x0018</code>: 32bit。指向暫存器初始化值的指標 (16bit 計數器後接 n×16bit 值。第一個值為暫存器 $0，接著 $1 等等。)<br>
+ * <code>0x001C</code>: 原始 XOR 值 (8bit)，見 [[media file table|GME Media file table]] 說明。<br>
+ * <code>0x001D</code>: 三個位元組，意義未知，目前所有見過的產品皆為 0。<br>
+ * <code>0x0020</code>: 一個 <s>可變長度</s> 字串，由其長度 (8bit) 及該長度的字元組成。新發現顯示字串必須由 48 或 49 位元組組成 (至少對非德文點讀筆而言)。常見為 <code>CHOMPTECH DATA FORMAT CopyRight 2009 Ver2.xx.yyyy</code> (產品間有所不同，xx 也可能僅一位數)。<br>
+ * 接著是 8 位數字日期字串 (<code>20111024</code>)。日期字串似乎為可選，但有一條件：若後接語言字串，則日期必須至少包含一個 ASCII 數字。<br>
+ * 接著是可選語言字串。目前已知：<code>GERMAN</code>、<code>DUTCH</code>、<code>FRENCH</code>、<code>ITALIA</code>、<code>RUSSIA</code>、<code>ENGLISH</code>。若提供語言字串，則必須符合點讀筆上運行的韌體語言 (不清楚檢查位置；檔案 .tiptoi.log 在此不被考慮！)，否則點讀筆將忽略它。若缺少語言，任何 TipToi 點讀筆皆會接受該檔案。點讀筆讀取語言字串不超過 6 個字元。<br>
+ * 接著是一連串零直到位置 0x5f 包含在內。<br>
+ * <code>0x0060</code>: 到一個 [[additional media file table|GME media file table]] 的 32bit 偏移量<br>
+ * <code>0x0071</code>: 到 [[playlistlist|GME Playlistlist]] 的 32bit 偏移量，用於開機聲音 (當辨識產品時播放。若為 0，則不播放聲音。)</p>
+<p>以下條目可能僅從 Version 2.10.0901 起存在：<br>
+ * <code>0x008C</code>: 到 32bit 值表格的 32bit 偏移量，看似特殊 [[media flag table|GME media flag table]]？有些產品在此為 0。<br>
+ * <code>0x0090</code>: 到 [[game binaries table|GME Game binaries table]] 的 32bit 偏移量 (可能是 ZC3201 的遊戲)<br>
+ * <code>0x0094</code>: 到 [[special symbols|GME Special symbols]] 的 32bit 偏移量<br>
+ * <code>0x0098</code>: 到另一個 [[game binaries table|GME Game binaries table]] 的 32bit 偏移量 (可能是 ZC3202N 的遊戲)<br>
+ * <code>0x009C</code>: 32bit。用途未知，總為 0。<br>
+ * <code>0x00A0</code>: 到另一個單一 binary 的 [[game binaries table|GME Game binaries table]] 的 32bit 偏移量 (可能是 ZC3201 的主 binary)<br>
+ * <code>0x00A4</code>: 32bit 旗標。可為 0 或 1。<br>
+值 0：標頭其餘部分填滿 0。<br>
+值 1：標頭包含以下一個或多個偏移量。<br>
+ * <code>0x00A8</code>: 到另一個單一 binary 的 [[game binaries table|GME Game binaries table]] 的 32bit 偏移量 (可能是 ZC3202N 的主 binary)<br>
+ * <code>0x00C8</code>: 到另一個單一 binary 的 [[game binaries table|GME Game binaries table]] 的 32bit 偏移量 (可能是 ZC3203L 的主 binary)<br>
+ * <code>0x00CC</code>: 到另一個 [[game binaries table|GME Game binaries table]] 的 32bit 偏移量 (可能是 ZC3203L 的遊戲)<br>
+ * 接著是一連串零直到位置 <code>0x01FF</code> 包含在內。</p>
+</article>
+<article id="GME-Media-file-table"><h1>GME Media file table</h1>
+<p>媒體檔案表格由偏移量和長度（兩者皆為 32 位元組）的配對組成。<br>
+此清單中記錄數似乎沒有明確定義，因此我們會持續檢查直到<br>
+ * 清單中第一個參照的媒體內容開始，<br>
+ * 或出現 [[additional media file table|GME media file table]]，其後接著第一個<br>
+   媒體內容。</p>
+<p>媒體檔案本身使用簡單的加密方案，採用神奇 XOR 值 (<code>x</code>)：<br>
+   - 值 <code>0x00</code>、<code>0xFF</code>、<code>x</code> 和 <code>x XOR 0xFF</code> 保持不變<br>
+   - 其他所有值則逐位元組以 x 進行 XOR 運算。</p>
+<p>神奇 XOR 值可透過找出使第一個媒體檔案的前 4 位元組讀取為 <code>OggS</code> 或 <code>RIFF</code> 的數字來取得。</p>
+<p>在位置 <code>0x001c</code> 的標頭中，有韌體用來推算真實 XOR 值的原始 XOR 值。它可能使用某種演算法或查詢表。目前觀察到的所有 TipToi gme 檔案在此處的相同原始 XOR 值會導向相同的真實 XOR 值。截至目前，已透過檢查現有 gme 檔案識別出約 55 種不同的組合。</p>
+<p>[[additional media file table|GME media file table]] 的用途不明。對許多檔案而言，它與主要音訊表格相同，對某些檔案僅單一檔案不同。</p>
+<p>也許 [[media flag table|GME media flag table]] 只適用於這兩個表格之一。</p>
+</article>
+<article id="GME-Media-flag-table"><h1>GME Media flag table</h1>
+<ul>
+<li>它緊接在暫存器初始化值之後。  </li>
+<li>僅見於包含二進位檔案的 GME 檔案中。  </li>
+<li>由 32 位元值組成，通常為 "01 00 00 00"。  </li>
+<li>32 位元值的數量對應於媒體檔案的數量。</li>
+<li>對於 "Die verrueckte Weltreise"，所有值均為 "01 00 00 00" (== 1)，除了媒體檔案 205 和 234，那裡為 "00 00 00 00" (== 0)。 </li>
+<li>用途未知。</li>
+</ul>
+<h3 id="_1">舊推測，可能錯誤：</h3>
+<p>來自 "Der interaktive Globus" 的範例：  </p>
+<p>僅有一個「正常」暫存器...  </p>
+<pre><code>0x00041260:                                        01 00 01
+0x00041270: 00
+</code></pre>
+<p>...但有 2014 個這樣的 32 位元值：  </p>
+<pre><code>0x00041270:    01 00 00 00 01 00 00 00 01 00 00 00 01 00 00
+(skipping 502 lines)
+0x000431E0: 00 01 00 00 00 01 00 00 00
+</code></pre>
+</article>
+<article id="GME-Play-script"><h1>GME Play script</h1>
+<p>一個播放腳本由一個 16 位元數字（定義後續清單的長度）和一個 32 位元偏移量清單所組成。這些偏移量指向 [[script lines|GME Script line]]。</p>
+</article>
+<article id="GME-Playlist"><h1>GME Playlist</h1>
+<p>播放清單由一個 16 位元數字（定義後續清單的長度）以及一個指向 [[media file table|GME Media file table]] 的 16 位元索引清單所組成。由於「隨機播放」指令僅認識用於範圍定義的 8 位元值，因此播放清單的大小可能限制為 256 個索引。</p>
+</article>
+<article id="GME-Playlistlist"><h1>GME Playlistlist</h1>
+<p>一個參照 [[playlists|GME Playlist]] 的清單。一個 16 位元值，後跟該數量的 32 位元偏移量指向播放清單。</p>
+</article>
+<article id="GME-Register-init-values"><h1>GME Register init values</h1>
+<p>這是一個 16 位元值，用來定義產品中使用的暫存器數量，後面接著該數量的 16 位元值。第一個值是暫存器 <code>$0</code> 的初始值，接著是 <code>$1</code> 等等<br>
+暫存器可以存放 16 位元值，並在播放腳本中被引用。</p>
+</article>
+<article id="GME-Script-line"><h1>GME Script line</h1>
+<p>一行腳本由一組<a href="#conditionals">條件式</a>、一組<a href="#actions">動作</a>，以及所謂的[[playlist|GME Playlist]]組成，該播放清單包含[[media file table|GME Media file table]]索引。</p>
+<p>一行腳本的格式為  <code>aaaa  conditionals... bbbb  actions... cccc media...</code>，其中<br>
+ * <code>a</code> (uint16) 是條件式的數量。每個條件式由 8 個位元組組成。<br>
+ * <code>b</code> (uint16) 是動作的數量。每個動作為 7 個位元組。<br>
+ * <code>c</code> (uint16) 是一個播放清單</p>
+<h3 id="_1">條件式</h3>
+<p>條件式的格式為 <code>t1 aaaa cccc t2 bbbb</code><br>
+ * <code>t1</code> &amp; <code>t2</code> (uint8) 分別為 <code>a</code> 和 <code>b</code> 的類型 (0 == register, 1 == value)<br>
+ * <code>a</code> &amp; <code>b</code> (uint16) 暫存器的值或 ID<br>
+ * <code>c</code> (uint16) 是<a href="#comparison-operators">比較運算子</a><br>
+只有當暫存器與值或其他暫存器的比較成立時，才會考慮該行的其餘部分。</p>
+<h3 id="_2">比較運算子</h3>
+<p>已知的比較運算子有：<br>
+ * <code>FFF9</code> (在 tttool 的輸出和 yaml 檔案中寫為 <code>$r==m?</code>)：等於<br>
+ * <code>FFFA</code> (在 tttool 的輸出中寫為 <code>$r&gt;m?</code>)：大於<br>
+ * <code>FFFB</code> (在 tttool 的輸出中寫為 <code>$r&lt;m?</code>)：小於<br>
+ * <code>FFFD</code> (在 tttool 的輸出中寫為 <code>$r&gt;=m?</code>)：大於或等於<br>
+ * <code>FFFE</code> (在 tttool 的輸出中寫為 <code>$r&lt;=?</code>)：小於或等於<br>
+ * <code>FFFF</code> (在 tttool 的輸出中寫為 <code>$r!=m?</code>)：不等於</p>
+<h3 id="_3">動作</h3>
+<p>動作的格式為 <code>rrrr cccc tt mmmm</code><br>
+ * <code>r</code> (uint16) 暫存器的 ID<br>
+ * <code>c</code> (uint16) 是<a href="#commands">指令</a><br>
+ * <code>t</code> (uint8) <code>m</code> 的類型 (0 == register, 1 == value)<br>
+ * <code>m</code> (uint16) 值或暫存器的 ID</p>
+<h3 id="_4">指令</h3>
+<p>已知的指令有：<br>
+ * <code>FFF0</code> (寫為 <code>$r+=m</code>)：<strong>遞增</strong> 暫存器 <code>$r</code> 加上 <code>m</code> 或 <code>$m</code> 的值<br>
+ * <code>FFF1</code> (寫為 <code>$r-=m</code>)：<strong>遞減</strong> 暫存器 <code>$r</code> 減去 <code>m</code> 或 <code>$m</code> 的值<br>
+ * <code>FFF2</code> (寫為 <code>$r*=m</code>)：<strong>乘法</strong> 暫存器 <code>$r</code> 乘以 <code>m</code> 或 <code>$m</code> 的值<br>
+ * <code>FFF3</code> (寫為 <code>$r%=m</code>)：將暫存器 <code>$r</code> 設為 <code>$r</code> <strong>模</strong> <code>m</code><br>
+ * <code>FFF4</code> (寫為 <code>$r/=m</code>)：將暫存器 <code>$r</code> 設為 <code>$r</code> <strong>除</strong> <code>m</code><br>
+ * <code>FFF5</code> (寫為 <code>$r&amp;=m</code>)：位元 <strong>AND</strong> 到暫存器 <code>$r</code> 加上 <code>m</code> 的值<br>
+ * <code>FFF6</code> (寫為 <code>$r|=m</code>)：位元 <strong>OR</strong> 到暫存器 <code>$r</code> 加上 <code>m</code> 的值<br>
+ * <code>FFF7</code> (寫為 <code>$r^=m</code>)：位元 <strong>XOR</strong> 到暫存器 <code>$r</code> 加上 <code>m</code> 的值<br>
+ * <code>FFF8</code> (寫為 <code>Neg($r)</code>)：<strong>取反</strong> 暫存器 <code>$r</code>。<br>
+ * <code>FFF9</code> (寫為 <code>$r:=m</code>)：<strong>設定</strong> 暫存器 <code>$r</code> 為 <code>m</code> 或 <code>$m</code> 的值<br>
+ * <code>FFE0</code> (寫為 <code>P*()</code>：<strong>播放一個</strong> 媒體清單中的隨機樣本<br>
+ * <code>FFE1</code> (寫為 <code>PA*()</code>：<strong>播放所有</strong> 媒體清單中的樣本<br>
+ * <code>FFE8</code> (寫為 <code>P(m)</code>)：<strong>播放</strong> 索引清單中第 <strong><code>m</code></strong> 個條目的音訊。<br>
+ * <code>FB00</code> (寫為 <code>PA(b-a)</code>)：<strong>播放所有</strong> 該包容範圍內的樣本。<code>a</code> := lowbyte(<code>m</code>), <code>b</code> := highbyte(<code>m</code>)<br>
+ * <code>FC00</code> (寫為 <code>P(b-a)</code>)：<strong>播放一個</strong> 該包容範圍內的隨機樣本。<code>a</code> := lowbyte(<code>m</code>), <code>b</code> := highbyte(<code>m</code>)<br>
+ * <code>FD00</code> (寫為 <code>G(m)</code>)：<strong>開始遊戲</strong> <code>m</code>。<br>
+ * <code>F8FF</code> (寫為 <code>J(m)</code>)：<strong>跳轉</strong> 到腳本 <code>m</code>。<br>
+ * <code>FAFF</code> (寫為 <code>C</code>)：<strong>取消遊戲</strong> 模式。<br>
+ * <code>FF00</code> (寫為 <code>T($register,123)</code>)：計時器動作。</p>
+<p>目前未知的指令有 <code>FE00</code> 和 <code>FF00</code> (理論上可能還有更多，但這些已在實際使用中出現)。<code>FE00</code> 似乎與計時器和隨機數有關。</p>
+<p>指令 <code>P</code>、<code>G</code>、<code>J</code> 和 <code>C</code> 似乎會忽略它們的暫存器，<code>C</code> 也忽略其參數 (總是 <code>FFFF</code>)。</p>
+<h3 id="01-p0-0">"$0==1?: P(0) [0]" 的範例</h3>
+<p>腳本行：<br>
+"01 00 | 00 00 00 F9 FF 01 01 00 | 01 00 | 00 00 E8 FF 01 00 00 | 01 00 | 00 00"</p>
+<p><sup><em>請注意，這些數字是以 little endian 格式儲存！</em></sup></p>
+<p><strong>條件式數量：</strong> "01 00"<br>
+0x0001 = 1 -&gt; 定義一個條件式</p>
+<p><strong>條件式 1：</strong> "00 00 00 F9 FF 01 01 00"<br>
+0x00 = 0 -&gt; 第一運算元 a 是暫存器<br>
+0x0000 = 0 -&gt; 此暫存器的編號為 0，即第一運算元 a 是暫存器 0 的值<br>
+0xFFF9 -&gt; 比較為等於<br>
+0x01 = 1 -&gt; 第二運算元 b 是絕對值<br>
+0x0001 = 1 -&gt; 第二運算元 b 的值為 1  </p>
+<p><strong>動作數量：</strong> "01 00"<br>
+0x0001 = 1 -&gt; 定義一個動作  </p>
+<p><strong>動作 1：</strong> "00 00 E8 FF 01 00 00"<br>
+0x0000 = 0 -&gt; 使用暫存器 0<br>
+0xFFE8 -&gt; 指令 "Play (m)"<br>
+0x01 = 1 -&gt; 引數 m 是絕對值<br>
+0x0000 = 0 -&gt; 引數 m 的值為 0  </p>
+<p><strong>播放清單中的項目數量：</strong> "01 00"<br>
+0x0001 = 1 -&gt; 播放清單中有一個項目</p>
+<p><strong>播放清單中的項目 1：</strong> "00 00"<br>
+0x0000 = 0 -&gt; 參照音訊檔案 0</p>
+<h3 id="_5">缺少的指令</h3>
+<p>預期存在的但尚未找到或驗證的指令：<br>
+   * 隨機數產生<br>
+   * 計時器程式設計<br>
+   * 迴圈<br>
+   * 從暫存器決定播放內容的播放<br>
+   * 休眠</p>
+</article>
+<article id="GME-Script-table"><h1>GME Script table</h1>
+<p>在 <code>0x0000</code>（通常為 <code>0x0200</code>）所引用的位置，是腳本表格。它由以下組成：<br>
+ * 32 位元組：最後使用的 OID 代碼<br>
+ * 32 位元組：第一個使用的 OID 代碼<br>
+ * 接著是 32 位元組偏移量，指向 [[play scripts|GME Play script]]。這些偏移量與 OID 代碼線性對應。<br>
+   例如 WWW_Bauernhof：第 6 頁的第一隻小豬有 OID 代碼 1499，對應的播放腳本位於 <code>0x766A</code>。腳本表格中的第 100 個 32 位元組單詞包含該偏移量。因此 <code>4×(OID - 1401) = 腳本表格索引 + 8</code>。此範例中的值 1401 是產品中第一個使用的 OID 代碼（腳本表格中的第二個 32 位元組單詞）。<br>
+ * 這些偏移量中的某些為 <code>0xFFFFFFFF</code>。這表示對應的 OID 代碼在產品中未被使用。<br>
+ * 偏移量的結尾可於 (腳本表格 + 8 + 4×(最後使用的 OID 代碼 - 第一個使用的 OID 代碼)) 找到。</p>
+</article>
+<article id="GME-Special-symbols"><h1>GME Special symbols</h1>
+<p>40 位元組</p>
+<p>來自 Puzzle Ponyhof 的範例：</p>
+<pre><code>0x00F05E40:             68 18 00 00 67 18 64 18 65 18 00 00
+                        aa aa bb bb cc cc dd dd ee ee pp pp
+0x00F05E50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+            pp pp pp pp pp pp pp pp pp pp pp pp pp pp pp pp
+0x00F05E60: 00 00 00 00 00 00 00 00 01 00 66 18
+            pp pp pp pp pp pp pp pp ff ff gg gg
+</code></pre>
+<ul>
+<li><strong>a:</strong> 重啟符號的光學識別碼  </li>
+<li><strong>b:</strong> 停止符號的光學識別碼  </li>
+<li><strong>c:</strong> 未知，似乎是跳過符號的光學識別碼（需要確認）  </li>
+<li><strong>d:</strong> 未知  </li>
+<li><strong>e:</strong> 未知（在此範例中：遊戲模式的 OID）  </li>
+<li><strong>p:</strong> 未知，填充？  </li>
+<li><strong>f:</strong> 未知，0 或 1（當 g != 0 時總是 1，但 g = 0 時也可能為 1）  </li>
+<li><strong>g:</strong> 未知，（在此範例中：探索模式）</li>
+</ul>
+</article>
+<article id="GME-Subgames"><h1>GME Subgames</h1>
+<h3 id="_1">標頭</h3>
+<pre><code>000170ff  00 00 00 00 00 00 01 00  01 00 00 00 00 00 00 00 
+          u0 u0 u1 u1 u2 u2 u3 u3  u4 u4 u5 u5 u6 u6 u7 u7
+0001710f  00 00 00 00 02 00 8e 05  9f 05 00 00 21 00 79 05 
+          u8 u8 u9 u9 aa aa bb bb  bb bb cc cc ee ee ff ff
+0001711f  7a 05 7b 05 7c 05 7d 05  83 05 84 05 85 05 86 05
+          ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
+0001712f  87 05 88 05 89 05 8a 05  8b 05 8c 05 8d 05 8e 05 
+          ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
+0001713f  8f 05 90 05 91 05 92 05  93 05 94 05 95 05 96 05 
+          ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
+0001714f  97 05 98 05 99 05 9a 05  9b 05 9c 05 9e 05 9f 05 
+          ff ff ff ff ff ff ff ff  ff ff ff ff ff ff ff ff
+0001715f  f1 76 01 00 fd 76 01 00  07 77 01 00 09 77 01 00
+          gg gg gg gg gg gg gg gg  gg gg gg gg gg gg gg gg
+0001716f  13 77 01 00 15 77 01 00  1f 77 01 00 29 77 01 00 
+          gg gg gg gg gg gg gg gg  gg gg gg gg gg gg gg gg
+0001717f  33 77 01 00 
+          gg gg gg gg
+</code></pre>
+<p><strong>u0:</strong> 16bit, 未知<br>
+<strong>u1:</strong> 16bit, 未知<br>
+<strong>u2:</strong> 16bit, 未知<br>
+<strong>u3:</strong> 16bit, 未知，或許是 b 中必須找到的 OID 數量？0 可能表示全部<br>
+<strong>u4:</strong> 16bit, 未知，在遊戲類型 2 中似乎是最大嘗試次數（例如 4 表示 3 次錯誤嘗試後給提示，第 4 次錯誤結束遊戲）<br>
+<strong>u5:</strong> 16bit, 未知<br>
+<strong>u6:</strong> 16bit, 未知<br>
+<strong>u7:</strong> 16bit, 未知<br>
+<strong>u8:</strong> 16bit, 未知<br>
+<strong>u9:</strong> 16bit, 未知<br>
+<strong>a:</strong> 16bit 計數<br>
+<strong>b:</strong> a * 16bit OID，表示正確答案的 OID<br>
+<strong>c:</strong> 16bit 計數<br>
+<strong>d:</strong> c * 16bit OID，遊戲類型 1 可選，表示錯誤答案的 OID（例如紅星=正確，綠星=錯誤）<br>
+<strong>e:</strong> 16bit 計數<br>
+<strong>f:</strong> e * 16bit OID，遊戲所屬頁面的所有 OID。<br>
+<strong>g:</strong> 9（似乎硬編碼）* 32bit 指向播放清單清單的指標  </p>
+<h3 id="_2">播放清單清單</h3>
+<p><strong>播放清單清單 1:</strong><br>
+子遊戲的起始音效<br>
+<strong>播放清單清單 2:</strong><br>
+正確答案，與播放清單清單 9 的差異未知<br>
+<strong>播放清單清單 3:</strong><br>
+錯誤答案，與播放清單清單 8 的差異未知<br>
+<strong>播放清單清單 4:</strong><br>
+錯誤頁面（OID 不在 f 清單中，通常：「請翻回第 xx 頁」）<br>
+<strong>播放清單清單 5:</strong><br>
+正確答案，但不是第一次（OID 在 b 清單中，但已被點讀過）<br>
+<strong>播放清單清單 6:</strong><br>
+錯誤答案（OID 在 f 清單中，但不在 b 或 d 清單中）<br>
+遊戲類型 2：尋找正確 OID 的提示清單，從左到右播放（第 1、2、3... 次嘗試後）<br>
+<strong>播放清單清單 7:</strong><br>
+正確答案，子遊戲完成（OID 在 b 清單中且無更多 OID 要找）<br>
+<strong>播放清單清單 8:</strong><br>
+錯誤答案（OID 在 d 清單中）<br>
+<strong>播放清單清單 9:</strong><br>
+正確答案，與播放清單清單 2 的差異未知</p>
+</article>
+<article id="RAV-file-format"><h1>RAV file format</h1>
+<p>這頁面旨在收集有關 RAV 檔案格式的資訊，該格式用於新型 tiptoi 搭配音訊播放器（Ravensburger 00700 - tiptoi Stift mit Player）播放音樂和有聲書。</p>
+<p>RAV 檔案範例可從 ravensburger 網站免費下載。如果您沒有帳戶，可以從公開範例路徑推斷下載路徑，如下所示：</p>
+<p>Bla_Bla-Blub-Hoerprobe.mp3 變成 Bla_Bla-Blub.rav（用於書籍）或 Bla_Bla-Blub.zip（用於音樂）</p>
+<p><a href="https://www.tiptoi.com/de/tiptoi-hoerbuch-und-musikshop/hoerbuecher/abenteuer/liliane-susewind-mit-elefanten-spricht-man-nicht-11097174/index.html">這裡有免費範例可供下載</a></p>
+<p>此檔案無需點讀筆即可下載，但只有在輸入點讀筆序號後才會取得有效的（非空的）keyfile。</p>
+<p>歡迎您將發現的任何相關資訊新增至此頁面。</p>
+<p>我從 <a href="https://lists.nomeata.de/mailman/listinfo/tiptoi">tiptoi 郵件列表檔案</a> 中開始收集資訊（感謝 Jens、Carsten、Tobi 和 Uli 分享他們的經驗。這些資訊已翻譯成英文並重新表述）：</p>
+<h2 id="_1">加密</h2>
+<p>顯然，音訊檔案與點讀筆綁定。這似乎是透過為每個點讀筆個別建立的獨立 keyfile 來實現。RAV 檔案本身很可能使用通用金鑰加密，而點讀筆透過解密 keyfile 取得該金鑰。<br>
+<a href="https://wiki.ubuntuusers.de/tiptoi#Hoerspiele-und-Lieder">另請參閱 ubuntu wiki 的 tiptoi 條目</a>。</p>
+<h3 id="keyfiles">Keyfiles</h3>
+<p>Keyfiles 很可能包含解密 RAV 檔案所需的金鑰。每次下載的 keyfile 內容完全不同（即使輸入相同的點讀筆序號），這暗示使用鹽值清單或其他類似加密技術。此外，金鑰也以某種方式使用了您下載時需輸入的點讀筆序號。</p>
+<p>只要 RAV 檔案尚未與點讀筆連結，就只能下載空的 keyfile。</p>
+<h2 id="_2">檔案格式</h2>
+<p>RAV 檔案一律以 "Ravensburgerv03" 開頭，後接一個空字節。此字串在舊款點讀筆的韌體中找不到。觀察後續位元組的統計資料，它們似乎分佈相當均勻（暗示強加密方法）。僅 0x00 和 0xFF 的出現頻率略高於平均值。這表示這些位元組可能會被使用的 XOR 變體略為不同處理。</p>
+</article>
+<article id="REC-file-format"><h1>REC file format</h1>
+<p>這頁旨在收集有關 <code>*.rec</code> 檔案的資訊，這些檔案是由 2018 年 TipToi 點讀筆在內建麥克風錄音時建立的。</p>
+<p>這些檔案的命名似乎使用以下結構（相對於 TipToi 點讀筆根目錄）：</p>
+<blockquote>
+<p><code>./‹productId›book/RecSlot‹slotNumber›.rec</code></p>
+</blockquote>
+<p>在此結構中，<code>‹productId›</code> 是用來錄製該檔案的「產品」（書籍/遊戲/…）的 ID。</p>
+<p><code>‹slotNumber›</code> 是一個 4 位數字，用來區分同一產品中的錄音。似乎一個槽位編號可以分配給任意 OID。通常有一個 OID 總是錄製特定槽位，另一個 OID 則播放該槽位。在 Ravensburger 書籍中找到的最低槽位編號是 <code>0001</code>（見範例）。</p>
+<h2 id="_1">範例</h2>
+<ul>
+<li>"Die verrückte Weltreise"</li>
+<li><code>./129book/RecSlot0001.rec</code>（第一頁的巫師，由 OID <code>3218</code> 錄製，由 OID <code>3219</code> 播放）</li>
+<li><code>./129book/RecSlot0007.rec</code>（第二頁戴耳形服裝的男子，由 OID <code>3248</code> 錄製，由 OID <code>3249</code> 播放）</li>
+<li><code>./129book/RecSlot0003.rec</code>（第一頁的鳥，由 OID <code>3226</code> 錄製，由 OID <code>3227</code> 以較高音調播放三次） </li>
+<li><code>./129book/RecSlot0013.rec</code>（第二頁的小丑，由 OID <code>3286</code> 錄製，由 <code>3287</code> 播放後接小丑笑聲）</li>
+</ul>
+<h2 id="_2">檔案格式</h2>
+<p>這些檔案是與位元組 <code>0x6a</code> 進行 XOR 運算的 WAV 檔案。更具體來說，WAV 檔案使用 PCM（有符號、little-endian）編碼，採樣率 16&thinsp;kHz（例外：在 "Die verrückte Weltreise" 中，藍色鳥的錄音採樣率為 8&thinsp;kHz，可能與高音播放有關），16 位元樣本大小，單聲道。</p>
+<h2 id="_3">檔案轉換</h2>
+<ul>
+<li>線上工具</li>
+<li><a href="https://gchq.github.io/CyberChef/#recipe=XOR(%7B'option':'Decimal','string':'106'%7D,'Standard',false)">CyberChef</a> 可用來轉換<br>
+REC 檔案為 WAV 檔案（反之亦然）。</li>
+<li>
+<p><a href="https://ttwebhelpers.quelltextlich.at/convert-rec.html">ttwebhelpers</a> 可用來將 REC 檔案轉換為 WAV 和 MP3。（解碼直接在瀏覽器中進行，REC 檔案不會上傳至網際網路。）</p>
+</li>
+<li>
+<p>離線工具</p>
+</li>
+<li><a href="https://github.com/cleracruza/ttbox">ttbox</a> 提供 <code>convert-rec</code> 指令，用來將 REC 檔案轉換為 WAV 和 MP3。</li>
+</ul>
+</article>
+<article id="Languages"><h1>Languages</h1>
+<h1 id="tiptoi">Tiptoi 在不同語言版本</h1>
+<p>Tiptoi 點讀筆針對不同語言販售。每支點讀筆僅能處理與其語言相符的 GME 檔案。若不修改，無法在一支點讀筆上混用不同語言的 GME 檔案。</p>
+<p>您也可以透過一些繁瑣的程序來切換點讀筆的語言。也有官方方法，但並非所有點讀筆型號皆適用。</p>
+<h2 id="gme">修改 GME 語言</h2>
+<p>切換 GME 檔案語言有幾種可能性：<br>
+1. 使用語言變更功能，例如 <code>tttool set-language FRENCH WWW_Bauernhof.gme</code> 將語言設為 <code>FRENCH</code>。已知語言代碼有 <code>GERMAN</code>、<code>DUTCH</code>、<code>FRENCH</code>、<code>ITALIA</code>、<code>RUSSIA</code>、<code>ENGLISH</code>。<br>
+   若要一次變更 Tiptoi 上所有 .gme 檔案的語言，Mac OS 使用者可在 bash shell 中執行以下程式碼 <code>for file in /Volumes/tiptoi/*.gme; do tttool set-language GERMAN $file; done</code>。將 <code>GERMAN</code> 替換為所需的語言代碼。<br>
+2. 使用十六進位編輯器變更語言特定部分。語言定義的位置與特性可參考此處：https://github.com/entropia/tip-toi-reveng/wiki/GME-Header<br>
+3. 使用 tttool 反組譯 GME 檔案，在產生的 yaml 檔案中變更語言，然後重新組譯 GME 檔案。此方法會遺失所有遊戲。<br>
+4. 使用 <a href="https://github.com/cleracruza/ttbox#gmeyaml-tooling">ttbox</a></p>
+<h2 id="_1">修改點讀筆語言</h2>
+<ol>
+<li>繁瑣方法：https://github.com/entropia/tip-toi-reveng/wiki/PEN-Firmware#how-to-switch-the-language-of-the-pen</li>
+<li>官方方法。參考 Ravensburger 的這封（德文）郵件：<blockquote>
+<p>Wir möchten Sie bitten zunächst die Seriennummer Ihres tiptoi® Stiftes raus zu suchen. Diese finden Sie entweder im Batteriefach unter einem Strichcode mit "A", "B", "C", "D", "E", "F", "G" und "T" beginnend, oder über dem Batteriefach mit einem „T" oder „H" beginnend.*</p>
+<p>Zudem finden Sie diese im tiptoi® Manager unter "Stift und Inhalte verwalten", wenn der Stift angeschlossen ist, im unteren Bildbereich.</p>
+<p>Es ist eine 8-stellige Kombination aus Buchstaben und Zahlen.</p>
+<p>Die Stifte der ersten und zweiten Generation sind größtenteils sprachlich umstellbar.</p>
+<p>Seriennummern mit CA, CB, CC, CD, DA und DB beginnend, sind in Deutsch, Französisch, Niederländisch und Italienisch</p>
+<p>Seriennummern mit DC bis DE und TA bis TZ beginnen sind zusätzlich noch auf Russisch umstellbar. (Ausnahme die Stifte mit der Kennung Te4)</p>
+<p>Umstellbar ist die Sprache im tiptoi® Manager oben rechts in den Optionen. Hierfür benötigen Sie den aktuellen Manager 4.1.2 Bitte wählen Sie dort die gewünschte Sprache an.</p>
+<p>Im ersten Schritt wird nun die Sprache des Manager umgestellt.</p>
+<p>Im zweiten Schritt kann nun, sofern der verbundene Stift für die Sprachumstellung kompatibel und angeschlossen ist, dieser sprachlich umgestellt werden.</p>
+<p>Bitte beachten Sie, dass hierbei alle Inhalte der ursprünglich eingestellten Sprache gelöscht werden. Sie können diese jedoch beliebig oft über den Manager wieder aufladen.</p>
+<p>Sie können jederzeit von Deutsch auf z.B. Französisch usw. und zurück wechseln, aber den Stift nicht gemischt bespielen.</p>
+<p>Des Weiteren benötigen Sie die Produkte in der jeweiligen Ländersprache.</p>
+<p>Da es sich dabei um Produkte unserer Tochterfirmen handelt, werden die Auslandsadaptionen von uns nicht auf dem deutschen Markt vertrieben. Auf Seiten wie www.amazon.com werden Sie hier jedoch oftmals fündig.</p>
+<p>Wir möchten Sie zuletzt noch darüber informieren, dass der Create Stift mit Aufnahmefunktion  nicht umstellbar ist.</p>
+<p>Die Auslandsadaptionen mit den Artikelnummern 780 (F), 789 (NL), 790 (NL), 791 (NL), 792 (NL), 821 (RU) sind momentan innerhalb dieser Sprachen umstellbar, jedoch nicht für deutsche Inhalte geeignet.</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="createmit-aufnahmefunktion">關於第三代點讀筆（「CREATE」）「mit Aufnahmefunktion」</h2>
+<p>目前（2021 年），此類點讀筆（一般版與 wlan 版）在法國與荷蘭未販售。這些市場販售的是第二代附播放器的點讀筆。如 <a href="https://www.ravensburger.de/entdecken/ravensburger-marken/tiptoi/tiptoi-service-faq/fragen-zum-tiptoi-manager/index.html">tiptoi-FAQ</a> 所述，此點讀筆尚未有非德文韌體。（「Insbesondere ist für den tiptoi-Stift mit Aufnahmefunktion bislang nur eine deutschsprachige Firmware verfügbar.」<br>
+）</p>
+</article>
+<article id="Printing"><h1>Printing</h1>
+<p>這裡您可以找到有關如何成功列印 OID 的資訊，以及硬體相容性清單。</p>
+<h1 id="_1">提示與技巧</h1>
+<ul>
+<li>如果可能，請以 1200dpi 列印，有時 600dpi 似乎也能運作</li>
+<li>調整品質設定、解析度、對比度（特別是圖形/影像/文字品質最佳化設定可能有很大影響）</li>
+<li>使用不同紙張</li>
+<li>試試黑白列印與彩色列印</li>
+<li>試著提亮您的圖片</li>
+<li>確保列印時不重新縮放影像（即以 100% 比例列印）。</li>
+<li>測試問題是出在 tttool 產生的 OID 影像處理還是印表機本身的好起點，是列印 <a href="https://github.com/user-attachments/files/22770906/tiptoi_Navigationsleiste-de.pdf">Ravensburger 的測試 PDF</a> (<a href="https://github.com/user-attachments/files/22770905/tiptoi_Navigationsleiste-fr.pdf">法文版</a>)。如果測試 PDF 在任何列印驅動程式設定的組合下都無法運作，很可能您的印表機無法處理 OID 碼的精細圖案。</li>
+<li>避免 OID 下方有太多結構</li>
+<li>分兩次列印背景與 OID，先列印背景，再列印 OID</li>
+<li>在您的 OID 圖形中試著使用更大的點</li>
+<li>避免任何縮放</li>
+<li>試著將 OID 點大小加倍用於 600dpi。這可以透過指定 <code>tttool --dpi 600 oid-code</code> 或 <code>tttool --dpi 1200 oid-code</code> 來達成。或者（例如針對現有的 PNG 檔案），您可以使用這個小型 shell 腳本來使用 ImageMagick 達成此目的（由 Sven Scholz 提供）（儲存為 double-oid.sh）。這會疊加 3 層額外的 OID，每層各偏移一個像素（一層向右、一層向下，以及一層向下+向右）：</li>
+</ul>
+<h3 id="_2"></h3>
+<pre><code>#!/bin/bash
+# Usage: ./double-oid.sh oid-&lt;nn&gt;.png
+# -&gt; produces oid-&lt;nn&gt;-composite.png
+while [ $# -gt 0 ];do
+   FILE=$1
+   OUTPUT=${FILE%.*}"-composite.png"
+   echo $FILE: $OUTPUT
+   convert $FILE $FILE -geometry +1+0 -composite $FILE -geometry +1+1 \
+      -composite $FILE -geometry +0+1 -composite $OUTPUT
+   shift
+ done
+</code></pre>
+<ul>
+<li>列印基於 SVG 的 OID 時，試試不同的瀏覽器與應用程式。Firefox 似乎運作良好。</li>
+</ul>
+<h1 id="_3">成功案例</h1>
+<h2 id="brother">Brother</h2>
+<ul>
+<li>Brother DCP-7030 作為網路印表機 (CUPS)</li>
+<li>以 HQ 1200 模式取得中等成功（HQ 1200 選項使用解析度增強來達成類似 1'200dpi 的列印）</li>
+<li>更換碳粉匣 <em>之後</em> 辨識成功率下降</li>
+<li>Brother HL-2135W (USB / Windows 7)</li>
+<li>參數 --dpi 600 --pixel-size 2 在箔片上列印完美運作，用以增強非 tiptoi 產品。</li>
+<li>Brother MFC-9340CDW 作為來自 Mac OS X 或 Windows 7 的網路印表機</li>
+<li>以 600 dpi 與加倍像素大小 (<code>tttool --dpi 600 oid-code</code>) 成功，用 Gimp 列印。在 Gimp 中手動設定列印解析度為 600 dpi。停用置中。將圖片對齊底部與左側。其他對齊可能導致影像被縮放。</li>
+<li>至少在白色背景與完全飽和的紅/藍/綠背景上運作。</li>
+<li>1200 dpi（無論一般或加倍）均未成功。 </li>
+<li>使用 Mac OS X Preview 列印無成功。我無法設定縮放使其以 600 dpi 不縮放列印，總是導致失真並毀壞 OID 圖案。</li>
+<li>Brother MFC-L2700DW 黑白雷射作為網路印表機 (Mac OS X 搭配 brother 驅動程式)</li>
+<li>這是一款相對實惠（約 170 歐元）的消費級雷射印表機，似乎可立即運作：</li>
+<li>使用 tttool 預設設定建立的 1200 dpi 圖案在白色背景上運作</li>
+<li>最佳/最可重現的結果是在白色背景上使用 --dpi 1200 與 --pixel-size 3（且僅限白色背景）</li>
+<li>PNG 從 Preview 以 100% 縮放列印</li>
+<li>相關印表機驅動程式設定：<ul>
+<li>解析度：1200 dpi HQ</li>
+<li>圖形品質：圖形</li>
+<li>所有其他設定預設</li>
+</ul>
+</li>
+<li>Brother MFC-L2740DW 黑白雷射作為網路印表機 (Windows 或 Linux 搭配 brother 驅動程式)</li>
+<li>成功：<ul>
+<li>解析度 1200 dpi HQ</li>
+<li>圖形品質：圖形</li>
+<li>所有影像增強功能停用</li>
+<li>無縮放</li>
+</ul>
+</li>
+<li>Brother MFC-L2700DW (網路印表機, macOS, Brother 驅動程式 (CUPS))</li>
+<li>以預設 <code>tttool</code> 設定建立 1200 dpi</li>
+<li>從 Preview 以 100% 縮放列印</li>
+<li>在白色背景上測試 </li>
+<li>相關印表機驅動程式設定：<ul>
+<li>解析度：HQ 1200</li>
+<li><strong>圖形品質：文字</strong>（圖形對我<strong>無效</strong>）</li>
+<li>改善列印輸出：改善碳粉固定（略微更好？）</li>
+</ul>
+</li>
+<li>Brother MFC-L2700DW - 成功</li>
+<li>Brother HL-L2300D</li>
+<li>成功：<ul>
+<li>解析度 1200 dpi HQ</li>
+<li>品質設定：文字</li>
+<li>碳粉固定開啟</li>
+<li>TTTool 設定為 1200 與 4 (!) 像素，3 如上對我無效，但可能因印表機稍遜頂級</li>
+</ul>
+</li>
+<li>Brother HL-L2350DW</li>
+<li>從 PDF 列印時使用 Foxit Reader。停用「列印為灰階」與「列印為影像」</li>
+<li>基本印表機設定<ul>
+<li>解析度：HQ 1200</li>
+<li>列印設定：文字</li>
+</ul>
+</li>
+<li>進階印表機設定<ul>
+<li>其他列印選項 - 密度調整：+3 </li>
+</ul>
+</li>
+<li>Brother DCP-585CW - 失敗</li>
+<li>Brother HL-L3230CDW 系列</li>
+<li>在白色背景上以以下設定成功測試：<ul>
+<li>「文件類型」-&gt; 「手動」</li>
+<li>文件類型設定選單：所有影像增強功能停用。</li>
+<li>600 DPI（2400 首次嘗試有問題因此中止進一步測試）</li>
+</ul>
+</li>
+<li>在彩色影像上以以下設定成功測試：<ul>
+<li>設定 1</li>
+<li>「文件類型」-&gt; 「手動」</li>
+<li>文件類型設定選單：<ul>
+<li>停用所有除「增加黑色列印」選項外。無此選項時，您必須將 OID 點大小至少增加至 6。</li>
+<li>「改善圖案列印」似乎使 OID 辨識更可靠</li>
+</ul>
+</li>
+<li>2400 DPI</li>
+<li>關閉「省碳粉」選項</li>
+<li>在 2400 DPI 專案中使用 Photoshop 測試以下 OID 產生設定：<ul>
+<li>將點大小增加至 5 並在雜訊背景上匯出為 PNG</li>
+<li>列印設定中將色彩管理設定為印表機</li>
+</ul>
+</li>
+<li>設定 2</li>
+<li>文件類型：<ul>
+<li>「影像/圖片」或</li>
+<li>「手動」</li>
+<li>文件類型設定選單：<ul>
+<li>全部停用</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>2400 DPI 列印（印表機僅支援 600 與 2400）</li>
+<li>關閉「省碳粉」選項</li>
+<li>在 1200 DPI 專案中使用 Photoshop 測試以下 OID 產生設定：<ul>
+<li>列印設定中將色彩管理設定為印表機</li>
+<li>下拉選項「一般列印」（非「硬體校正」）</li>
+<li>ICC 設定檔渲染意圖<ul>
+<li>絕對比色</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>嘗試將 OID 與插圖分開列印</li>
+</ul>
+</li>
+<li>使用「增加黑色列印」列印過多 OID（約 30 個）損壞了我的黑色感光鼓單元 (PCU)。這也可能由其他環境因素引起，但我想要提及。</li>
+<li>Brother Brother MFC-L8650CDW - 成功，立即可用。從 MacOS Preview 以「一般」品質列印</li>
+</ul>
+<h2 id="canon">Canon</h2>
+<ul>
+<li>Canon LBP 1760(e) 黑白 PCL 5e 在 Windows 7x64 上</li>
+<li>解析度 1200 dpi ，點陣</li>
+<li>所有影像增強/節能功能停用</li>
+<li>
+<p>GIMP 2.8</p>
+</li>
+<li>
+<p>Canon LBP 5050N 在 Windows 10x64 上</p>
+</li>
+<li>
+<p>成功：</p>
+<ul>
+<li>OID 使用 tttool --dpi 1200 --pixel-size 2 --code-dim 100 oid-code</li>
+<li>GIMP 2.8 A5 1200dpi</li>
+<li>匯出為點陣圖</li>
+<li>匯出為 PDF</li>
+<li>點陣圖透過 IrVanView 列印</li>
+<li>PDF 透過 PDF-Exchange-Viewer 列印</li>
+<li>平滑功能關閉</li>
+</ul>
+</li>
+<li>
+<p>Canon imageRUNNER ADVANCE 525iZ</p>
+</li>
+<li>注意：絕不在任何階段渲染為點陣圖。始終保留向量資料。</li>
+<li>無成功：Linux 使用「Canon iR-ADV 525 PS」驅動程式在向量模式</li>
+<li>成功：透過 USB 直接 PDF 列印<ol>
+<li>媒體製作<br>
+  * 以 SVG 建立 OID 碼。<br>
+  * 將點大小增加 2（圖案非常明顯）。<br>
+  * 將 SVG 影像組合成 A4 PDF。<br>
+  * 將 PDF 儲存至 USB 隨身碟。</li>
+<li>列印設定：<br>
+  * 1200 dpi<br>
+  * 所有漸層：高品質</li>
+</ol>
+</li>
+</ul>
+<h2 id="dell">Dell</h2>
+<ul>
+<li>Dell C2665dnf 彩色多功能印表機在 macOS 上 (600 dpi 印表機)</li>
+<li>成功：OID 碼解析度 1200 與 OID 像素大小 4，直接從瀏覽器列印。</li>
+</ul>
+<h2 id="epson">Epson</h2>
+<ul>
+<li>Epson Home XP 322 在 Windows 7 上</li>
+<li>成功：600 dpi OID，使用「超精細」設定列印</li>
+<li>似乎是第一款有報導成功的噴墨印表機</li>
+<li>Epson WF-3720 系列</li>
+<li>成功：普通紙、高品質、彩色或灰階、自訂色彩校正，其他全部「關閉」</li>
+<li>確保查看「更多選項」索引標籤 -&gt; 「影像選項」</li>
+<li>原廠墨水匣</li>
+<li>使用 <code>ttaudio</code> 列印輸出測試</li>
+<li>Epson ET-8500 系列</li>
+<li>在 macOS 上無成功。（範例 PDF 也無效，品質與輸出設定的任何組合均無效，無論普通紙或相紙）</li>
+</ul>
+<h2 id="hp">HP</h2>
+<ul>
+<li>HP Color LaserJet Pro MFP M476dw PCL 6</li>
+<li>使用高品質列印設定成功（來自 OIDProducer 的測試 pdf-page，使用 sonix 1.5G 600dpi）</li>
+<li>點讀筆辨識非常好（有些超過 4x4 的碼也被辨識）</li>
+<li>圖案肉眼可見</li>
+<li>HP Color Laserjet Pro MFP M277dw (600 dpi 印表機)</li>
+<li>調整設定後以 2x2 像素有些運作，但無法在影像上列印</li>
+<li>以 4x4 像素運作極佳，但會使影像變暗</li>
+<li>分兩次列印（先彩色，再黑白 OID）</li>
+<li>HP Color Laserjet CP4025 在 Linux 上 1200dpi</li>
+<li>HP LaserJet Pro M148fdw</li>
+<li>使用 600dpi PDF 立即完美結果（在 Debian 上）</li>
+<li>HP Laserjet 1200 在 Ubuntu 14.04 上</li>
+<li>成功：使用 eog (Driver HP LaserJet 1200 pcl3, hpcups 3.14.3)。在印表機設定中將圖片縮放至 100x100mm 並將品質設為「最佳」</li>
+<li>成功：使用 gimp</li>
+<li><a href="https://support.hp.com/us-en/product/hp-laserjet-1320-printer-series/410622">HP Laserjet 1320</a> (1,200 dpi)</li>
+<li>PDF 成功</li>
+<li>使用 Linux CUPS + HP LaserJet 1320 hpijs 3.16.11，高品質列印模式測試</li>
+<li>HP Laserjet 4050 (600dpi) 在 Windows10、Windows7、Vista、Ubuntu 12.04、Ubuntu 14.04 上 </li>
+<li>成功：使用原廠 HP-Toner，使用廉價替換碳粉有問題（驅動程式像作業系統辨識為網路印表機）</li>
+<li>HP LaserJet 4250，黑白，600 dpi，Linux Debian Jessie 搭配 CUPS+Gutenprint v5.2.10 </li>
+<li>HP Laserjet 5</li>
+<li>在 Windows 7 上使用 HP 驅動程式成功<br>
+    印表機設定：600x600dpi；增強列印功能開啟；列印最佳化開啟；經濟模式關閉；REt 開啟； </li>
+<li>HP Laserjet 5000N (600dpi) 在 Linux Ubuntu 14.04 上</li>
+<li>嘗試各種不同設定、PDF 列印、Gimp Gutenprint 等均無成功</li>
+<li>HP Laserjet 5500DN (600dpi) 在 Windows10、Windows7、Vista 上 </li>
+<li>使用 HP Laserjet 5i 驅動程式（黑白印表機）後成功</li>
+<li>使用偵測到的原廠驅動程式、HP Universal Printing PCL 6 或 PCL 5 驅動程式完全無成功</li>
+<li>仍在 Ubuntu 上嘗試<br>
+Graphic-Mode HP-GL/2<br>
+    Gimp-設定：圖片設定 x&amp;y-解析度 600dpi；忽略頁面邊界  </li>
+<li>HP LaserJet CP 1025nw</li>
+<li>PDF 尚未成功</li>
+<li>使用來自 make 雜誌的 kompass 範例以 600dpi 成功（tttool --dpi 600 oid-code）在 Mac 與 Linux 上使用 gimp，品質設定最佳（Linux 為一般），無置中，OID 在影像上運作良好（不在黑暗部分）</li>
+<li>HP Laserjet P1005</li>
+<li>Ubuntu 14.04：<a href="http://hplipopensource.com/hplip-web/index.html">HPLIP</a>(3.15.11) 似乎無效（PDF 與 GIMP 均無）</li>
+<li>HP Windows 驅動程式運作良好（600 或 1200 DPI，兩者均產生可接受結果），使用 GIMP 列印</li>
+<li>HP DeskJet 3630</li>
+<li>無成功</li>
+<li>使用新「player」TipToi 非常偶爾運作。使用舊 TipToi 完全無效。</li>
+<li>嘗試不同 <code>--dpi</code> 與 <code>--pixel-size</code> 無任何改善</li>
+<li>HP ENVY Inspire 7920e</li>
+<li>在 80g 與 120g 紙上無成功</li>
+<li>使用 MacOSX 的 PDF 與 Preview 結果明顯不良。</li>
+<li>有時使用 Gimp 列印 PNG（1200dpi 以 2x2 像素）時部分區域運作。</li>
+<li>HP Photosmart 8050</li>
+<li>成功</li>
+<li>Windows 7 的 HP Windows 驅動程式</li>
+<li>1200x1200 dpi 使用 gimp 或 openoffice writer 內嵌影像列印</li>
+<li>HP Color Laserjet 1600, 2600n (600 dpi 印表機)</li>
+<li>Linux 搭配 CUPS，ghostscript-printer-app 內的 foo2hp 驅動程式</li>
+<li>2x4 像素 PNG 影像無成功，4x4 影像偵測非常差</li>
+<li>使用 librsvg2-bin 中的 rsvg-convert 轉換為 PDF 的 SVG 向量影像成功。</li>
+<li>HP Laserjet 1010</li>
+<li>Linux 搭配 Cups，HP LaserJet 1010 Foomatic/pxl1010 驅動程式</li>
+<li>使用 Cups，HP LaserJet 1010，hpcups 3.16.3 驅動程式無成功</li>
+<li>使用 Firefox/Windows 列印 SVG。也列印至 PDF 再至印表機。</li>
+<li>HP Laserjet 1020</li>
+<li>使用 Windows 搭配 Gimp 3.0.4 或 Adobe Reader&amp;PDF，最新驅動程式 2012.918.1.57980。兩種解析度「Fastres 1200」與 600 dpi 均運作。 </li>
+<li>最佳化：- 使用白色紙張<br>
+                  - 啟用「Gesamten Text schwarz drucken」/「全部文字黑色列印」 <br>
+                  - 透過列印清潔頁執行清潔。<br>
+                  - 屬性中的密度設定，設定索引標籤可能有用。 </li>
+<li>HP PageWide MFP Pro 477dw (辦公室噴墨印表機)</li>
+<li>Linux 搭配 CUPS，HP PageWide Pro 477 MFP Postscript 驅動程式</li>
+<li>以 1200x1200dpi 列印，使用 evince 列印 OID 表格作為 PDF 或包含在 SVG 中使用 Inkscape 列印。</li>
+<li>HP Officejet 6600 噴墨</li>
+<li>Mac OS 上成功：使用 Preview 應用程式列印以 600 DPI 產生的單一 OID 碼 PNG。</li>
+<li>印表機設定：100% 大小、彩色、品質：最佳</li>
+<li>HP Officejet Pro 8600 噴墨 (de)</li>
+<li>紙張類型：HP 紙高白（重要）</li>
+<li>品質設定（自訂）：<ul>
+<li>灰階列印：僅黑色墨水</li>
+<li>輸出品質：最佳</li>
+<li>文字黑色列印：啟用</li>
+</ul>
+</li>
+</ul>
+<h2 id="konica-minolta">Konica Minolta</h2>
+<ul>
+<li>bizhub C300i</li>
+<li>成功：使用 Inkscape 1.0 產生的 PDF，使用 tttool 的 1200 DPI 填充圖案。<br>
+    重要：使用印表機的網頁介面列印<br>
+    （透過 Win10 的 Acrobat Reader 列印相同 PDF <em>無</em>成功）。 </li>
+</ul>
+<h2 id="kyocera">Kyocera</h2>
+<ul>
+<li>Kyocera 4551ci </li>
+<li>成功：使用 gimp，(600 dpi)</li>
+<li>在列印設定中的影像編輯「文字黑色列印」與「灰階使用黑色碳粉列印」勾選</li>
+</ul>
+<h2 id="lexmark">Lexmark</h2>
+<ul>
+<li>Lexmark CX410dn</li>
+<li>成功：來自 Photoshop CS 1200dpi</li>
+<li>Lexmark MS415dn</li>
+<li>成功：以 600 dpi 列印 pdf (oid-table)</li>
+</ul>
+<h2 id="ricoh">Ricoh</h2>
+<ul>
+<li>Ricoh Afiko MP C4502</li>
+<li>成功：<ul>
+<li>OID 使用 tttool --dpi 1200 --pixel-size 2 --code-dim 100 oid-code</li>
+<li>GIMP 2.8 A5 1200dpi</li>
+<li>直接透過 GIMP 列印</li>
+<li>列印品質標準：解析度 600 x 600 dpi</li>
+<li>列印品質進階：全部文字黑色列印</li>
+</ul>
+</li>
+<li>Rico Aficio MP 8001 RPCS</li>
+<li>使用 <a href="https://github.com/thawn/ttmp32gme">ttmp32gme</a> 以 1200 dpi 與 pixel-size 3 成功<ul>
+<li>1200 dpi</li>
+<li>高品質</li>
+<li>抖動：圖片</li>
+<li>抗鋸齒：圖片</li>
+<li>「全部文字黑色列印」啟用</li>
+</ul>
+</li>
+</ul>
+<h2 id="samsung">Samsung</h2>
+<ul>
+<li>Samsung CLP-670 系列 PS</li>
+<li>成功：使用 gimp，甚至一次列印顏色與圖案。</li>
+<li><a href="http://www.samsung.com/us/support/owners/product/SCX-4500">Samsung SCX-4500</a></li>
+<li>成功：使用 <a href="https://github.com/sidiandi/ttaudio/blob/master/README.md">ttaudio</a></li>
+<li><a href="http://amzn.to/2eaWpxc">Samsung M2020 - Xpress 2026W</a></li>
+<li>成功：<ul>
+<li>品質：高解析度</li>
+<li>字型/文字：最大並勾選「Gesamten Text schwarz drucken」 </li>
+<li>邊緣強調：啟用</li>
+<li>紙張類型：檔案 --&gt; 由於這會變得相當暗，我總是透過 Photoshop 在碼上放置一層白色圖層 </li>
+<li>我使用我的噴墨印表機（Brother DCP-585CW - 順便說一下，它無法列印編碼）列印了一張彩色圖片。</li>
+<li>結果令人信服：即使在相當黑暗的區域，新款帶有 Player 的筆也完美運作。</li>
+<li>列印設定可在此下載：http://tiptoi.as-webstyling.de/download.php</li>
+</ul>
+</li>
+<li>成功2 (OS X)：<ul>
+<li>碼產生：oid-code [OIDnr] --dpi 1200 --code-dim [Breitemm]x[Höhemm] --pixel-size 3</li>
+<li>品質：高解析度，碳粉省模式：關閉，邊緣強調：最大</li>
+<li>等級：亮度：50，對比度：50（任意）</li>
+<li>紙張：普通紙（任意）</li>
+<li>此外，我在 Indesign 影像框中將碼旋轉 13°，因為這樣可以防止輕微的馬賽克現象。</li>
+<li>碼的列印黑暗程度約如 30% 的傳統點陣</li>
+</ul>
+</li>
+<li><a href="http://www.samsung.com/de/support/model/ML-1640/SEE">Samsung ML 1640</a></li>
+<li>成功：<ul>
+<li>品質：最佳</li>
+<li>字型/文字：勾選「Gesamten Text schwarz drucken」（選用）</li>
+<li>碳粉省模式：關閉</li>
+<li>亮度：暗</li>
+<li>彩色影像來自 Epson Expression Home XP-445（無法列印 OID）。使用普通紙與相紙作為基礎，之後在 ML 1640 上列印 OID。未進一步編輯彩色影像。即使在黑暗區域，使用新款帶有 Player 的筆也運作良好。</li>
+</ul>
+</li>
+<li>
+<p>無成功：</p>
+<ul>
+<li>使用「Samsung Universal Print Driver」</li>
+</ul>
+</li>
+<li>
+<p><a href="https://support.hp.com/us-en/product/Samsung-Xpress-SL-M2835-Laser-Printer-series/16462889/model/16462891">Samsung Xpress SL-M2835DW</a></p>
+</li>
+<li>
+<p>成功</p>
+<ul>
+<li>Ravensburger 00700 (tiptoi v2)</li>
+<li>
+<p>macOS 10.12.6，使用 <a href="https://github.com/thawn/ttmp32gme">ttmp32gme v 0.22</a> ，使用 Firefox 58.0 列印（Chromium 62.03 無效）</p>
+</li>
+<li>
+<p><code>tttool --dpi 1200 --pixel-size 3  --code-dim 24 oid-code 2065</code></p>
+</li>
+<li>驅動程式： <ul>
+<li>M283x Series Print Driver for Mac OS V1.03.00</li>
+<li>Easy Printer Manager V1.03.38   </li>
+</ul>
+</li>
+<li>品質設定 (Easy Printer Manager)： </li>
+<li>Eco mode = Off</li>
+<li>Resolution = Standard</li>
+<li>Clear Text = Minimum</li>
+<li>Print density = 0</li>
+</ul>
+</li>
+<li>
+<p>Samsung CLX-3180</p>
+</li>
+<li>
+<p>成功：</p>
+<ul>
+<li>使用 Windows 的 GIMP 列印</li>
+<li>驅動程式：Samsung CLX-3180 系列類別驅動程式 (Windows)</li>
+<li>600DPI 與 1200DPI 均運作</li>
+<li>顏色設定：黑白</li>
+</ul>
+</li>
+<li>
+<p>Samsung Xpress M2885FW</p>
+</li>
+<li>成功：<ul>
+<li>使用 Xreader (Linux) 列印 tttoool 建立的 pdf 檔案</li>
+<li>驅動程式：Samsung M288x 系列 (Linux)</li>
+<li>邊緣增強：關閉</li>
+<li>碳粉節省：關閉</li>
+<li>品質：高解析度</li>
+<li>頁面縮放：無</li>
+<li>其他設定也可能運作（尚未測試）</li>
+</ul>
+</li>
+<li>
+<p>成功：</p>
+<ul>
+<li>使用「tttool --dpi 600 oid-table Schatzsuche1.xaml」建立的 pdf</li>
+<li>驅動程式：M288x_Series_WIN_SPL_PCL_V3.13.13.00.01_CDV1.23</li>
+<li>使用 Chrome (Windows 11) 開啟並列印 pdf</li>
+<li>紙張大小：A4</li>
+<li>品質：600 dpi</li>
+<li>縮放：100</li>
+</ul>
+</li>
+<li>
+<p>Samsung ML-2525W</p>
+</li>
+<li>在 Linux 上使用 ttmp32gme 與 Chrome 成功 - 直接從瀏覽器以 1200dpi 列印完美運作。</li>
+<li>Ubuntu 20.04 附帶的驅動程式似乎無法以 1200x1200dpi 列印（至少未報告）；Samsung 網站上有支援 1200dpi 列印的 Linux 驅動程式。</li>
+<li>從 Gimp 列印似乎無效。到目前為止，我僅透過從 Gimp 匯出至 PDF、在 Google Chrome 中開啟 PDF 並從那裡列印取得成功。在 Chrome 中，列印對話方塊中的「列印為影像」選項必須停用（這是預設設定）。</li>
+</ul>
+<h2 id="sharp">Sharp</h2>
+<ul>
+<li>Sharp MX-3610N </li>
+<li>在 windows 7 prof 上使用原廠 Sharp 網路驅動程式成功</li>
+</ul>
+<h2 id="xerox">Xerox</h2>
+<ul>
+<li>Xerox VersaLink C7000</li>
+<li>以 1200 dpi 與像素大小 3 成功<ul>
+<li>從 PDF 以預設印表機設定列印</li>
+<li>即使在影像上列印也能偵測碼</li>
+</ul>
+</li>
+<li>
+<p>以 1200 dpi 與像素大小 2 運作不佳</p>
+</li>
+<li>
+<p>Xerox WorkCentre (7xxx 型號)</p>
+</li>
+<li>使用高品質列印設定成功（假設為 1200 dpi）</li>
+<li>點讀筆辨識非常好</li>
+<li>
+<p>圖案肉眼可見</p>
+</li>
+<li>
+<p>Xerox WorkCentre 6515</p>
+</li>
+<li>成功：<ul>
+<li>高品質設定</li>
+<li>PDF 無效（輸出縮放）</li>
+<li>透過瀏覽器上傳 PS 至印表機成功</li>
+<li>點讀筆良好辨識圖案</li>
+</ul>
+</li>
+</ul>
+<h1 id="_4">列印服務</h1>
+<h2 id="targa-fotos"><a href="https://www.targa-fotos.de/">TARGA-Fotos</a></h2>
+<ul>
+<li>相簿</li>
+<li>無成功：黑色點透過 CMY 疊加模擬。OID 圖案被毀壞。</li>
+</ul>
+</article>
+<article id="Hidden-Features-in-Ravensburger-Books"><h1>Hidden Features in Ravensburger Books</h1>
+<p>產品中的隱藏功能：</p>
+<ul>
+<li>WWW 隨消防隊出動<ul>
+<li>第 3 頁 <ul>
+<li>敘述模式<ul>
+<li>紅髮男子在影印機旁邊，點擊幾次後會放屁（正常情況下會吹口哨）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>WWW 探索農場<ul>
+<li>第 1 頁<ul>
+<li>探索模式<ul>
+<li>住宅裡睡覺的嬰兒，點擊 10 次後會放屁（正常文字「這裡睡著 Marie 的小弟弟 Moritz」）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>第 10 頁：農夫需要哪些機器<ul>
+<li>探索模式<ul>
+<li>路上散步的人，點擊 10 次</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</article>
+<article id="Ideas"><h1>Ideas</h1>
+<p>在本頁面上，我們收集了有關此專案的各種想法。</p>
+<h1 id="_1">書籍與應用程式的想法</h1>
+<ul>
+<li>在「眼睛」圖示上點讀三次，會觸發額外的圖層。這會從宣布孩子發現了「秘密模式」（孩子們很喜歡這個！）開始，並允許播放兒歌，直到再次點讀「眼睛」圖示。</li>
+<li>使用 Tiptoi 技術製作相片書。</li>
+<li>製作自己的動物 (<a href="https://github.com/entropia/tip-toi-reveng/wiki/Links-and-Resources#videos">done</a>)</li>
+<li>製作計算器應用程式 (<a href="https://www.joachim-breitner.de/blog/669-Ein_Tiptoi-Taschenrechner">done</a>)</li>
+<li>擴充計算器應用程式，用作低階「條碼」收銀機，例如用於小型跳蚤市場的中央結帳</li>
+<li>將孩子們的名字整合到現有書籍中（個人化）</li>
+<li>使用 Tiptoi 為視覺障礙者和盲人服務 (<a href="https://www.youtube.com/watch?v=ePE0-U73Ajc">example</a>)</li>
+<li>實作<a href="https://mycvs.org/p/interactive-treasure-hunt-with-tip-toi">互動尋寶遊戲</a></li>
+<li>透過音訊線纜將 Tiptoi 連接至 PC，以觸發 PC 上的動作（開啟網站、控制 Tiptoi 模擬器等）</li>
+</ul>
+<h1 id="tttool"><a href="https://github.com/entropia/tip-toi-reveng">tttool</a> 的想法</h1>
+<ul>
+<li>新增一個指令，將除錯輸出整合到現有的 .gme 檔案中。這可以透過在起始圖示上點讀 5 次來觸發。</li>
+<li>壓縮 gme 檔案，移除不必要的內容（例如重複的音訊表格）並對取樣進行降頻。這對使用第一代儲存空間有限的 Tiptoi 的使用者來說，將是一個實用的功能。</li>
+<li>整合一個功能，用來建立僅包含現有 .gme 檔案修改部分的檔案（delta gme）。這將允許在不違反版權的情況下，提供商業產品的修改版本。</li>
+</ul>
+<h1 id="_2"><a href="https://github.com/entropia/tip-toi-reveng/wiki/Hardware">硬體修改</a> 的想法</h1>
+<ul>
+<li>修改電池電量辨識功能，使其也能與可充電電池（特別是 Eneloop）相容。目前使用這些電池時，點讀筆會過早關機。</li>
+<li>啟用除錯模式（有一種中文除錯模式：啟動點讀筆時按住音量減鍵，然後按音量加鍵，即可聽到中文 OID 碼）</li>
+</ul>
+</article>
+<article id="Known-Product-IDs"><h1>Known Product IDs</h1>
+<p>已知德國 TipToi 產品的產品 ID。用於避免自訂專案中的產品 ID 衝突。</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>Filename</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>WWW Bauernhof.gme</td>
+</tr>
+<tr>
+<td>2</td>
+<td>WWW Feuerwehr.gme</td>
+</tr>
+<tr>
+<td>3</td>
+<td>WWW Flughafen.gme</td>
+</tr>
+<tr>
+<td>4</td>
+<td>WWW Musik.gme</td>
+</tr>
+<tr>
+<td>5</td>
+<td>WWW Strassenverkehr.gme</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Englisch-Detektive.gme</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Magors Lesezauber.gme</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Geheimnis der Zahleninsel.gme</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Abenteuer Tierwelt.gme</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Reise durch die Jahreszeiten.gme</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Globus puzzleball.gme</td>
+</tr>
+<tr>
+<td>12</td>
+<td>WWW Englisch.gme</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Wimmelbuch.gme</td>
+</tr>
+<tr>
+<td>14</td>
+<td>Rekorde im Tierreich.gme</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Puzzle Ritterburg.gme</td>
+</tr>
+<tr>
+<td>16</td>
+<td>Puzzle Baustelle.gme</td>
+</tr>
+<tr>
+<td>17</td>
+<td>Puzzle Ponyhof.gme</td>
+</tr>
+<tr>
+<td>18</td>
+<td>WWW Piraten.gme</td>
+</tr>
+<tr>
+<td>19</td>
+<td>WWW Wald.gme</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Bilderlexikon Tiere.gme</td>
+</tr>
+<tr>
+<td>21</td>
+<td>Leserabe Pony.gme</td>
+</tr>
+<tr>
+<td>22</td>
+<td>Die geheimnisvolle Maske.gme</td>
+</tr>
+<tr>
+<td>23</td>
+<td>Leserabe Vampir.gme</td>
+</tr>
+<tr>
+<td>24</td>
+<td>WWW Stadt.gme</td>
+</tr>
+<tr>
+<td>25</td>
+<td>WWW Tiere Afrikas.gme</td>
+</tr>
+<tr>
+<td>26</td>
+<td>In Deutschland unterwegs.gme</td>
+</tr>
+<tr>
+<td>27</td>
+<td>Mission im Lesedschungel.gme</td>
+</tr>
+<tr>
+<td>28</td>
+<td>Puzzle Kinderarzt.gme</td>
+</tr>
+<tr>
+<td>29</td>
+<td>Leserabe Fussball.gme</td>
+</tr>
+<tr>
+<td>30</td>
+<td>Mein grosses Bilderlexikon.gme</td>
+</tr>
+<tr>
+<td>31</td>
+<td>WWW Ritter.gme</td>
+</tr>
+<tr>
+<td>32</td>
+<td>Leserabe Drache.gme</td>
+</tr>
+<tr>
+<td>33</td>
+<td>Erste Zahlen.gme</td>
+</tr>
+<tr>
+<td>34</td>
+<td>Expedition Wissen - Aegypten.gme</td>
+</tr>
+<tr>
+<td>35</td>
+<td>Puzzle Im Zoo.gme</td>
+</tr>
+<tr>
+<td>36</td>
+<td>Ratespass auf Reisen.gme</td>
+</tr>
+<tr>
+<td>38</td>
+<td>Grundschulwoerterbuch Englisch.gme</td>
+</tr>
+<tr>
+<td>39</td>
+<td>Das versunkene Logikland.gme</td>
+</tr>
+<tr>
+<td>42</td>
+<td>Expedition Wissen - Dinosaurier.gme</td>
+</tr>
+<tr>
+<td>43</td>
+<td>Das Tal der Tempel.gme</td>
+</tr>
+<tr>
+<td>44</td>
+<td>Wettstreit im Hexenwald.gme</td>
+</tr>
+<tr>
+<td>45</td>
+<td>WWW Weltatlas.gme</td>
+</tr>
+<tr>
+<td>46</td>
+<td>Die turbulente Zeitreise.gme</td>
+</tr>
+<tr>
+<td>48</td>
+<td>Monsterstarke Musikschule.gme</td>
+</tr>
+<tr>
+<td>49</td>
+<td>Der interaktive Globus.gme</td>
+</tr>
+<tr>
+<td>50</td>
+<td>WWW Fahrzeuge.gme</td>
+</tr>
+<tr>
+<td>51</td>
+<td>Puzzle Einsatz.gme</td>
+</tr>
+<tr>
+<td>52</td>
+<td>Leserabe Feen.gme</td>
+</tr>
+<tr>
+<td>53</td>
+<td>Spielfiguren1.gme<br>Spielfiguren2.gme<br>Spielfiguren3.gme<br>Spielfiguren_Amerika.gme<br>Spielfiguren_AsienAustralien.gme<br>Spielfiguren_Dinosaurier.gme<br>Spielfiguren_Pferde.gme<br>Spielfiguren_Reiterhof.gme<br>Spielfiguren_Zoo.gme</td>
+</tr>
+<tr>
+<td>54</td>
+<td>Erste Buchstaben.gme</td>
+</tr>
+<tr>
+<td>55</td>
+<td>Der Millionencoup.gme</td>
+</tr>
+<tr>
+<td>56</td>
+<td>WWW Pferde und Ponys.gme</td>
+</tr>
+<tr>
+<td>57</td>
+<td>Weltkarte.gme</td>
+</tr>
+<tr>
+<td>58</td>
+<td>Expedition Wissen - Musik.gme</td>
+</tr>
+<tr>
+<td>60</td>
+<td>Adventskalender Mandelmann.gme</td>
+</tr>
+<tr>
+<td>61</td>
+<td>Dein Koerper und Du.gme</td>
+</tr>
+<tr>
+<td>62</td>
+<td>Schatzsuche in der Buchstabenburg.gme</td>
+</tr>
+<tr>
+<td>64</td>
+<td>Der hungrige Zahlenroboter.gme</td>
+</tr>
+<tr>
+<td>65</td>
+<td>WWW Europa.gme</td>
+</tr>
+<tr>
+<td>66</td>
+<td>Die internationale Sprachen-Rallye.gme</td>
+</tr>
+<tr>
+<td>67</td>
+<td>WWW Komm mit auf die Baustelle.gme</td>
+</tr>
+<tr>
+<td>68</td>
+<td>WissenQuizzen1.gme<br>WissenQuizzen2.gme<br>WissenQuizzen3.gme<br>WissenQuizzenDinosaurier.gme<br>WissenQuizzenFCBayernMuenchen.gme<br>WissenQuizzenHunde.gme<br>WissenQuizzenKoerper.gme<br>WissenQuizzenMusik.gme<br>WissenQuizzenNaturwunder.gme<br>WissenQuizzenPferde.gme<br>WissenQuizzenRetterHelfer.gme<br>WissenQuizzenTierkinder.gme</td>
+</tr>
+<tr>
+<td>69</td>
+<td>WWW Musik aus aller Welt.gme</td>
+</tr>
+<tr>
+<td>70</td>
+<td>Advenstkalender Wichtelwald.gme</td>
+</tr>
+<tr>
+<td>71</td>
+<td>Lern mit mir - Mathe - Klasse 1.gme</td>
+</tr>
+<tr>
+<td>72</td>
+<td>Quer durch Europa.gme</td>
+</tr>
+<tr>
+<td>73</td>
+<td>Meine schoensten Kinderlieder.gme</td>
+</tr>
+<tr>
+<td>74</td>
+<td>Leserabe Piraten.gme</td>
+</tr>
+<tr>
+<td>75</td>
+<td>WWW Eisenbahn.gme</td>
+</tr>
+<tr>
+<td>76</td>
+<td>Lern mit mir - Deutsch - Klasse 1.gme</td>
+</tr>
+<tr>
+<td>77</td>
+<td>WWW Jahreszeiten.gme</td>
+</tr>
+<tr>
+<td>79</td>
+<td>Vorschulwissen.gme</td>
+</tr>
+<tr>
+<td>80</td>
+<td>Star Wars - Episode I-VI.gme</td>
+</tr>
+<tr>
+<td>81</td>
+<td>Tier-Set Golden Retriever.gme</td>
+</tr>
+<tr>
+<td>82</td>
+<td>Tier-Set Falabella.gme</td>
+</tr>
+<tr>
+<td>83</td>
+<td>Tier-Set Loewen.gme</td>
+</tr>
+<tr>
+<td>84</td>
+<td>TierSet_Tierarzt.gme</td>
+</tr>
+<tr>
+<td>85</td>
+<td>TierSet_Dinosaurier.gme</td>
+</tr>
+<tr>
+<td>86</td>
+<td>Rund um die Uhr.gme</td>
+</tr>
+<tr>
+<td>87</td>
+<td>Expedition Wissen - Weltraum.gme</td>
+</tr>
+<tr>
+<td>88</td>
+<td>Wir spielen Schule.gme</td>
+</tr>
+<tr>
+<td>89</td>
+<td>Adventskalender Weihnachtsbaeckerei.gme</td>
+</tr>
+<tr>
+<td>90</td>
+<td>Lern mit mir - Deutsch - Klasse 2.gme</td>
+</tr>
+<tr>
+<td>91</td>
+<td>mini Spielwelt Polizei SEK-Einsatz.gme<br>mini_Spielwelt_Polizei_Verkehrspolizei.gme<br>Spielwelt Polizei.gme</td>
+</tr>
+<tr>
+<td>92</td>
+<td>mini Spielwelt Feuerwehr Gefahrguteinsatz.gme<br>Spielwelt Feuerwehr.gme</td>
+</tr>
+<tr>
+<td>93</td>
+<td>Spielwelt Autorennen.gme</td>
+</tr>
+<tr>
+<td>94</td>
+<td>Spielwelt Einkaufszentrum.gme</td>
+</tr>
+<tr>
+<td>95</td>
+<td>Lern mit mir - Mathe - Klasse 2.gme</td>
+</tr>
+<tr>
+<td>96</td>
+<td>WWW Regenwald.gme</td>
+</tr>
+<tr>
+<td>97</td>
+<td>Merken und Konzentrieren.gme</td>
+</tr>
+<tr>
+<td>98</td>
+<td>Die verrueckte Wettermaschine.gme</td>
+</tr>
+<tr>
+<td>99</td>
+<td>Adventskalender Waldweihnacht.gme</td>
+</tr>
+<tr>
+<td>100</td>
+<td>Alle meine Tiere.gme</td>
+</tr>
+<tr>
+<td>101</td>
+<td>Mein Woerter-Bilderbuch Unser Zuhause.gme</td>
+</tr>
+<tr>
+<td>102</td>
+<td>Star Wars - Episode VII.gme</td>
+</tr>
+<tr>
+<td>104</td>
+<td>Adventskalender_Weihnachtsdorf.gme</td>
+</tr>
+<tr>
+<td>105</td>
+<td>WWW Zoo.gme</td>
+</tr>
+<tr>
+<td>106</td>
+<td>Spielwelt Verkehrsschule.gme</td>
+</tr>
+<tr>
+<td>107</td>
+<td>Spielwelt Krankenhaus.gme</td>
+</tr>
+<tr>
+<td>109</td>
+<td>Mein_interaktiver_Junior_Globus.gme</td>
+</tr>
+<tr>
+<td>110</td>
+<td>Lern_mit_mir-Das_kleine_1x1.gme</td>
+</tr>
+<tr>
+<td>111</td>
+<td>Meine schönsten Weihnachtslieder.gme</td>
+</tr>
+<tr>
+<td>112</td>
+<td>Rechenspass mit Taschengeld.gme</td>
+</tr>
+<tr>
+<td>113</td>
+<td>Pocket Wissen - Baustellenfahrzeuge.gme</td>
+</tr>
+<tr>
+<td>114</td>
+<td>Pocket Wissen - Dinosaurier.gme</td>
+</tr>
+<tr>
+<td>115</td>
+<td>Pocket Wissen - Pferde und Ponys.gme</td>
+</tr>
+<tr>
+<td>116</td>
+<td>Pocket Wissen - Wale und Delfine.gme</td>
+</tr>
+<tr>
+<td>117</td>
+<td>Star Wars - Weg der Jedi.gme</td>
+</tr>
+<tr>
+<td>118</td>
+<td>Sprichst_Du_Englisch.gme</td>
+</tr>
+<tr>
+<td>119</td>
+<td>Mein Wörter-Bilderbuch Unterwegs.gme</td>
+</tr>
+<tr>
+<td>120</td>
+<td>CREATE_Sound-Quiz.gme</td>
+</tr>
+<tr>
+<td>121</td>
+<td>Die_Welt_des_Fussballs.gme</td>
+</tr>
+<tr>
+<td>122</td>
+<td>Puzzle_Deutschland.gme</td>
+</tr>
+<tr>
+<td>123</td>
+<td>Erstes_Englisch.gme</td>
+</tr>
+<tr>
+<td>125</td>
+<td>Pocketwissen_Ballett.gme</td>
+</tr>
+<tr>
+<td>126</td>
+<td>Raetselspass_auf_dem_Bauernhof.gme</td>
+</tr>
+<tr>
+<td>127</td>
+<td>Dschungel-Olympiade.gme</td>
+</tr>
+<tr>
+<td>128</td>
+<td>Pocketwissen_Feuerwehr.gme</td>
+</tr>
+<tr>
+<td>129</td>
+<td>Die verrueckte Weltreise.gme</td>
+</tr>
+<tr>
+<td>130</td>
+<td>Adventskalender_Weihnachtswerkstatt.gme</td>
+</tr>
+<tr>
+<td>132</td>
+<td>Die_Welt_der_Technik.gme</td>
+</tr>
+<tr>
+<td>133</td>
+<td>Stickerbogen_Starterset.gme</td>
+</tr>
+<tr>
+<td>134</td>
+<td>Rekorde_im_Tierreich-HappyMeal-Edition.gme</td>
+</tr>
+<tr>
+<td>135</td>
+<td>Cars_Buch.gme</td>
+</tr>
+<tr>
+<td>136</td>
+<td>Leselauschabenteuer_Zauberwald.gme</td>
+</tr>
+<tr>
+<td>137</td>
+<td>Duell-der-Superquizzer.gme</td>
+</tr>
+<tr>
+<td>138</td>
+<td>CREATE_Sticker_Elfen.gme</td>
+</tr>
+<tr>
+<td>139</td>
+<td>CREATE_Sticker_LustigeTiere.gme</td>
+</tr>
+<tr>
+<td>140</td>
+<td>CREATE_Sticker_Meerestiere.gme</td>
+</tr>
+<tr>
+<td>141</td>
+<td>CREATE_Sticker_Weltall.gme</td>
+</tr>
+<tr>
+<td>142</td>
+<td>CREATE_Die_magische_Insel_der_Tiere.gme</td>
+</tr>
+<tr>
+<td>143</td>
+<td>CREATE_Schatzsuche_im_Dschungel.gme</td>
+</tr>
+<tr>
+<td>145</td>
+<td>Meine_schoensten_Lieder_fuer_unterwegs.gme</td>
+</tr>
+<tr>
+<td>146</td>
+<td>REWE Weihnachtssticker.gme</td>
+</tr>
+<tr>
+<td>147</td>
+<td>Wir_lernen_die_Uhr.gme</td>
+</tr>
+<tr>
+<td>148</td>
+<td>Fahrzeuge_in_der_Stadt.gme</td>
+</tr>
+<tr>
+<td>149</td>
+<td>Mein_Wörter_Bilderbuch_Tiere.gme</td>
+</tr>
+<tr>
+<td>150</td>
+<td>CREATE_Kreative_Bildergeschichten.gme</td>
+</tr>
+<tr>
+<td>151</td>
+<td>Leselauschabenteuer_Tiefsee.gme</td>
+</tr>
+<tr>
+<td>152</td>
+<td>Pocketwissen_Koerper.gme</td>
+</tr>
+<tr>
+<td>158</td>
+<td>CREATE_Die_galaktische_WeltraumMission.gme</td>
+</tr>
+<tr>
+<td>159</td>
+<td>WWW_Polizei.gme</td>
+</tr>
+<tr>
+<td>160</td>
+<td>Cars-Das_rasante_Rennspiel.gme</td>
+</tr>
+<tr>
+<td>161</td>
+<td>Lern_mit_mir_Deutschland.gme</td>
+</tr>
+<tr>
+<td>162</td>
+<td>Die_Eiskoenigin_Verdrehtes_Wettlaufspiel.gme</td>
+</tr>
+<tr>
+<td>163</td>
+<td>Meine_schoensten_Maerchen.gme</td>
+</tr>
+<tr>
+<td>164</td>
+<td>Create_Elfen_brauchen_Abenteuer.gme</td>
+</tr>
+<tr>
+<td>165</td>
+<td>Die_Eiskoenigin_Buch.gme</td>
+</tr>
+<tr>
+<td>166</td>
+<td>Leselauschabenteuer_Dino-Stadt.gme</td>
+</tr>
+<tr>
+<td>167</td>
+<td>Mitmach-Abenteuer.gme</td>
+</tr>
+<tr>
+<td>168</td>
+<td>Mein_Wörter_Bilderbuch_Kindergarten.gme</td>
+</tr>
+<tr>
+<td>170</td>
+<td>Heute_gehen_wir_einkaufen.gme</td>
+</tr>
+<tr>
+<td>171</td>
+<td>Alles_ueber_die_Musik.gme</td>
+</tr>
+<tr>
+<td>172</td>
+<td>Uhr_und_Zeit.gme</td>
+</tr>
+<tr>
+<td>173</td>
+<td>Puzzle_Entdecker_Die_Biene_Maja.gme</td>
+</tr>
+<tr>
+<td>174</td>
+<td>Puzzle_Entdecker_Baustelle.gme</td>
+</tr>
+<tr>
+<td>175</td>
+<td>Puzzle_Entdecker_Zoo.gme</td>
+</tr>
+<tr>
+<td>176</td>
+<td>Das_Geheimnis_der_Logik_Pyramide.gme</td>
+</tr>
+<tr>
+<td>177</td>
+<td>Pocketwissen_Tierkinder.gme</td>
+</tr>
+<tr>
+<td>178</td>
+<td>CREATE_Ferien_auf_dem_Reiterhof.gme</td>
+</tr>
+<tr>
+<td>179</td>
+<td>Puzzle_Entdecker_Feuerwehrmann_Sam.gme</td>
+</tr>
+<tr>
+<td>180</td>
+<td>Puzzlekarte.gme</td>
+</tr>
+<tr>
+<td>181</td>
+<td>Unterwegs_in_der_Natur.gme</td>
+</tr>
+<tr>
+<td>182</td>
+<td>Smarties.gme</td>
+</tr>
+<tr>
+<td>183</td>
+<td>Abenteuer_Supermarkt.gme</td>
+</tr>
+<tr>
+<td>184</td>
+<td>CREATE_MSA_Superhelden.gme</td>
+</tr>
+<tr>
+<td>185</td>
+<td>CREATE_SpieleErfinder.gme</td>
+</tr>
+<tr>
+<td>188</td>
+<td>CREATE_MSA_Zauberschule.gme</td>
+</tr>
+<tr>
+<td>190</td>
+<td>Die_große_Wimmelreise_der_Tiere.gme</td>
+</tr>
+<tr>
+<td>14999</td>
+<td>WissenManage.gme</td>
+</tr>
+</tbody>
+</table>
+</article>
+<article id="Links-and-Resources"><h1>Links and Resources</h1>
+<h1 id="_1">媒體</h1>
+<ul>
+<li><a href="https://tttool.readthedocs.io/de/latest">tttool-Buch</a> (德文)</li>
+<li><a href="http://www.joachim-breitner.de/various/20150130_12h20_TipToi.mp3">tttool 作者 Joachim Breitner 的電台訪談</a> (德文)</li>
+<li><a href="http://www.math.kit.edu/ianm4/seite/ma-papierrechner/de">tttool 作者 Joachim Breitner 的播客訪談</a> (德文)</li>
+<li><a href="https://www.youtube.com/watch?v=QwaXRq15n0I&amp;list=PLC019CA07E3373B69">Ravensburger 的 Youtube 頻道</a> 展示許多 Tiptoi 產品的實際運作</li>
+<li><a href="https://www.youtube.com/watch?v=ME9uszUCeP4#t=7m54s">Tiptoi 遊戲作者 Marco Teubner 的訪談</a> (德文)</li>
+<li><a href="http://youtu.be/Yic57Y9VORA">Pronwan 的動物模型</a> 展示自製 Tiptoi 動物模型。也展示了在遊戲中實現隨機性的方法</li>
+<li><a href="https://www.youtube.com/watch?v=4AjvjFM8GzM">Pronwan 的列印教學</a> (德文，附英文字幕)</li>
+<li><a href="https://www.youtube.com/watch?v=UieoGOHULVw&amp;feature=youtu.be">Pronwan 的 Tiptoi Monkey Island Adventure 原型</a></li>
+<li><a href="http://www.heise.de/ct/ausgabe/2015-8-Eigene-Buecher-und-Spiele-fuer-den-Tiptoi-vertonen-2578001.html">c't 08/15 關於 tttool 的文章</a> (德文)</li>
+<li><a href="https://entropia.de/wiki/images/b/b3/GPN15-Tiptoi.pdf">Joachim Breitner 在 GPN15 的 TipToi 簡報 (PDF)</a> (德文，解釋除錯模式的中文數字)</li>
+<li><a href="http://www.karlsruhe.de/b3/freizeit/zoo/zoopaedagogik/tiptoi.de">卡爾斯魯厄動物園的 Tiptoi</a></li>
+</ul>
+<h1 id="_2">軟體</h1>
+<ul>
+<li>在這裡可以下載 <a href="https://www.o-pen.com.cn/download/">OIDProducer</a>，用來為各種不同的 OID 系統建立自訂 OID 產品。對於 Tiptoi，「Sonix G1.5」是正確的選擇。您必須將 OIDProducer 在您的系統上產生的檔案傳送給供應商，很快就能免費取得所需的金鑰。</li>
+<li><a href="https://github.com/sengels/okteta-gme">Okteta-Strukturdefinition</a> 擴充 KDE 十六進位編輯器 Okteta，使其能夠顯示 Tiptoi GME 檔案的結構</li>
+<li><a href="https://github.com/sidiandi/ttaudio">ttaudio</a> 一個用來舒適建立 gme 檔案和列印的工具，以便用 Tiptoi 聆聽有聲書（以及音樂專輯）。</li>
+</ul>
+<h1 id="_3">硬體</h1>
+<ul>
+<li><a href="http://husmanns.ch/?page_id=7">這裡</a> 展示如何更換壞掉的揚聲器。</li>
+<li><a href="https://www.youtube.com/watch?v=LfQDjs2rB0g">如何修復壞掉的 Tiptoi 揚聲器</a> (德文)</li>
+<li><a href="https://books.google.de/books?id=xr5mqyeBUrQC&amp;pg=PA74&amp;lpg=PA74&amp;dq=tiptoi+firmware&amp;source=bl&amp;ots=_qy1jaiefQ&amp;sig=LtA403-5b3L9GNEampoz7AfBK8I&amp;hl=de&amp;sa=X&amp;ei=2fSvVI3eJMm3PKWHgIgB&amp;ved=0CEAQ6AEwBTgU#v=onepage&amp;q=tiptoi%20firmware&amp;f=false">Tiptoi 硬體描述</a> 一本書的摘錄，描述 Tiptoi 硬體的一些細節。它指出 CPU 類型是 ARM9。</li>
+<li>Conrad 提供適合的替換揚聲器：<a href="http://www.conrad.de/ce/de/product/716777/Miniaturlautsprecher-Geraeusch-Entwicklung-89-3-dB-8-Nennbelastbarkeit-05-W-560-Hz-20-Inhalt-1-St?ref=searchDetail">Miniaturlautsprecher Geräusch-Entwicklung: 89 ± 3 dB 8 Ω Nennbelastbarkeit: 0.5 W 560 Hz ± 20 % Inhalt: 1 St., Bestell-Nr. 716777 - 62</a></li>
+</ul>
+<h1 id="_4">其他</h1>
+<ul>
+<li><a href="http://tttool.entropia.de">tttool.entropia.de</a>，tttool 網頁</li>
+<li><a href="http://www.ravensburger.de">Ravensburger</a>，Tiptoi 點讀筆及相關產品的供應商。</li>
+<li>Chomp Microelectronics，這家公司製作了 Tiptoi（或至少是頂層軟體），擁有兩個網站：<ul>
+<li><a href="http://www.chomptech.com">公司網站</a></li>
+<li><a href="http://www.zc-kidology.com">教育產品</a></li>
+</ul>
+</li>
+<li><a href="http://www.anyka.com">Anyka</a>，提供主要處理器、加密 IC 和 <a href="http://www.anyka.com/en/productInfo.aspx?id=102">開發平台</a> 的公司</li>
+<li><a href="https://github.com/jinlan100130/BTPhone/tree/master/lib_code/Driverlib_SnowbirdC/arch/ak10xxL">Anyka AK10XXL 處理器的程式碼儲存庫</a></li>
+<li><a href="https://github.com/stevezuo/ak98_kernel">Anyka AK98XX 處理器的 Linux 核心原始碼儲存庫</a>。似乎涵蓋多個 Anyka 晶片家族</li>
+<li><a href="https://www.youtube.com/watch?v=SOUAX99RO6g">一段影片</a> 展示如何使用「Burntool」程式更新韌體。</li>
+<li><a href="http://www.sonix.com.tw">Sonix</a>，提供 OID 解決方案（感測器模組和影像解碼器）的公司</li>
+<li><a href="https://www.joachim-breitner.de/blog/tag/Tiptoi">Joachim 關於 Tiptoi 的部落格文章</a></li>
+<li><a href="https://blogs.fsfe.org/guido/2014/05/tiptoi-hacking-und-systemanforderungen/">Guido Arnold 的 Tiptoi 駭客</a></li>
+<li><a href="http://www.nerd.junetz.de/blogbox/index.php?/archives/1377-TipToi-Hacking.html">Mr. Blog 的 Tiptoi Hacking</a> 和 <a href="http://www.nerd.junetz.de/blogbox/index.php?/archives/1378-TipToi-Hacking-II.html">Tiptoi Hacking II</a></li>
+<li><a href="http://www.quadrierer.de/geekythinking/blog/?itemid=368">Quadrierer.de</a> 上的 Tiptoi 討論</li>
+<li>關於 Tiptoi 和相關 TING 點讀筆的討論，包括如何列印自訂書籍的討論：<a href="http://www.mikrocontroller.net/topic/214479">Wie funktioniert die Erkennung beim Hörstift TING?</a> (德文)</li>
+</ul>
+<h1 id="_5">類似點讀筆</h1>
+<ul>
+<li>Ting</li>
+<li><a href="http://www.mikrocontroller.net/attachment/152668/TING.pdf">TING 產品簡報</a> 包含許多列印細節</li>
+<li><a href="https://tingeltangel12.wordpress.com/">TingelTangel</a> 一個製作自訂 Ting 書籍的工具。</li>
+<li>BOOKii</li>
+<li>類似 <a href="https://www.ting-el-tangel.de/doku.php?id=bookii">Ting</a></li>
+<li><a href="http://www.atlas-editions.de/meinStips/view.do">Meinstips</a></li>
+<li><a href="http://www.toystick.de">Toystick</a></li>
+<li><a href="http://www.jlb.com.sg/products/item/pen-pal-whizz.html">Pen Pal Whizz</a> (同樣由 Chomptech 製作)</li>
+<li><a href="https://www.kouzelnecteni.cz/stahnout-audio-soubor/">Albi Tužka</a> - <a href="https://tatageek.blog/2021/01/28/jak-funguje-albi-tuzka/">使用 Sonix 晶片</a> (由 Guangzhou Childhood Technology 製作，型號：E8800)</li>
+<li><a href="https://blog.csdn.net/weiqifa0/article/details/119745335">展示其他中國 OID 點讀筆內部的部落格文章</a></li>
+<li><a href="https://www.bilibili.com/video/BV1Q54y1e7M6/">中國 OID 點讀筆拆解影片</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/351727573">中國 OID 點讀筆拆解和 SD 卡升級</a></li>
+</ul>
+</article>
+<article id="Home"><h1>Home</h1>
+<h2 id="tip-toi-reveng-wiki">歡迎來到 Tip-Toi-Reveng Wiki！</h2>
+<p>請從右側選擇一個類別，並歡迎您貢獻並擴充這些知識。<br>
+如果您有更多關於這支神奇點讀筆的資訊想分享，我們非常感謝您寄送電子郵件。請訂閱並寫信至 <a href="https://lists.nomeata.de/mailman/listinfo/tiptoi">the tiptoi Mailing list</a>。</p>
+<p><strong>重要事項：</strong><br>
+tttool 和這些頁面均非由 Ravensburger 提供或支援。此處顯示的所有資訊均由獨立業餘愛好者彙整，僅供教育目的。作者不對任何可能的損害承擔責任。</p>
+<p><IMG SRC="https://upload.wikimedia.org/wikipedia/commons/b/bf/Tiptoi_stift.png"><br>
+<sup>(圖片由 Schwesterschlumpf 提供 [<a href="https://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a>])</sup></p>
+</article>
+</main>
+<script>
+  const links = document.querySelectorAll('aside a[data-target]');
+  const articles = document.querySelectorAll('article');
+  function show(id) {
+    let found = false;
+    articles.forEach(a => {
+      const match = a.id === id;
+      a.classList.toggle('active', match);
+      if (match) found = true;
+    });
+    links.forEach(l => l.classList.toggle('active', l.dataset.target === id));
+    if (!found && links.length) {
+      show(links[0].dataset.target); return;
+    }
+    if (location.hash !== '#' + id) {
+      history.replaceState(null, '', '#' + id);
+    }
+    window.scrollTo(0, 0);
+  }
+  links.forEach(a => a.addEventListener('click', e => {
+    e.preventDefault();
+    show(a.dataset.target);
+  }));
+  window.addEventListener('hashchange', () => {
+    const id = location.hash.slice(1);
+    if (id) show(id);
+  });
+  const initial = location.hash.slice(1) || (links[0] && links[0].dataset.target);
+  if (initial) show(initial);
+</script>
+</body>
+</html>
