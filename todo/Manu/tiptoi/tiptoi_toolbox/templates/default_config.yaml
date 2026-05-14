@@ -1,0 +1,55 @@
+# =====================================================================
+# tiptoi_toolbox — 預設專案設定範本
+# =====================================================================
+#
+# 這是一份「全部欄位都填上預設值」的範本。
+# 直接搭配 main.py 使用：
+#
+#     python main.py --config ./default_config.yaml --task all
+#
+# 或者用 init 指令把它複製到你的專案：
+#
+#     python main.py --task init --dst ./my_project
+#
+# 所有路徑都建議 **相對於本 YAML 所在目錄** 來填寫，這樣整包搬走也能跑。
+# (main.py 會自動把相對路徑接到本檔案所在目錄。)
+# =====================================================================
+
+project:
+  name: my_tiptoi_project
+  product_id: 999          # 寫入 GME 的 product-id
+  comment: "tiptoi test pack (auto-built)"
+
+# ---------------------------------------------------------------------
+# Audio: mp3 → ogg vorbis (mono / 22050Hz)
+# ---------------------------------------------------------------------
+audio:
+  src_dir: ./audio/src     # 來源 mp3 目錄
+  out_dir: ./audio         # 輸出 ogg 目錄 (亦為 YAML / GME 所在)
+  start_oid: 1000          # 從這個 OID 開始遞增編號
+  overwrite: true          # 同名 ogg 是否覆寫
+  quality: 3               # libvorbis -q:a (0..10，3 ≈ 96 kbps)
+
+# ---------------------------------------------------------------------
+# YAML / GME (tttool assemble)
+# ---------------------------------------------------------------------
+gme:
+  yaml: ./audio/test.yaml  # 產出的 YAML
+  output: ./audio/test.gme # 最終 .gme
+  media_path: "./%s.ogg"   # YAML 內 media-path 字串
+  assemble: true           # 跑完轉檔後是否自動 tttool assemble
+
+# ---------------------------------------------------------------------
+# OID 測試索引 PDF (oid_generator)
+# ---------------------------------------------------------------------
+oid_grid:
+  low: 1000                # 範圍起 (含)
+  high: 1100               # 範圍迄 (含)
+  activation_oid: 999      # 頁首啟動碼；填 null 可關掉
+  cols: 5                  # 每列幾欄
+  code_dim_mm: 20          # 每個 OID 邊長 (mm)，1200 DPI 下 = 945 px
+  gap_mm: 20               # OID 之間最小間距 (mm)，至少 2 cm 才不易誤讀
+  page_margin_mm: 10
+  oid_dir: ./oid_codes_grid    # 暫存 tttool 產出的 PNG
+  output_pdf: ./index_test.pdf # 最終 PDF
+  regenerate: false        # true = 強制重跑 tttool

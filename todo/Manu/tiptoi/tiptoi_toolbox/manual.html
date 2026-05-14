@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="generator" content="tiptoi_toolbox/generate_html.py">
+<title>tiptoi_toolbox 使用說明書</title>
+<style>
+:root {
+  --fg: #1f2328;
+  --fg-muted: #57606a;
+  --bg: #ffffff;
+  --bg-soft: #f6f8fa;
+  --border: #d0d7de;
+  --link: #0969da;
+  --code-bg: #f6f8fa;
+  --code-border: #d0d7de;
+  --accent: #0969da;
+  --warn-bg: #fff8c5;
+  --warn-fg: #59450b;
+  --warn-border: #d4a72c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fg: #e6edf3;
+    --fg-muted: #8b949e;
+    --bg: #0d1117;
+    --bg-soft: #161b22;
+    --border: #30363d;
+    --link: #58a6ff;
+    --code-bg: #161b22;
+    --code-border: #30363d;
+    --accent: #58a6ff;
+    --warn-bg: #271c00;
+    --warn-fg: #d29922;
+    --warn-border: #9e6a03;
+  }
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "PingFang TC", "Heiti TC", "Microsoft JhengHei",
+    "Noto Sans CJK TC", "WenQuanYi Zen Hei",
+    Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--fg);
+  background: var(--bg);
+  margin: 0;
+  padding: 0;
+}
+
+main {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 32px 28px 96px;
+}
+
+header.doc-header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 18px;
+  margin-bottom: 28px;
+}
+header.doc-header .crumbs {
+  color: var(--fg-muted);
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+header.doc-header h1 {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: -0.01em;
+}
+header.doc-header .meta {
+  color: var(--fg-muted);
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 1.6em 0 0.6em;
+}
+h1 { font-size: 26px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+h2 { font-size: 22px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+h3 { font-size: 18px; }
+h4 { font-size: 16px; color: var(--fg-muted); }
+
+p { margin: 0.6em 0; }
+
+a { color: var(--link); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+ul, ol { padding-left: 1.6em; }
+li { margin: 0.25em 0; }
+li > p { margin: 0.25em 0; }
+
+blockquote {
+  border-left: 4px solid var(--border);
+  margin: 1em 0;
+  padding: 0.4em 1em;
+  color: var(--fg-muted);
+  background: var(--bg-soft);
+  border-radius: 4px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+  font-size: 14px;
+}
+table th, table td {
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  text-align: left;
+  vertical-align: top;
+}
+table th { background: var(--bg-soft); font-weight: 600; }
+table tr:nth-child(2n) td { background: var(--bg-soft); }
+
+/* Inline code */
+code, kbd, samp {
+  font-family:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 0.92em;
+}
+:not(pre) > code {
+  background: var(--code-bg);
+  border: 1px solid var(--code-border);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+/* Fenced code blocks */
+pre {
+  background: var(--code-bg);
+  border: 1px solid var(--code-border);
+  border-radius: 6px;
+  padding: 12px 14px;
+  overflow: auto;
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+pre code { background: transparent; border: 0; padding: 0; }
+
+/* Pygments wraps with .codehilite when codehilite extension is on */
+.codehilite { background: var(--code-bg); border-radius: 6px; }
+
+/* TOC */
+.toc {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px 24px;
+  margin: 0 0 28px;
+  font-size: 14px;
+}
+.toc::before {
+  content: "目錄";
+  display: block;
+  font-weight: 600;
+  font-size: 15px;
+  margin-bottom: 6px;
+  color: var(--fg);
+}
+.toc > ul { padding-left: 1.2em; }
+.toc ul ul { padding-left: 1.2em; }
+.toc li { margin: 0.18em 0; }
+
+/* Admonition-ish blockquotes */
+blockquote.note { border-left-color: var(--accent); }
+blockquote.warn {
+  background: var(--warn-bg);
+  color: var(--warn-fg);
+  border-left-color: var(--warn-border);
+}
+
+footer.doc-footer {
+  margin-top: 64px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  color: var(--fg-muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+/* 列印 */
+@media print {
+  body { background: white; color: black; font-size: 11pt; }
+  main { padding: 0 12mm; max-width: none; }
+  pre, code { font-size: 9pt; }
+  a { color: black; text-decoration: none; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 9pt; color: #444; }
+  h1 { page-break-before: always; }
+  h1:first-of-type { page-break-before: auto; }
+  .toc { page-break-after: always; }
+}
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.codehilite .hll { background-color: #ffffcc }
+.codehilite { background: #f8f8f8; }
+.codehilite .c { color: #3D7B7B; font-style: italic } /* Comment */
+.codehilite .err { border: 1px solid #F00 } /* Error */
+.codehilite .k { color: #008000; font-weight: bold } /* Keyword */
+.codehilite .o { color: #666 } /* Operator */
+.codehilite .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.codehilite .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.codehilite .cp { color: #9C6500 } /* Comment.Preproc */
+.codehilite .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.codehilite .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.codehilite .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.codehilite .gd { color: #A00000 } /* Generic.Deleted */
+.codehilite .ge { font-style: italic } /* Generic.Emph */
+.codehilite .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.codehilite .gr { color: #E40000 } /* Generic.Error */
+.codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.codehilite .gi { color: #008400 } /* Generic.Inserted */
+.codehilite .go { color: #717171 } /* Generic.Output */
+.codehilite .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.codehilite .gs { font-weight: bold } /* Generic.Strong */
+.codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilite .gt { color: #04D } /* Generic.Traceback */
+.codehilite .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.codehilite .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.codehilite .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.codehilite .kp { color: #008000 } /* Keyword.Pseudo */
+.codehilite .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.codehilite .kt { color: #B00040 } /* Keyword.Type */
+.codehilite .m { color: #666 } /* Literal.Number */
+.codehilite .s { color: #BA2121 } /* Literal.String */
+.codehilite .na { color: #687822 } /* Name.Attribute */
+.codehilite .nb { color: #008000 } /* Name.Builtin */
+.codehilite .nc { color: #00F; font-weight: bold } /* Name.Class */
+.codehilite .no { color: #800 } /* Name.Constant */
+.codehilite .nd { color: #A2F } /* Name.Decorator */
+.codehilite .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.codehilite .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.codehilite .nf { color: #00F } /* Name.Function */
+.codehilite .nl { color: #767600 } /* Name.Label */
+.codehilite .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+.codehilite .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.codehilite .nv { color: #19177C } /* Name.Variable */
+.codehilite .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+.codehilite .w { color: #BBB } /* Text.Whitespace */
+.codehilite .mb { color: #666 } /* Literal.Number.Bin */
+.codehilite .mf { color: #666 } /* Literal.Number.Float */
+.codehilite .mh { color: #666 } /* Literal.Number.Hex */
+.codehilite .mi { color: #666 } /* Literal.Number.Integer */
+.codehilite .mo { color: #666 } /* Literal.Number.Oct */
+.codehilite .sa { color: #BA2121 } /* Literal.String.Affix */
+.codehilite .sb { color: #BA2121 } /* Literal.String.Backtick */
+.codehilite .sc { color: #BA2121 } /* Literal.String.Char */
+.codehilite .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.codehilite .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.codehilite .s2 { color: #BA2121 } /* Literal.String.Double */
+.codehilite .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.codehilite .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.codehilite .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.codehilite .sx { color: #008000 } /* Literal.String.Other */
+.codehilite .sr { color: #A45A77 } /* Literal.String.Regex */
+.codehilite .s1 { color: #BA2121 } /* Literal.String.Single */
+.codehilite .ss { color: #19177C } /* Literal.String.Symbol */
+.codehilite .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #00F } /* Name.Function.Magic */
+.codehilite .vc { color: #19177C } /* Name.Variable.Class */
+.codehilite .vg { color: #19177C } /* Name.Variable.Global */
+.codehilite .vi { color: #19177C } /* Name.Variable.Instance */
+.codehilite .vm { color: #19177C } /* Name.Variable.Magic */
+.codehilite .il { color: #666 } /* Literal.Number.Integer.Long */
+@media (prefers-color-scheme: dark) {
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.codehilite .hll { background-color: #49483e }
+.codehilite { background: #272822; color: #F8F8F2 }
+.codehilite .c { color: #959077 } /* Comment */
+.codehilite .err { color: #ED007E; background-color: #1E0010 } /* Error */
+.codehilite .esc { color: #F8F8F2 } /* Escape */
+.codehilite .g { color: #F8F8F2 } /* Generic */
+.codehilite .k { color: #66D9EF } /* Keyword */
+.codehilite .l { color: #AE81FF } /* Literal */
+.codehilite .n { color: #F8F8F2 } /* Name */
+.codehilite .o { color: #FF4689 } /* Operator */
+.codehilite .x { color: #F8F8F2 } /* Other */
+.codehilite .p { color: #F8F8F2 } /* Punctuation */
+.codehilite .ch { color: #959077 } /* Comment.Hashbang */
+.codehilite .cm { color: #959077 } /* Comment.Multiline */
+.codehilite .cp { color: #959077 } /* Comment.Preproc */
+.codehilite .cpf { color: #959077 } /* Comment.PreprocFile */
+.codehilite .c1 { color: #959077 } /* Comment.Single */
+.codehilite .cs { color: #959077 } /* Comment.Special */
+.codehilite .gd { color: #FF4689 } /* Generic.Deleted */
+.codehilite .ge { color: #F8F8F2; font-style: italic } /* Generic.Emph */
+.codehilite .ges { color: #F8F8F2; font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.codehilite .gr { color: #F8F8F2 } /* Generic.Error */
+.codehilite .gh { color: #F8F8F2 } /* Generic.Heading */
+.codehilite .gi { color: #A6E22E } /* Generic.Inserted */
+.codehilite .go { color: #66D9EF } /* Generic.Output */
+.codehilite .gp { color: #FF4689; font-weight: bold } /* Generic.Prompt */
+.codehilite .gs { color: #F8F8F2; font-weight: bold } /* Generic.Strong */
+.codehilite .gu { color: #959077 } /* Generic.Subheading */
+.codehilite .gt { color: #F8F8F2 } /* Generic.Traceback */
+.codehilite .kc { color: #66D9EF } /* Keyword.Constant */
+.codehilite .kd { color: #66D9EF } /* Keyword.Declaration */
+.codehilite .kn { color: #FF4689 } /* Keyword.Namespace */
+.codehilite .kp { color: #66D9EF } /* Keyword.Pseudo */
+.codehilite .kr { color: #66D9EF } /* Keyword.Reserved */
+.codehilite .kt { color: #66D9EF } /* Keyword.Type */
+.codehilite .ld { color: #E6DB74 } /* Literal.Date */
+.codehilite .m { color: #AE81FF } /* Literal.Number */
+.codehilite .s { color: #E6DB74 } /* Literal.String */
+.codehilite .na { color: #A6E22E } /* Name.Attribute */
+.codehilite .nb { color: #F8F8F2 } /* Name.Builtin */
+.codehilite .nc { color: #A6E22E } /* Name.Class */
+.codehilite .no { color: #66D9EF } /* Name.Constant */
+.codehilite .nd { color: #A6E22E } /* Name.Decorator */
+.codehilite .ni { color: #F8F8F2 } /* Name.Entity */
+.codehilite .ne { color: #A6E22E } /* Name.Exception */
+.codehilite .nf { color: #A6E22E } /* Name.Function */
+.codehilite .nl { color: #F8F8F2 } /* Name.Label */
+.codehilite .nn { color: #F8F8F2 } /* Name.Namespace */
+.codehilite .nx { color: #A6E22E } /* Name.Other */
+.codehilite .py { color: #F8F8F2 } /* Name.Property */
+.codehilite .nt { color: #FF4689 } /* Name.Tag */
+.codehilite .nv { color: #F8F8F2 } /* Name.Variable */
+.codehilite .ow { color: #FF4689 } /* Operator.Word */
+.codehilite .pm { color: #F8F8F2 } /* Punctuation.Marker */
+.codehilite .w { color: #F8F8F2 } /* Text.Whitespace */
+.codehilite .mb { color: #AE81FF } /* Literal.Number.Bin */
+.codehilite .mf { color: #AE81FF } /* Literal.Number.Float */
+.codehilite .mh { color: #AE81FF } /* Literal.Number.Hex */
+.codehilite .mi { color: #AE81FF } /* Literal.Number.Integer */
+.codehilite .mo { color: #AE81FF } /* Literal.Number.Oct */
+.codehilite .sa { color: #E6DB74 } /* Literal.String.Affix */
+.codehilite .sb { color: #E6DB74 } /* Literal.String.Backtick */
+.codehilite .sc { color: #E6DB74 } /* Literal.String.Char */
+.codehilite .dl { color: #E6DB74 } /* Literal.String.Delimiter */
+.codehilite .sd { color: #E6DB74 } /* Literal.String.Doc */
+.codehilite .s2 { color: #E6DB74 } /* Literal.String.Double */
+.codehilite .se { color: #AE81FF } /* Literal.String.Escape */
+.codehilite .sh { color: #E6DB74 } /* Literal.String.Heredoc */
+.codehilite .si { color: #E6DB74 } /* Literal.String.Interpol */
+.codehilite .sx { color: #E6DB74 } /* Literal.String.Other */
+.codehilite .sr { color: #E6DB74 } /* Literal.String.Regex */
+.codehilite .s1 { color: #E6DB74 } /* Literal.String.Single */
+.codehilite .ss { color: #E6DB74 } /* Literal.String.Symbol */
+.codehilite .bp { color: #F8F8F2 } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #A6E22E } /* Name.Function.Magic */
+.codehilite .vc { color: #F8F8F2 } /* Name.Variable.Class */
+.codehilite .vg { color: #F8F8F2 } /* Name.Variable.Global */
+.codehilite .vi { color: #F8F8F2 } /* Name.Variable.Instance */
+.codehilite .vm { color: #F8F8F2 } /* Name.Variable.Magic */
+.codehilite .il { color: #AE81FF } /* Literal.Number.Integer.Long */
+}
+
+</style>
+</head>
+<body>
+<main>
+<header class="doc-header">
+  <div class="crumbs">tiptoi_toolbox · 文件</div>
+  <h1>tiptoi_toolbox 使用說明書</h1>
+  <div class="meta">由 generate_html.py 於 2026-05-14 14:26 產生 ‧ 來源 User_Manual_CN.md ‧ 10,380 字元</div>
+</header>
+
+<h1 id="tiptoi_toolbox">tiptoi_toolbox 使用說明書</h1>
+<div class="toc">
+<ul>
+<li><a href="#1">1. 這份工具箱能做什麼</a></li>
+<li><a href="#2">2. 環境依賴</a><ul>
+<li><a href="#21">2.1 系統二進位</a><ul>
+<li><a href="#ffmpeg">ffmpeg（音訊轉碼）</a></li>
+<li><a href="#tttooloid-gme">tttool（OID 點讀碼產生 / GME 組裝）</a></li>
+<li><a href="#cjk-pdf">CJK 中文字型（PDF 中文標籤需要）</a></li>
+</ul>
+</li>
+<li><a href="#22-python">2.2 Python 套件</a></li>
+<li><a href="#23">2.3 一鍵驗證</a></li>
+</ul>
+</li>
+<li><a href="#3-5">3. 第一次使用（5 分鐘上手）</a><ul>
+<li><a href="#31">3.1 建立專案資料夾</a></li>
+<li><a href="#32-mp3">3.2 把 mp3 放進去</a></li>
+<li><a href="#33">3.3 編輯設定</a></li>
+<li><a href="#34">3.4 跑一條龍</a></li>
+<li><a href="#35-gme-pdf">3.5 把 .gme 灌進筆 + 列印 PDF + 開測</a></li>
+</ul>
+</li>
+<li><a href="#4-1200-dpi">4. 印表機 1200 DPI 設定建議（重要）</a><ul>
+<li><a href="#41">4.1 必要硬體條件</a></li>
+<li><a href="#42">4.2 印表機驅動設定</a><ul>
+<li><a href="#linux-cups">Linux (CUPS)</a></li>
+<li><a href="#macos">macOS</a></li>
+<li><a href="#windows">Windows</a></li>
+</ul>
+</li>
+<li><a href="#43">4.3 列印對話框</a></li>
+<li><a href="#44">4.4 印完怎麼驗證</a></li>
+</ul>
+</li>
+<li><a href="#5-oid-10001100-qa">5. OID 1000–1100 測試流程（標準 QA 程序）</a><ul>
+<li><a href="#step-1-mp3">Step 1 — 準備 mp3</a></li>
+<li><a href="#step-2">Step 2 — 跑一條龍</a></li>
+<li><a href="#step-3-gme">Step 3 — 灌 GME 進筆</a></li>
+<li><a href="#step-4-pdf">Step 4 — 列印 PDF</a></li>
+<li><a href="#step-5">Step 5 — 逐碼點測</a></li>
+<li><a href="#step-6">Step 6 — 故障排除對照表</a></li>
+<li><a href="#step-7">Step 7 — 通過驗收</a></li>
+</ul>
+</li>
+<li><a href="#6">6. 進階使用</a><ul>
+<li><a href="#61">6.1 拆步驟跑</a></li>
+<li><a href="#62-oid">6.2 改 OID 物理尺寸</a></li>
+<li><a href="#63-python">6.3 在 Python 程式裡呼叫</a></li>
+<li><a href="#64-html">6.4 自製 HTML 說明書</a></li>
+</ul>
+</li>
+<li><a href="#7">7. 整包搬移到別台機器</a></li>
+<li><a href="#8">8. 檔案結構詳細表</a></li>
+<li><a href="#9-faq">9. 常見問題 (FAQ)</a></li>
+</ul>
+</div>
+<blockquote>
+<p>一個自帶 CLI 的小工具箱，把 <strong>mp3 → ogg → tttool 組裝 .gme</strong> 與
+<strong>OID 點讀碼測試 PDF</strong> 兩條流程都封進同一個資料夾，可整包搬走、跨機器執行。
+適合給 tiptoi 點讀筆做客製語音包與品質驗證。</p>
+</blockquote>
+<hr>
+<h2 id="1">1. 這份工具箱能做什麼</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">任務</th>
+<th style="text-align: left;">對應指令</th>
+<th style="text-align: left;">產出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">偵測環境</td>
+<td style="text-align: left;"><code>python main.py --task info</code></td>
+<td style="text-align: left;">列出 ffmpeg / tttool / 字型 / Python 套件版本</td>
+</tr>
+<tr>
+<td style="text-align: left;">建立新專案</td>
+<td style="text-align: left;"><code>python main.py --task init --dst ./my_project</code></td>
+<td style="text-align: left;"><code>my_project/default_config.yaml</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">音檔轉碼 + 組 GME</td>
+<td style="text-align: left;"><code>python main.py --task convert --src ./audio/src</code></td>
+<td style="text-align: left;"><code>&lt;oid&gt;.ogg</code>、<code>test.yaml</code>、<code>test.gme</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">只組 GME</td>
+<td style="text-align: left;"><code>python main.py --task assemble --yaml ./test.yaml</code></td>
+<td style="text-align: left;"><code>test.gme</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">印測試索引 PDF</td>
+<td style="text-align: left;"><code>python main.py --task grid --low 1000 --high 1100</code></td>
+<td style="text-align: left;"><code>index_test.pdf</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">一條龍</td>
+<td style="text-align: left;"><code>python main.py --task all --src ./audio/src</code></td>
+<td style="text-align: left;">上面全部</td>
+</tr>
+<tr>
+<td style="text-align: left;">產出 HTML 說明書</td>
+<td style="text-align: left;"><code>python generate_html.py</code></td>
+<td style="text-align: left;"><code>manual.html</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="2">2. 環境依賴</h2>
+<p>工具箱本身只是 Python；真正做事的是兩個 <strong>系統二進位</strong> + 幾個 pip 套件。</p>
+<h3 id="21">2.1 系統二進位</h3>
+<h4 id="ffmpeg"><code>ffmpeg</code>（音訊轉碼）</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Ubuntu / Debian</span>
+sudo<span class="w"> </span>apt<span class="w"> </span>update
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>ffmpeg
+
+<span class="c1"># macOS</span>
+brew<span class="w"> </span>install<span class="w"> </span>ffmpeg
+
+<span class="c1"># Windows (winget)</span>
+winget<span class="w"> </span>install<span class="w"> </span>Gyan.FFmpeg
+</code></pre></div>
+
+<p>驗證：</p>
+<div class="codehilite"><pre><span></span><code>ffmpeg<span class="w"> </span>-version
+</code></pre></div>
+
+<h4 id="tttooloid-gme"><code>tttool</code>（OID 點讀碼產生 / GME 組裝）</h4>
+<p>來源：<a href="https://github.com/entropia/tip-toi-reveng/releases">https://github.com/entropia/tip-toi-reveng/releases</a></p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 範例：Linux x86_64</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>~/opt<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/opt
+wget<span class="w"> </span>https://github.com/entropia/tip-toi-reveng/releases/download/1.11/tttool-1.11.zip
+unzip<span class="w"> </span>tttool-1.11.zip
+<span class="c1"># 注意 zip 內的 `tttool` 是 wrapper script，會去找 `linux/tttool` 真檔。</span>
+<span class="c1"># 最簡單的作法是把 ELF 檔直接放到 PATH：</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>~/bin
+cp<span class="w"> </span>~/opt/tttool-1.11/linux/tttool<span class="w"> </span>~/bin/tttool
+chmod<span class="w"> </span>+x<span class="w"> </span>~/bin/tttool
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export PATH=&quot;$HOME/bin:$PATH&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+<span class="nb">source</span><span class="w"> </span>~/.bashrc
+</code></pre></div>
+
+<p>驗證：</p>
+<div class="codehilite"><pre><span></span><code>tttool<span class="w"> </span>--version
+<span class="c1"># 預期輸出: tttool 1.11</span>
+</code></pre></div>
+
+<blockquote>
+<p><strong>常見坑：</strong> 直接把 zip 內的 wrapper symlink 到 <code>~/bin/tttool</code> 會出現
+<code>linux/tttool: No such file or directory</code>，因為 wrapper 是用相對路徑找
+ELF 檔。改成上面「直接複製 ELF 二進位」的作法即可。</p>
+</blockquote>
+<h4 id="cjk-pdf">CJK 中文字型（PDF 中文標籤需要）</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1"># Ubuntu / Debian (二擇一即可)</span>
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>fonts-wqy-zenhei<span class="w">      </span><span class="c1"># 文泉驛正黑 (預設第一順位)</span>
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>fonts-noto-cjk<span class="w">        </span><span class="c1"># Noto Sans CJK</span>
+</code></pre></div>
+
+<p>工具箱會自動偵測並 fallback 到 Helvetica（中文會變方塊），所以
+不裝也跑得起來，只是 PDF 標題會看不到中文。</p>
+<h3 id="22-python">2.2 Python 套件</h3>
+<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>tiptoi_toolbox
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</code></pre></div>
+
+<p><code>requirements.txt</code> 內容：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">套件</th>
+<th style="text-align: left;">用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>reportlab</code></td>
+<td style="text-align: left;">產 PDF</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Pillow</code></td>
+<td style="text-align: left;">影像預處理 (LA → 1-bit)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PyYAML</code></td>
+<td style="text-align: left;">讀 <code>--config</code> 設定檔</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>markdown</code></td>
+<td style="text-align: left;"><code>generate_html.py</code> 主引擎</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Pygments</code></td>
+<td style="text-align: left;">程式碼語法高亮</td>
+</tr>
+</tbody>
+</table>
+<p>可選：<code>pydub</code>（如果你想用更 high-level 的 Python API 處理音檔，
+不過本工具箱用 <code>subprocess</code> 直接呼叫 ffmpeg 以求最少依賴與最大可預測性）。</p>
+<h3 id="23">2.3 一鍵驗證</h3>
+<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>tiptoi_toolbox
+python3<span class="w"> </span>main.py<span class="w"> </span>--task<span class="w"> </span>info
+</code></pre></div>
+
+<p>應看到 ffmpeg / tttool / CJK font 都顯示路徑，五個 Python 套件都標 <code>[OK]</code>。
+任何一行顯示 <code>(NOT FOUND)</code> 或 <code>(not installed)</code> 就先補齊它。</p>
+<hr>
+<h2 id="3-5">3. 第一次使用（5 分鐘上手）</h2>
+<blockquote>
+<p>以下範例假設工具箱解壓在 <code>&lt;TOOLBOX&gt;</code> 這個位置（例：
+<code>~/tiptoi_toolbox</code> 或 <code>D:\tools\tiptoi_toolbox</code>）。把 <code>&lt;TOOLBOX&gt;</code>
+整段替換成你電腦上的實際路徑即可。</p>
+</blockquote>
+<h3 id="31">3.1 建立專案資料夾</h3>
+<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/projects<span class="w">                 </span><span class="c1"># 或任何你喜歡的位置</span>
+python<span class="w"> </span>&lt;TOOLBOX&gt;/main.py<span class="w"> </span>--task<span class="w"> </span>init<span class="w"> </span>--dst<span class="w"> </span>./my_voice_pack
+</code></pre></div>
+
+<p>得到：</p>
+<div class="codehilite"><pre><span></span><code>my_voice_pack/
+└── default_config.yaml
+</code></pre></div>
+
+<h3 id="32-mp3">3.2 把 mp3 放進去</h3>
+<div class="codehilite"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>my_voice_pack/audio/src
+<span class="c1"># 把要錄進筆的 mp3 都放進去；建議命名 01_xxx.mp3, 02_xxx.mp3 ...</span>
+<span class="c1"># 排序順序就是 OID 編號順序</span>
+ls<span class="w"> </span>my_voice_pack/audio/src
+<span class="c1"># 01_hello.mp3  02_thanks.mp3  03_goodbye.mp3 ...</span>
+</code></pre></div>
+
+<h3 id="33">3.3 編輯設定</h3>
+<p>打開 <code>my_voice_pack/default_config.yaml</code>，至少確認：</p>
+<div class="codehilite"><pre><span></span><code><span class="nt">project</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">product_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">999</span><span class="w">          </span><span class="c1"># 想用哪個 product-id</span>
+
+<span class="nt">audio</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">src_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./audio/src</span><span class="w">     </span><span class="c1"># 不動 (相對於 yaml 所在目錄)</span>
+<span class="w">  </span><span class="nt">out_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./audio</span>
+<span class="w">  </span><span class="nt">start_oid</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span><span class="w">          </span><span class="c1"># 想從哪個 OID 開始</span>
+
+<span class="nt">oid_grid</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">low</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
+<span class="w">  </span><span class="nt">high</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1100</span><span class="w">               </span><span class="c1"># 視 mp3 數量調整</span>
+</code></pre></div>
+
+<h3 id="34">3.4 跑一條龍</h3>
+<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>my_voice_pack
+python<span class="w"> </span>&lt;TOOLBOX&gt;/main.py<span class="w"> </span>--config<span class="w"> </span>./default_config.yaml<span class="w"> </span>--task<span class="w"> </span>all
+</code></pre></div>
+
+<p>跑完會產出：</p>
+<div class="codehilite"><pre><span></span><code>my_voice_pack/
+├── audio/
+│   ├── 1000.ogg       # 從 01_hello.mp3 來
+│   ├── 1001.ogg       # 從 02_thanks.mp3 來
+│   ├── ...
+│   ├── test.yaml      # tttool 用的設定
+│   └── test.gme       # 燒進筆的最終檔
+├── oid_codes_grid/    # 100 個 oid-NNNN.png (供 PDF 用)
+└── index_test.pdf     # A4 測試索引頁
+</code></pre></div>
+
+<h3 id="35-gme-pdf">3.5 把 .gme 灌進筆 + 列印 PDF + 開測</h3>
+<ol>
+<li>將點讀筆接 USB，會被當隨身碟掛載。</li>
+<li>把 <code>audio/test.gme</code> 複製到筆內存放 GME 檔的目錄
+   （視筆代不同，常見是根目錄或 <code>gme/</code>）。</li>
+<li>拔筆、開機。</li>
+<li>用筆點 PDF 上的 999 啟動碼（或你 product-id 對應的啟動碼）。</li>
+<li>依序點 1000、1001 …，每個都應該對應你錄的那段 mp3。</li>
+</ol>
+<hr>
+<h2 id="4-1200-dpi">4. 印表機 1200 DPI 設定建議（<strong>重要</strong>）</h2>
+<p>OID 是「微點陣列」，每個 dot 約 0.1 mm，要靠 <strong>印表機解析度</strong>
++ <strong>筆的鏡頭</strong> 才讀得到。沒設好就是「全部點不到反應」。</p>
+<h3 id="41">4.1 必要硬體條件</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">項目</th>
+<th style="text-align: left;">最低</th>
+<th style="text-align: left;">建議</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">印表機</td>
+<td style="text-align: left;">600 dpi 雷射</td>
+<td style="text-align: left;"><strong>1200 dpi 雷射</strong></td>
+</tr>
+<tr>
+<td style="text-align: left;">紙張</td>
+<td style="text-align: left;">80 g/m² 普通影印紙</td>
+<td style="text-align: left;">80–100 g/m² 霧面影印紙</td>
+</tr>
+<tr>
+<td style="text-align: left;">碳粉</td>
+<td style="text-align: left;">原廠碳粉</td>
+<td style="text-align: left;">原廠碳粉 (副廠常擴散變模糊)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>❌ <strong>不要用噴墨印表機。</strong> 噴墨墨點會在紙纖維上擴散，把 dot 糊掉。
+❌ <strong>不要用熱昇華 / 熱感應。</strong> 對比不夠 / 反光問題。
+⚠ 如果只有 600 dpi，OID 物理尺寸請拉到 25 mm 以上，dot 還是能讀，
+   但建議升級到 1200 dpi 印表機。</p>
+</blockquote>
+<h3 id="42">4.2 印表機驅動設定</h3>
+<h4 id="linux-cups">Linux (CUPS)</h4>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 系統設定 → 印表機 → 你的雷射印表機 → Settings</span>
+<span class="c1"># 把以下都勾上 / 設定:</span>
+<span class="c1">#   Resolution: 1200 dpi  (而不是 600 / Auto)</span>
+<span class="c1">#   Color Mode: Black &amp; White / Grayscale</span>
+<span class="c1">#   Toner Saving / Economy mode: OFF</span>
+<span class="c1">#   Smoothing / 邊緣強化: OFF       ← 這個會把 dot 圓化導致誤讀</span>
+<span class="c1">#   Resize / Scaling: 100% / Actual Size  ← 千萬不能 Fit to page</span>
+</code></pre></div>
+
+<h4 id="macos">macOS</h4>
+<p><code>File → Print</code> 進去後：</p>
+<ul>
+<li><strong>Show Details</strong> 展開</li>
+<li>紙張設定選 A4</li>
+<li>縮放 (Scale) 設 <strong>100%</strong></li>
+<li>Quality 選 <strong>Best / 1200 dpi</strong></li>
+<li>影像處理 / Halftone 關掉</li>
+</ul>
+<h4 id="windows">Windows</h4>
+<p>印表機內容 → 進階：</p>
+<ul>
+<li>列印品質：<strong>1200 × 1200 dpi</strong></li>
+<li>色彩模式：黑白 / 灰階</li>
+<li>紙張處理：實際大小 (不縮放)</li>
+<li>圖形設定 → 影像平滑化 / TrueType 替代：<strong>關閉</strong></li>
+</ul>
+<h3 id="43">4.3 列印對話框</h3>
+<p>無論哪個 OS，<strong>「縮放 / Scaling」一定要設 100% / Actual Size</strong>。
+任何 “Fit to page”、“Shrink to fit”、“Auto” 都會把 dot pitch 拉跑掉，
+筆會完全讀不到。</p>
+<p>PDF 第 1 頁的頁尾固定有提醒：</p>
+<blockquote>
+<p>列印：A4 100% 不縮放 ‧ 600 DPI 以上雷射印表機</p>
+</blockquote>
+<p>照做就對了。</p>
+<h3 id="44">4.4 印完怎麼驗證</h3>
+<ol>
+<li>拿真的 999 OID 圖卡（隨筆附的活化卡）跟你印的 999 比對：
+   兩者用尺量物理尺寸應幾乎一模一樣（差異 &lt; 0.5 mm）。</li>
+<li>用筆先點原廠 999 → 換點你印的 999 → 兩者都能切換語系才算過關。</li>
+<li>再點 1000、1001 確認音檔對得上。</li>
+</ol>
+<p>如果原廠卡能讀、你印的不能讀 → <strong>印表機設定問題</strong>（多半是 dpi
+被降回 600 或開了平滑化）。</p>
+<hr>
+<h2 id="5-oid-10001100-qa">5. OID 1000–1100 測試流程（標準 QA 程序）</h2>
+<p>這是把整個工具箱端到端跑一遍的標準腳本。</p>
+<h3 id="step-1-mp3">Step 1 — 準備 mp3</h3>
+<p>把你要驗的所有音檔放進 <code>audio/src/</code>，按命名排序。
+數量等於你要的 OID 數量；本範例是 101 段（OID 1000 到 1100）。</p>
+<div class="codehilite"><pre><span></span><code>ls<span class="w"> </span>audio/src<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
+<span class="c1"># 101</span>
+</code></pre></div>
+
+<h3 id="step-2">Step 2 — 跑一條龍</h3>
+<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>main.py<span class="w"> </span>--config<span class="w"> </span>./default_config.yaml<span class="w"> </span>--task<span class="w"> </span>all
+</code></pre></div>
+
+<p>或不用設定檔：</p>
+<div class="codehilite"><pre><span></span><code>python<span class="w"> </span>main.py<span class="w"> </span>--task<span class="w"> </span>all<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--src<span class="w"> </span>./audio/src<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--start-oid<span class="w"> </span><span class="m">1000</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--product-id<span class="w"> </span><span class="m">999</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--low<span class="w"> </span><span class="m">1000</span><span class="w"> </span>--high<span class="w"> </span><span class="m">1100</span>
+</code></pre></div>
+
+<p>預期輸出尾段：</p>
+<div class="codehilite"><pre><span></span><code>轉檔成功: 101 / 101
+YAML:    .../audio/test.yaml  (3.10 KB)
+GME:     .../audio/test.gme  (XX.XX MB)
+
+[grid] OID 1000..1100  → index_test.pdf
+完成: index_test.pdf  (~1 MB)
+頁數: 4
+OID 像素: 945×945
+</code></pre></div>
+
+<h3 id="step-3-gme">Step 3 — 灌 GME 進筆</h3>
+<div class="codehilite"><pre><span></span><code>audio/test.gme  →  (USB 複製)  →  筆內 GME 目錄
+</code></pre></div>
+
+<h3 id="step-4-pdf">Step 4 — 列印 PDF</h3>
+<p><code>index_test.pdf</code> 用 1200 dpi 雷射印表機 100% 列印（見 §4）。
+4 頁全部印好。</p>
+<h3 id="step-5">Step 5 — 逐碼點測</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">步驟</th>
+<th style="text-align: left;">操作</th>
+<th style="text-align: left;">預期結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">點 PDF 第 1 頁的 999</td>
+<td style="text-align: left;">筆切到對應語系 / 提示音</td>
+</tr>
+<tr>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">點第 1 頁的 1000</td>
+<td style="text-align: left;">第 1 段音檔播放</td>
+</tr>
+<tr>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">點第 1 頁的 1001</td>
+<td style="text-align: left;">第 2 段音檔播放</td>
+</tr>
+<tr>
+<td style="text-align: left;">…</td>
+<td style="text-align: left;">直到第 4 頁的 1100</td>
+<td style="text-align: left;">第 101 段音檔播放</td>
+</tr>
+</tbody>
+</table>
+<h3 id="step-6">Step 6 — 故障排除對照表</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">現象</th>
+<th style="text-align: left;">可能原因</th>
+<th style="text-align: left;">處理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">點任何碼都沒反應</td>
+<td style="text-align: left;">沒點 999 啟動 / 印表機 dpi 不夠 / GME 沒灌</td>
+<td style="text-align: left;">先確認 §4.4 的驗證步驟</td>
+</tr>
+<tr>
+<td style="text-align: left;">999 有反應，1000 開始全沒反應</td>
+<td style="text-align: left;">product-id 對不上</td>
+<td style="text-align: left;">確認 <code>default_config.yaml</code> 的 <code>project.product_id</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">99% 能讀，少數幾顆不行</td>
+<td style="text-align: left;">dot 印壞 / 紙皺</td>
+<td style="text-align: left;">重印該頁，或用 <code>--regenerate</code> 重產 PNG 再印</td>
+</tr>
+<tr>
+<td style="text-align: left;">點 1000 卻播 1001 的音</td>
+<td style="text-align: left;">mp3 命名排序跟想的不一樣</td>
+<td style="text-align: left;">改 mp3 檔名讓字典序符合預期</td>
+</tr>
+<tr>
+<td style="text-align: left;">筆唸出錯誤的「啟動碼語言」</td>
+<td style="text-align: left;">999 對應第 4 代筆是 <em>德語</em> 切換</td>
+<td style="text-align: left;">換用筆對應語系的活化碼，而不是硬填 999</td>
+</tr>
+</tbody>
+</table>
+<h3 id="step-7">Step 7 — 通過驗收</h3>
+<p>101 個 OID 全對 → 把 <code>audio/test.gme</code>、<code>audio/test.yaml</code>、<code>index_test.pdf</code>
+打包封存即可（建議連同當次 <code>default_config.yaml</code> 一起存）。</p>
+<hr>
+<h2 id="6">6. 進階使用</h2>
+<h3 id="61">6.1 拆步驟跑</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 只轉檔，不組 GME</span>
+python<span class="w"> </span>main.py<span class="w"> </span>--task<span class="w"> </span>convert<span class="w"> </span>--src<span class="w"> </span>./mp3<span class="w"> </span>--no-assemble
+
+<span class="c1"># 之後手動組</span>
+python<span class="w"> </span>main.py<span class="w"> </span>--task<span class="w"> </span>assemble<span class="w"> </span>--yaml<span class="w"> </span>./audio/test.yaml
+
+<span class="c1"># 換印新一批 OID 但不重做音檔</span>
+python<span class="w"> </span>main.py<span class="w"> </span>--task<span class="w"> </span>grid<span class="w"> </span>--low<span class="w"> </span><span class="m">2000</span><span class="w"> </span>--high<span class="w"> </span><span class="m">2050</span><span class="w"> </span>--code-dim<span class="w"> </span><span class="m">22</span><span class="w"> </span>--cols<span class="w"> </span><span class="m">4</span>
+</code></pre></div>
+
+<h3 id="62-oid">6.2 改 OID 物理尺寸</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 18 mm × 18 mm OID，5 欄</span>
+python<span class="w"> </span>main.py<span class="w"> </span>--task<span class="w"> </span>grid<span class="w"> </span>--code-dim<span class="w"> </span><span class="m">18</span><span class="w"> </span>--gap-mm<span class="w"> </span><span class="m">22</span>
+
+<span class="c1"># 25 mm × 25 mm OID，4 欄</span>
+python<span class="w"> </span>main.py<span class="w"> </span>--task<span class="w"> </span>grid<span class="w"> </span>--code-dim<span class="w"> </span><span class="m">25</span><span class="w"> </span>--cols<span class="w"> </span><span class="m">4</span><span class="w"> </span>--gap-mm<span class="w"> </span><span class="m">22</span>
+</code></pre></div>
+
+<p>排版函式會自動算「裝不下就報錯」，不會偷偷縮小 OID。</p>
+<h3 id="63-python">6.3 在 Python 程式裡呼叫</h3>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tiptoi_toolbox.core.audio_processor</span><span class="w"> </span><span class="kn">import</span> <span class="n">convert_directory</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tiptoi_toolbox.core.oid_generator</span><span class="w"> </span><span class="kn">import</span> <span class="n">GridConfig</span><span class="p">,</span> <span class="n">generate_grid_pdf</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">convert_directory</span><span class="p">(</span>
+    <span class="n">src_dir</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;audio/src&quot;</span><span class="p">),</span>
+    <span class="n">out_dir</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;audio&quot;</span><span class="p">),</span>
+    <span class="n">start_oid</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">product_id</span><span class="o">=</span><span class="mi">999</span><span class="p">,</span>
+    <span class="n">assemble</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">generate_grid_pdf</span><span class="p">(</span><span class="n">GridConfig</span><span class="p">(</span>
+    <span class="n">low</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+    <span class="n">high</span><span class="o">=</span><span class="mi">1000</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">successes</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">output_pdf</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;index_test.pdf&quot;</span><span class="p">),</span>
+<span class="p">))</span>
+</code></pre></div>
+
+<h3 id="64-html">6.4 自製 HTML 說明書</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 用預設輸入輸出</span>
+python<span class="w"> </span>generate_html.py
+
+<span class="c1"># 自訂</span>
+python<span class="w"> </span>generate_html.py<span class="w"> </span>--src<span class="w"> </span>我的筆記.md<span class="w"> </span>--out<span class="w"> </span>output.html<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;客戶版手冊&quot;</span>
+</code></pre></div>
+
+<p><code>manual.html</code> 是 <strong>單一檔</strong>，所有 CSS / 字型堆疊都嵌進去，可以直接 email 給人。</p>
+<hr>
+<h2 id="7">7. 整包搬移到別台機器</h2>
+<p>工具箱所有檔案都是相對路徑，搬移不需要改設定：</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># 從來源機器搬走整個資料夾</span>
+scp<span class="w"> </span>-r<span class="w"> </span>&lt;TOOLBOX&gt;<span class="w"> </span>user@&lt;target-host&gt;:~/
+
+<span class="c1"># 在新機器</span>
+ssh<span class="w"> </span>user@&lt;target-host&gt;
+<span class="nb">cd</span><span class="w"> </span>~/tiptoi_toolbox<span class="w">            </span><span class="c1"># (或你 scp 過去後的實際資料夾名)</span>
+pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>ffmpeg<span class="w"> </span>fonts-wqy-zenhei<span class="w">      </span><span class="c1"># tttool 自行下載 (見 §2.1)</span>
+python3<span class="w"> </span>main.py<span class="w"> </span>--task<span class="w"> </span>info<span class="w">                      </span><span class="c1"># 確認都綠</span>
+python3<span class="w"> </span>main.py<span class="w"> </span>--task<span class="w"> </span>grid<span class="w"> </span>--low<span class="w"> </span><span class="m">1000</span><span class="w"> </span>--high<span class="w"> </span><span class="m">1010</span><span class="w">   </span><span class="c1"># 跑一個小 sanity test</span>
+</code></pre></div>
+
+<blockquote>
+<p><strong>資料夾名也可隨便改。</strong> main.py 透過 <code>__file__</code> 找自己的 <code>core/</code>，
+不依賴資料夾叫 <code>tiptoi_toolbox</code>，所以 <code>mv tiptoi_toolbox foo &amp;&amp; cd foo &amp;&amp;
+python3 main.py --task info</code> 一樣可以跑。</p>
+</blockquote>
+<p>需要轉移到 Windows、macOS 也是同樣模式。<code>utils.py</code> 內的 <code>FFMPEG_CANDIDATES</code>
+和 <code>TTTOOL_CANDIDATES</code> 已含三大平台的常見路徑。</p>
+<hr>
+<h2 id="8">8. 檔案結構詳細表</h2>
+<div class="codehilite"><pre><span></span><code>tiptoi_toolbox/
+├── README_AGENT.md          # 給 AI Agent 讀的精簡 runbook
+├── User_Manual_CN.md        # 本檔 (給人看)
+├── manual.html              # 由 generate_html.py 產生的單檔 HTML
+├── requirements.txt         # pip 依賴
+├── main.py                  # CLI 進入點
+├── generate_html.py         # markdown → html
+├── core/
+│   ├── __init__.py
+│   ├── utils.py             # find_tool / 字型 / 路徑常數
+│   ├── audio_processor.py   # mp3 → ogg + yaml + assemble
+│   └── oid_generator.py     # OID PNG ensure + PDF 網格
+└── templates/
+    └── default_config.yaml  # 專案設定範本 (init 任務複製此檔)
+</code></pre></div>
+
+<hr>
+<h2 id="9-faq">9. 常見問題 (FAQ)</h2>
+<p><strong>Q: 為什麼要用 <code>subprocess</code> 直接叫 ffmpeg，而不用 <code>pydub</code>？</strong>
+A: 為了最少依賴 + 結果可預測。<code>pydub</code> 內部仍然是 ffmpeg，但多一層
+   會吞掉部分錯誤訊息。追求簡潔可以裝 <code>pydub</code> 自己包；本工具箱核心
+   只用 stdlib + ffmpeg + tttool。</p>
+<p><strong>Q: PDF 內 OID 圖會被 ReportLab 壓縮 / 模糊嗎？</strong>
+A: 不會。我們先用 PIL 把每個 OID 從 LA 模式壓平成 1-bit，再用
+   <code>ImageReader(pil)</code> 餵給 ReportLab，內部走 FlateDecode 無損 zlib。
+   過去已用 SHA1 比對驗證 102 張全部 pixel-exact。</p>
+<p><strong>Q: 我可以混不同尺寸的 OID 嗎？</strong>
+A: 同一份 PDF 內不行（網格假設等寬）。如果要混，請各自用獨立的
+   <code>GridConfig</code> 做兩份 PDF 再合併。</p>
+<p><strong>Q: 999 是不是任何 product-id 都能用的「萬用啟動碼」？</strong>
+A: <strong>不是。</strong> 999 在第 4 代筆上是「切換成德語」的特殊碼，剛好被
+   常常用來當示範。實際的「啟動」對應到 <code>product-id</code>，所以你
+   build 的 GME 用什麼 product-id，就需要對應 product-id 的活化方式。</p>
+<p><strong>Q: 可以把 .gme 還原回 mp3 + yaml 嗎？</strong>
+A: 可以：<code>tttool export &lt;file&gt;.gme</code>、<code>tttool play &lt;file&gt;.gme</code>。本工具箱
+   暫未包這個功能，但 <code>core/utils.find_tttool()</code> 已經幫你找好二進位。</p>
+<hr>
+<p><em>工具箱版本：0.1.0 — 由 <code>tiptoi_toolbox</code> 產生 ‧ 任何問題請看 <code>README_AGENT.md</code> 的 §8 已知地雷。</em></p>
+
+<footer class="doc-footer">
+  generated from <code>User_Manual_CN.md</code> by
+  <code>tiptoi_toolbox/generate_html.py</code>
+</footer>
+</main>
+</body>
+</html>

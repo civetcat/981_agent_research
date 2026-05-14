@@ -1,0 +1,23 @@
+# tiptoi_toolbox — Python 套件依賴
+#
+# 安裝：
+#   pip install -r requirements.txt
+#
+# 註：以下兩個是 *系統二進位*，不在 pip 範圍，請另行安裝：
+#   - ffmpeg   (apt: ffmpeg / brew: ffmpeg / winget: Gyan.FFmpeg)
+#   - tttool   (https://github.com/entropia/tip-toi-reveng/releases)
+# 詳細安裝步驟見 User_Manual_CN.md「環境依賴」章節。
+
+# ---------- 核心：PDF 與影像 (oid_generator) ----------
+reportlab>=4.0
+Pillow>=10.0
+
+# ---------- 設定檔解析 (main.py --config) ----------
+PyYAML>=6.0
+
+# ---------- 文件渲染 (generate_html.py) ----------
+markdown>=3.5
+Pygments>=2.17
+
+# ---------- 可選 (進階使用者；本工具預設用 subprocess+ffmpeg) ----------
+# pydub>=0.25       # 想用更 high-level 的 Python API 操作音檔可裝
