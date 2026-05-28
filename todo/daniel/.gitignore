@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# IDE
+.vscode/
+.idea/
+
+# Project data
+backend/data_cache/
+backend/stocksim.db
+backend/*.log
+
+# OS
+.DS_Store
+Thumbs.db
